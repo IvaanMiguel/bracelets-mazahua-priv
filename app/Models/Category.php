@@ -13,13 +13,4 @@ class Category extends Model
     protected $fillable = [
         'name'
     ];
-
-    protected $hidden = [
-        'id'
-    ];
-
-    public function getRouteKeyName(): string
-    {
-        return 'uuid';
-    }
 }

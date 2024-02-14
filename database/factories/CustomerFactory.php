@@ -10,7 +10,6 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'uuid' => fake()->unique()->uuid(),
             'name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'birth_date' => $this->createBirthDate(),

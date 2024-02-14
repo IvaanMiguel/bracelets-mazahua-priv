@@ -23,15 +23,6 @@ class Customer extends Model
         'birth_date' => 'datetime'
     ];
 
-    protected $hidden = [
-        'id'
-    ];
-
-    public function getRouteKeyName(): string
-    {
-        return 'uuid';
-    }
-
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
