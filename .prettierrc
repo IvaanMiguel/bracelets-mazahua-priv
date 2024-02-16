@@ -1,0 +1,11 @@
+{
+	"trailingComma": "es5",
+	"tabWidth": 2,
+	"singleQuote": true,
+	"semi": false,
+	"vueIndentScriptAndStyle": true,
+	"singleAttributePerLine": true,
+	"plugins": [
+		"prettier-plugin-tailwindcss"
+	]
+}
