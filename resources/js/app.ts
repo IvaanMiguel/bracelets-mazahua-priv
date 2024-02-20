@@ -1,6 +1,8 @@
 import './bootstrap'
 import '../css/app.css'
 
+import '@material/web/button/filled-button'
+
 import { createApp, h, DefineComponent } from 'vue'
 import { createInertiaApp, Link } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
