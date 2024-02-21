@@ -15,6 +15,6 @@ export type PageProps<
 export interface MenuButton {
   icon: string
   label: string
-  href: string
+  routeName: string
   component: string
 }
