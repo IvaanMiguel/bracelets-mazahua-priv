@@ -8,6 +8,6 @@ defineOptions({
 
 <template>
   <h1 class="text-2xl text-light-primary dark:text-dark-primary">
-    Customers page
+    Orders page
   </h1>
 </template>
