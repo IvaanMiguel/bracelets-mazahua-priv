@@ -57,7 +57,7 @@ const triggerMenu = () => {
     :class="isExpanded ? 'w-60' : 'w-auto'"
   >
     <md-icon-button
-      class="relative left-1"
+      class="hover:elevation-4 active:elevation-1 relative left-1"
       @click="triggerMenu"
     >
       <Icon>menu</Icon>
@@ -69,7 +69,7 @@ const triggerMenu = () => {
       :class="[
         { '!pe-3': !isExpanded },
         {
-          'bg-white !text-light-primary dark:bg-dark-on-primary-container dark:!text-dark-primary-container':
+          'bg-light-on-primary !text-light-primary dark:bg-dark-on-primary-container dark:!text-dark-primary-container':
             $page.component === button.component,
         },
       ]"
@@ -86,23 +86,13 @@ const triggerMenu = () => {
 </template>
 
 <style scoped>
+html:not(.dark) nav {
+  --md-focus-ring-color: theme(colors.light.surface-variant);
+}
 .dark md-icon-button {
   --md-sys-color-on-surface-variant: theme(colors.dark.on-primary-container);
 }
 md-icon-button {
-  --md-sys-color-on-surface-variant: white;
-  --md-elevation-level: 0;
-}
-md-icon-button:hover {
-  --md-elevation-level: 4;
-}
-md-icon-button:active {
-  --md-elevation-level: 1;
-}
-.dark md-text-button {
-  --md-sys-color-primary: theme(colors.dark.on-primary-container);
-}
-md-text-button {
-  --md-sys-color-primary: white;
+  --md-sys-color-on-surface-variant: theme(colors.light.on-primary);
 }
 </style>

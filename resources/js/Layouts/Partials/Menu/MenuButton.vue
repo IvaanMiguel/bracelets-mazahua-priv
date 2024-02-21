@@ -12,7 +12,7 @@ defineProps<{
 <template>
   <component
     :is="$attrs.href ? 'Link' : 'button'"
-    class="relative flex items-center gap-3 rounded-full py-3 pe-4 ps-3 text-white outline-none dark:text-dark-on-primary-container"
+    class="relative flex items-center gap-3 rounded-full py-3 pe-4 ps-3 text-light-on-primary outline-none dark:text-dark-on-primary-container"
     as="button"
   >
     <span class="absolute left-0 right-0 top-1/2 h-12 -translate-y-1/2"></span>
@@ -38,12 +38,10 @@ button:active {
 }
 
 .dark md-ripple {
-  --md-ripple-hover-color: theme(colors.dark.on-primary-container);
-  --md-ripple-pressed-color: theme(colors.dark.on-primary-container);
+  --md-sys-color-on-surface: theme(colors.dark.on-primary-container);
 }
 
 md-ripple {
-  --md-ripple-hover-color: white;
-  --md-ripple-pressed-color: white;
+  --md-sys-color-on-surface: theme(colors.light.on-primary);
 }
 </style>

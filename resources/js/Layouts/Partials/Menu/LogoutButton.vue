@@ -32,18 +32,8 @@ onMounted(() => {
   </MenuButton>
 
   <Modal id="logout-modal">
-    <Icon
-      slot="icon"
-      class="text-light-secondary dark:text-dark-secondary"
-    >
-      logout
-    </Icon>
-    <div
-      slot="headline"
-      class="border-b-light-on-surface-variant"
-    >
-      Cerrar sesión
-    </div>
+    <Icon slot="icon">logout</Icon>
+    <div slot="headline">Cerrar sesión</div>
     <div slot="content">¿Deseas cerrar la sesión actual?</div>
     <div slot="actions">
       <md-text-button @click="closeModal">Cancelar</md-text-button>
@@ -58,12 +48,3 @@ onMounted(() => {
     </div>
   </Modal>
 </template>
-
-<style scoped>
-.dark md-text-button {
-  --md-sys-color-primary: theme(colors.dark.primary);
-}
-md-text-button {
-  --md-sys-color-primary: theme(colors.light.primary);
-}
-</style>

@@ -4,7 +4,7 @@ import '@material/web/iconbutton/icon-button'
 import '@material/web/textfield/outlined-text-field'
 import Icon from '@/Components/Icon.vue'
 import { computed, ref } from 'vue'
-import ColorMode from '@/Layouts/Partials/ColorMode.vue'
+import ColorMode from '@/Components/ColorMode.vue'
 import { useForm } from '@inertiajs/vue3'
 import Form from '@/Components/Form.vue'
 
@@ -28,13 +28,16 @@ const submit = () => {
 <template>
   <div class="grid min-h-svh place-items-center">
     <div
-      id="form-container"
-      class="relative w-3/4 max-w-md rounded-lg p-6"
+      class="md-elevation-4 relative w-3/4 max-w-md rounded-lg border-[1px] border-light-outline bg-light-surface-container-highest p-6 dark:border-dark-outline dark:bg-dark-surface-container"
     >
       <div class="text-end">
         <ColorMode />
       </div>
-      <h1 class="mb-6 text-center text-2xl">Inicia sesión</h1>
+      <h1
+        class="mb-6 text-center text-2xl text-light-on-background dark:text-dark-on-background"
+      >
+        Inicia sesión
+      </h1>
       <Form
         class="flex flex-col gap-6"
         :submit="submit"
@@ -90,11 +93,7 @@ const submit = () => {
 </template>
 
 <style scoped>
-#form-container {
-  --md-elevation-level: 3;
-}
 #password-field {
-  --md-sys-color-surface-container-highest: theme(colors.neutral.90);
   --md-focus-ring-active-width: 4px;
   --md-focus-ring-width: 2px;
   --md-focus-ring-outward-offset: -2px;
