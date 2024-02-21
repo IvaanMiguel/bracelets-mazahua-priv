@@ -53,7 +53,7 @@ const triggerMenu = () => {
 
 <template>
   <nav
-    class="flex flex-col gap-3 overflow-y-auto rounded-e-lg bg-light-primary p-4 shadow-md shadow-light-shadow dark:bg-dark-primary-container dark:shadow-dark-shadow"
+    class="flex flex-col gap-3 overflow-y-auto rounded-e-lg bg-light-primary p-4 dark:bg-dark-primary-container"
     :class="isExpanded ? 'w-60' : 'w-auto'"
   >
     <md-icon-button
