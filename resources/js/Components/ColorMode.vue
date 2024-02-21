@@ -17,9 +17,3 @@ const colorModeIcon = computed(() =>
     <Icon>{{ colorModeIcon }}</Icon>
   </md-icon-button>
 </template>
-
-<style scoped>
-.dark md-icon-button {
-  --md-sys-color-on-surface-variant: theme('colors.dark.on-surface-variant');
-}
-</style>
