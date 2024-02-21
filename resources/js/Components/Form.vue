@@ -14,7 +14,7 @@ const props = withDefaults(
 const form = ref<HTMLFormElement | null>(null)
 
 const submitFormOnEnter   = (e: KeyboardEvent) => {
-  if (e.code !== 'Enter') return
+  if (e.code !== 'Enter' && e.code !== 'NumpadEnter') return
 
   props.submit()
 }
