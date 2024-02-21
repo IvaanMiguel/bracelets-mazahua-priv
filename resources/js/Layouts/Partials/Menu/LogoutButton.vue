@@ -24,7 +24,6 @@ onMounted(() => {
 <template>
   <MenuButton
     class="mt-auto"
-    :class="{ '!pe-3': !isExpanded }"
     icon="logout"
     @click="openModal"
   >

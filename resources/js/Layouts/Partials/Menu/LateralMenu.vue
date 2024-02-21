@@ -53,11 +53,11 @@ const triggerMenu = () => {
 
 <template>
   <nav
-    class="flex flex-col gap-3 overflow-y-auto rounded-e-lg bg-light-primary p-4 dark:bg-dark-primary-container"
+    class="flex flex-col gap-3 overflow-y-auto rounded-e-lg bg-light-primary p-4 shadow-md shadow-light-shadow dark:bg-dark-primary-container dark:shadow-dark-shadow"
     :class="isExpanded ? 'w-60' : 'w-auto'"
   >
     <md-icon-button
-      class="hover:elevation-4 active:elevation-1 relative left-1"
+      class="hover:md-elevation-4 active:md-elevation-1 relative left-1"
       @click="triggerMenu"
     >
       <Icon>menu</Icon>
@@ -67,7 +67,6 @@ const triggerMenu = () => {
     <MenuButton
       v-for="button in buttons"
       :class="[
-        { '!pe-3': !isExpanded },
         {
           'bg-light-on-primary !text-light-primary dark:bg-dark-on-primary-container dark:!text-dark-primary-container':
             $page.component === button.component,

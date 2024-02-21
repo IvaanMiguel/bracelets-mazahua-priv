@@ -8,7 +8,7 @@ import LateralMenu from './Partials/Menu/LateralMenu.vue'
     <LateralMenu />
     <div class="flex flex-1 flex-col">
       <Header />
-      <main class="h-svh overflow-y-auto p-4">
+      <main class="h-svh overflow-y-auto">
         <slot />
       </main>
     </div>

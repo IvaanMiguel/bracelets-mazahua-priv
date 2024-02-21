@@ -12,7 +12,7 @@ defineProps<{
 <template>
   <component
     :is="$attrs.href ? 'Link' : 'button'"
-    class="relative flex items-center gap-3 rounded-full py-3 pe-4 ps-3 text-light-on-primary outline-none dark:text-dark-on-primary-container"
+    class="active:md-elevation-1 hover:md-elevation-4 relative flex items-center gap-3 rounded-full p-3 text-light-on-primary outline-none dark:text-dark-on-primary-container"
     as="button"
   >
     <span class="absolute left-0 right-0 top-1/2 h-12 -translate-y-1/2"></span>
@@ -25,18 +25,6 @@ defineProps<{
 </template>
 
 <style scoped>
-button {
-  --md-elevation-level: 0;
-}
-
-button:hover {
-  --md-elevation-level: 4;
-}
-
-button:active {
-  --md-elevation-level: 1;
-}
-
 .dark md-ripple {
   --md-sys-color-on-surface: theme(colors.dark.on-primary-container);
 }
