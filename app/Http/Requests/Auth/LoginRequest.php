@@ -20,7 +20,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => ['bail', 'required', 'string', 'email'],
-            'password' => ['bail', 'required', 'string', 'between:8,255'],
+            'password' => ['bail', 'required', 'string', 'between:4,255'],
         ];
     }
 
