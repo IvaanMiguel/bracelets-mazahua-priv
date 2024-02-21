@@ -1,3 +1,26 @@
+@import url('color-scheme.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .md-elevation-0 {
+    --md-elevation-level: 0
+  }
+  .md-elevation-1 {
+    --md-elevation-level: 1
+  }
+  .md-elevation-2 {
+    --md-elevation-level: 2
+  }
+  .md-elevation-3 {
+    --md-elevation-level: 3
+  }
+  .md-elevation-4 {
+    --md-elevation-level: 4
+  }
+  .md-elevation-5 {
+    --md-elevation-level: 5
+  }
+}
