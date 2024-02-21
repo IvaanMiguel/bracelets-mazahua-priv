@@ -13,32 +13,32 @@ const buttons: MenuButtonType[] = [
   {
     icon: 'home',
     label: 'Inicio',
-    href: '/',
+    routeName: 'home',
     component: 'Home',
   },
   {
     icon: 'groups',
     label: 'Clientes',
-    href: '/customers',
-    component: 'Customers',
+    routeName: 'customers',
+    component: 'Customers/Index',
   },
   {
     icon: 'inventory_2',
     label: 'Productos',
-    href: '/products',
-    component: 'Products',
+    routeName: 'products',
+    component: 'Products/Index',
   },
   {
     icon: 'category',
     label: 'Categorías',
-    href: '/categories',
-    component: 'Categories',
+    routeName: 'categories',
+    component: 'Categories/Index',
   },
   {
     icon: 'inventory',
     label: 'Pedidos',
-    href: '/orders',
-    component: 'Orders',
+    routeName: 'orders',
+    component: 'Orders/Index',
   },
 ]
 
@@ -66,14 +66,12 @@ const triggerMenu = () => {
 
     <MenuButton
       v-for="button in buttons"
-      :class="[
-        {
-          'bg-light-on-primary !text-light-primary dark:bg-dark-on-primary-container dark:!text-dark-primary-container':
-            $page.component === button.component,
-        },
-      ]"
+      :class="{
+        'bg-light-on-primary !text-light-primary dark:bg-dark-on-primary-container dark:!text-dark-primary-container':
+          $page.component === button.component,
+      }"
       :icon="button.icon"
-      :href="button.href"
+      :href="route(button.routeName)"
     >
       <template v-if="isExpanded">
         {{ button.label }}
