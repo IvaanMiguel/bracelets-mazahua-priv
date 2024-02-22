@@ -11,7 +11,7 @@ defineOptions({
 </script>
 
 <template>
-  <Tabs selected-tab="1">
+  <Tabs auto-activate>
     <template #tab>
       <md-primary-tab id="list-tab" aria-controls="list-panel">
         <Icon slot="icon">list_alt</Icon>
@@ -23,10 +23,10 @@ defineOptions({
       </md-primary-tab>
     </template>
     <template #panel>
-      <div id="list-panel" aria-labelledby="list-tab" role="tabpanel" hidden>
-        Lista
+      <div id="list-panel" aria-labelledby="list-tab" role="tabpanel">
+        <div>Lista</div>
       </div>
-      <div id="add-panel" aria-labelledby="add-tab" role="tabpanel" hidden>
+      <div id="add-panel" aria-labelledby="add-tab" role="tabpanel">
         Agregar cliente nuevo
       </div>
     </template>

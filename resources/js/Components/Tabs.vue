@@ -3,51 +3,50 @@ import '@material/web/tabs/tabs'
 import '@material/web/tabs/primary-tab'
 
 import { onMounted, onUnmounted, ref } from 'vue'
-import { MdTabs } from '@material/web/tabs/tabs';
-
-withDefaults(
-    defineProps<{
-        selectedTab: string | number
-    }>(),
-    {
-        selectedTab: 1
-    }
-)
+import { MdTabs } from '@material/web/tabs/tabs'
 
 const tabs = ref<MdTabs | null>(null)
-const root = ref<Document | ShadowRoot | null>(null)
-const currentPanel = ref<HTMLElement | null>(null)
+const tabsCount = ref<number | undefined>(0)
+const tabTranslation = ref<string | null>(null)
 
-const tabsOnChange = (e?: Event) => {
-    if (currentPanel.value) {
-        currentPanel.value.hidden = true
-    }
-
-    const panelId = tabs.value?.activeTab?.getAttribute('aria-controls')
-
-    if (root.value) {
-        currentPanel.value = root.value.querySelector<HTMLElement>(`#${panelId}`)
-    }
-
-    if (currentPanel.value) {
-        currentPanel.value.hidden = false
-    }
+const tabsOnChange = () => {
+  tabTranslation.value = `${-tabs.value!.activeTabIndex * 100}%`
 }
 
 onMounted(() => {
-    root.value = tabs.value?.getRootNode() as Document | ShadowRoot
+  tabsCount.value = tabs.value?.childElementCount
 
-    tabs.value?.addEventListener('change', tabsOnChange);
+  tabs.value?.addEventListener('change', tabsOnChange)
 })
 
 onUnmounted(() => {
-    tabs.value?.removeEventListener('change', tabsOnChange);
+  tabs.value?.removeEventListener('change', tabsOnChange)
 })
 </script>
 
 <template>
-    <md-tabs ref="tabs">
-        <slot name="tab" />
+  <div class="flex h-full flex-col">
+    <md-tabs
+      ref="tabs"
+      v-bind="$attrs"
+    >
+      <slot name="tab" />
     </md-tabs>
-    <slot name="panel" />
+    <div
+      id="panel-container"
+      class="grid flex-1 overflow-y-auto overflow-x-hidden"
+    >
+      <slot name="panel" />
+    </div>
+  </div>
 </template>
+
+<style scoped>
+#panel-container {
+  grid-template-columns: repeat(v-bind(tabsCount), 100%);
+}
+:slotted([role='tabpanel']) {
+  transform: translateX(v-bind(tabTranslation));
+  transition: transform 0.25s ease-in-out 0s;
+}
+</style>
