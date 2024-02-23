@@ -20,25 +20,25 @@ const buttons: MenuButtonType[] = [
     icon: 'groups',
     label: 'Clientes',
     routeName: 'customers',
-    component: 'Customers/Index',
+    component: 'Customers',
   },
   {
     icon: 'inventory_2',
     label: 'Productos',
     routeName: 'products',
-    component: 'Products/Index',
+    component: 'Products',
   },
   {
     icon: 'category',
     label: 'Categorías',
     routeName: 'categories',
-    component: 'Categories/Index',
+    component: 'Categories',
   },
   {
     icon: 'inventory',
     label: 'Pedidos',
     routeName: 'orders',
-    component: 'Orders/Index',
+    component: 'Orders',
   },
 ]
 
@@ -68,7 +68,7 @@ const triggerMenu = () => {
       v-for="button in buttons"
       :class="{
         'bg-light-on-primary !text-light-primary dark:bg-dark-on-primary-container dark:!text-dark-primary-container':
-          $page.component === button.component,
+          $page.component.startsWith(button.component),
       }"
       :icon="button.icon"
       :href="route(button.routeName)"
