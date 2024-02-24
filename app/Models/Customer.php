@@ -23,6 +23,12 @@ class Customer extends Model
         'birth_date' => 'datetime'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
