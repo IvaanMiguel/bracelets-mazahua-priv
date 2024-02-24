@@ -4,12 +4,18 @@ export interface User {
   email_verified_at: string
 }
 
+export interface Filters {
+  results: number
+  search: string | null
+}
+
 export type PageProps<
   T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
   auth: {
     user: User
   }
+  filters: Filters
 }
 
 export type Link = {
