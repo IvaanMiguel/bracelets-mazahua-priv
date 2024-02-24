@@ -10,7 +10,7 @@ class CustomerSeeder extends Seeder
 {
     public function run(): void
     {
-        Customer::factory(50)
+        Customer::factory(75)
             ->hasAddresses(3)
             ->create();
 

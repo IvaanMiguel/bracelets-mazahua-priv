@@ -34,7 +34,7 @@ onUnmounted(() => {
     </md-tabs>
     <div
       id="panel-container"
-      class="grid flex-1 overflow-y-auto overflow-x-hidden"
+      class="grid flex-1 overflow-x-hidden"
     >
       <slot name="panel" />
     </div>
@@ -47,6 +47,6 @@ onUnmounted(() => {
 }
 :slotted([role='tabpanel']) {
   transform: translateX(v-bind(tabTranslation));
-  transition: transform 0.25s ease-in-out 0s;
+  transition: transform 0.2s ease-in-out 0s;
 }
 </style>

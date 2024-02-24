@@ -24,3 +24,17 @@
     --md-elevation-level: 5
   }
 }
+
+::-webkit-scrollbar {
+  width: .5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: .5rem;
+  background-color: var(--md-sys-color-outline-variant);
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  border-radius: .5rem;
+  background-color: var(--md-sys-color-surface-variant);
+}

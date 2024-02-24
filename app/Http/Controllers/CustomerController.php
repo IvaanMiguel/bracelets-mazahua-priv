@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -12,9 +14,22 @@ class CustomerController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Customers/Index');
+        $results = $request->input('results', 15);
+        $search = $request->input('search');
+
+        return Inertia::render('Customers/Index', [
+            'customers' => Customer::where(DB::raw('CONCAT(name, " ", last_name)'), 'like', "{$search}%")
+                ->orderBy('name', 'asc')
+                ->orderBy('last_name', 'asc')
+                ->paginate($results, ['id', 'name', 'last_name'])
+                ->withQueryString(),
+            'filters' => [
+                'results' => intval($results),
+                'search' => $search
+            ]
+        ]);
     }
 
     /**
@@ -38,7 +53,9 @@ class CustomerController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Inertia::render('Customers/Show', [
+            'customer' => Customer::find($id)
+        ]);
     }
 
     /**
