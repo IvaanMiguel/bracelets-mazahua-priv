@@ -66,10 +66,7 @@ const triggerMenu = () => {
 
     <MenuButton
       v-for="button in buttons"
-      :class="{
-        'bg-light-on-primary !text-light-primary dark:bg-dark-on-primary-container dark:!text-dark-primary-container':
-          $page.component.startsWith(button.component),
-      }"
+      :active="$page.component.startsWith(button.component)"
       :icon="button.icon"
       :href="route(button.routeName)"
     >
