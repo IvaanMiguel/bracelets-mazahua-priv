@@ -26,12 +26,16 @@ defineProps<{
       >
         {{ customers.total }} clientes
       </h1>
-      <SearchBar placeholder="Buscar por nombre..." />
+      <SearchBar
+        placeholder="Buscar por nombre..."
+        :base-url="route('customers')"
+      />
     </div>
     <Paginator
       class="justify-end p-4 pt-2"
       :pagination="customers"
       :selected-results="$page.props.filters.results"
+      :base-url="route('customers')"
     />
     <md-list
       v-if="customers.data.length"
@@ -73,6 +77,7 @@ defineProps<{
       class="justify-end p-4 pt-2"
       :pagination="customers"
       :selected-results="$page.props.filters.results"
+      :base-url="route('customers')"
     />
   </div>
 </template>
