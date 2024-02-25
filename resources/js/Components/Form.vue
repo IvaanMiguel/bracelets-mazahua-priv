@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    submit: () => void
+    submit: (e?: Event) => void
     notSubmitOnEnter?: boolean
   }>(),
   {
@@ -13,7 +13,7 @@ const props = withDefaults(
 
 const form = ref<HTMLFormElement | null>(null)
 
-const submitFormOnEnter   = (e: KeyboardEvent) => {
+const submitFormOnEnter = (e: KeyboardEvent) => {
   if (e.code !== 'Enter' && e.code !== 'NumpadEnter') return
 
   props.submit()
