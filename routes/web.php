@@ -17,6 +17,7 @@ Route::get('/', HomeController::class)
 Route::controller(CustomerController::class)->prefix('customers')->group(function () {
     Route::get('/', 'index')->name('customers');
     Route::get('/{id}', 'show')->name('customers.show');
+    Route::post('/', 'store')->name('customers.store');
 });
 
 Route::controller(ProductController::class)->prefix('products')->group(function () {
