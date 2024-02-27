@@ -3,7 +3,7 @@ import '@material/web/button/text-button'
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
 
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Icon from './Icon.vue'
 
 const props = withDefaults(
@@ -29,23 +29,38 @@ const paddingEnd = computed(() => {
 
 const isVisible = ref(false)
 
-const close = () => (isVisible.value = false)
-const show = () => (isVisible.value = true)
+let closeOnTimeoutId:number | undefined = undefined
+const show = (bool: boolean) => (isVisible.value = bool)
+const closeOnTimeout = () => isVisible.value = false
+
+watch(isVisible, () => {
+  if (isVisible.value) {
+    closeOnTimeoutId = setTimeout(closeOnTimeout, 5000)
+
+    return
+  }
+
+  clearTimeout(closeOnTimeoutId)
+})
 
 defineExpose({
-  close,
   show
 })
 </script>
 
 <template>
   <Teleport to="body">
-    <Transition>
-      <div
-        v-show="isVisible"
-        class="absolute inset-x-0 bottom-4 z-[1] mx-auto h-fit w-fit"
+    <div
+      class="absolute inset-x-0 bottom-4 z-[1] mx-auto h-fit w-fit"
+    >
+      <Transition
+        enter-from-class="translate-y-20"
+        enter-active-class="transition-transform duration-300 ease-out"
+        leave-active-class="transition-transform duration-300 ease-out"
+        leave-to-class="translate-y-20"
       >
         <div
+          v-show="isVisible"
           class="md-elevation-3 relative flex max-h-16 min-h-12 w-fit min-w-[40ch] max-w-[60ch] items-center justify-between rounded bg-light-inverse-surface ps-4 dark:bg-dark-inverse-surface"
           :class="[paddingEnd, action ? 'gap-2' : 'gap-3']"
         >
@@ -68,14 +83,14 @@ defineExpose({
             </md-text-button>
             <md-icon-button
               v-if="closeButton"
-              @click="close"
+              @click="show(false)"
             >
               <Icon>close</Icon>
             </md-icon-button>
           </div>
         </div>
-      </div>
-    </Transition>
+      </Transition>
+    </div>
   </Teleport>
 </template>
 
