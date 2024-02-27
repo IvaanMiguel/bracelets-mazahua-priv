@@ -2,11 +2,9 @@
 import { CustomerListItem } from '@/types/customers'
 import { Pagination } from '@/types'
 
-import '@material/web/elevation/elevation'
 import '@material/web/tabs/primary-tab'
-import '@material/web/textfield/outlined-text-field'
-import '@material/web/textfield/filled-text-field'
 
+import Create from './Partials/Create.vue'
 import Icon from '@/Components/Icon.vue'
 import List from './Partials/List.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
@@ -32,8 +30,8 @@ defineProps<{
         Clientes
       </md-primary-tab>
       <md-primary-tab
-        id="add-tab"
-        aria-controls="add-panel"
+        id="create-tab"
+        aria-controls="create-panel"
       >
         <Icon slot="icon">add</Icon>
         Agregar cliente nuevo
@@ -48,18 +46,18 @@ defineProps<{
         role="tabpanel"
       >
         <List
-          class="mx-auto w-full max-w-7xl"
+          class="mx-auto w-full max-w-6xl"
           :customers="customers"
         />
       </div>
 
       <div
-        id="add-panel"
+        id="create-panel"
         class="overflow-y-auto p-4"
-        aria-labelledby="add-tab"
+        aria-labelledby="create-tab"
         role="tabpanel"
       >
-        Agregar cliente nuevo
+        <Create class="mx-auto w-full max-w-6xl" />
       </div>
     </template>
   </Tabs>
