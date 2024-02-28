@@ -9,6 +9,7 @@ import { ref } from 'vue'
 import PersonalInfoForm from './PersonalInfoForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Snackbar from '@/Components/Snackbar.vue'
+import AddressForm from './AddressForm.vue'
 
 const successSnackbar = ref<typeof Snackbar | null>(null)
 
@@ -18,20 +19,20 @@ const form = useForm({
   birth_date: '',
   email: '',
   phone_number: '',
-  // main_street: '',
-  // cross_streets: '',
-  // neighborhood: '',
-  // street_number: '',
-  // suite_number: '',
-  // postal_code: '',
+  main_street: '',
+  cross_streets: '',
+  neighborhood: '',
+  street_number: '',
+  suite_number: '',
+  postal_code: '',
 })
 
 const submit = () => {
   form.post(route('customers.store'), {
     onSuccess: () => {
       form.reset()
-      successSnackbar.value?.show()
-    }
+      successSnackbar.value?.show(true)
+    },
   })
 }
 </script>
@@ -45,12 +46,11 @@ const submit = () => {
       :submit="submit"
       :form="form"
     />
-    <md-divider class="my-4" />
-    <h1
-      class="mb-4 text-xl font-medium text-light-on-background dark:text-dark-on-background"
-    >
-      Direcciones
-    </h1>
+    <md-divider class="my-8" />
+    <AddressForm
+      :submit="submit"
+      :form="form"
+    />
     <div class="text-end">
       <md-filled-button
         @click="submit"
@@ -60,7 +60,10 @@ const submit = () => {
         <Icon slot="icon">save</Icon>
       </md-filled-button>
     </div>
-    <Snackbar ref="successSnackbar" close-button>
+    <Snackbar
+      ref="successSnackbar"
+      close-button
+    >
       <template #content>
         Información del cliente guardada con éxito.
       </template>
