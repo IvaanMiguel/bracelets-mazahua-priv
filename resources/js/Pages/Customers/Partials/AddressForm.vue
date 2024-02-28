@@ -4,8 +4,8 @@ import { Address } from '@/types/customers'
 import { InertiaForm } from '@inertiajs/vue3'
 
 import Form from '@/Components/Form.vue'
-import Icon from '@/Components/Icon.vue';
-import TextField from '@/Components/TextField.vue';
+import Icon from '@/Components/Icon.vue'
+import TextField from '@/Components/TextField.vue'
 
 defineProps<{
   submit: (e?: Event) => void
@@ -24,30 +24,17 @@ defineProps<{
     :submit="submit"
   >
     <div class="mb-6 flex flex-col items-start gap-6 md:flex-row">
-      <div class='flex flex-1 gap-6 flex-col md:flex-row w-full'>
-        <TextField
-          class="w-full flex-[2]"
-          label="Calle principal"
-          :error="form.errors.main_street"
-          required
-          v-model="form.main_street"
-        >
-          <template #floating-icon>
-            <Icon>location_home</Icon>
-          </template>
-        </TextField>
-        <TextField
-          class="w-full flex-1"
-          label="Código postal"
-          :error="form.errors.postal_code"
-          required
-          v-model="form.postal_code"
-        >
-          <template #floating-icon>
-            <Icon>local_post_office</Icon>
-          </template>
-        </TextField>
-      </div>
+      <TextField
+        class="w-full flex-1"
+        label="Calle principal"
+        :error="form.errors.main_street"
+        required
+        v-model="form.main_street"
+      >
+        <template #floating-icon>
+          <Icon>location_home</Icon>
+        </template>
+      </TextField>
       <TextField
         class="w-full flex-1"
         label="Calles adyacentes"
@@ -60,40 +47,51 @@ defineProps<{
       </TextField>
     </div>
     <div class="mb-6 flex flex-col items-start gap-6 md:flex-row">
-      <TextField
-        class="w-full flex-1"
-        label="Colonia"
-        :error="form.errors.neighborhood"
-        required
-        v-model="form.neighborhood"
-      >
-        <template #floating-icon>
-          <Icon>warehouse</Icon>
-        </template>
-      </TextField>
-      <div class='flex gap-6 flex-col md:flex-row'>
-        <!-- <TextField
-          class="w-full flex-1"
-          label="Calles adyacentes"
-          :error="form.errors.cross_streets"
+      <div class="flex flex-col gap-6 flex-1 w-full md:flex-row">
+        <TextField
+          class="w-full flex-[3]"
+          label="Colonia"
+          :error="form.errors.neighborhood"
           required
-          v-model="form.cross_streets"
+          v-model="form.neighborhood"
         >
           <template #floating-icon>
-            <Icon>alt_route</Icon>
+            <Icon>warehouse</Icon>
+          </template>
+        </TextField>
+        <TextField
+          class="w-full flex-[2]"
+          label="Código postal"
+          :error="form.errors.postal_code"
+          required
+          v-model="form.postal_code"
+        >
+          <template #floating-icon>
+            <Icon>local_post_office</Icon>
+          </template>
+        </TextField>
+      </div>
+      <div class="flex flex-1 w-full gap-6">
+        <TextField
+          class="w-full flex-1"
+          label="Número Exterior"
+          :error="form.errors.street_number"
+          v-model="form.street_number"
+        >
+          <template #floating-icon>
+            <Icon>house</Icon>
           </template>
         </TextField>
         <TextField
           class="w-full flex-1"
-          label="Calles adyacentes"
-          :error="form.errors.cross_streets"
-          required
-          v-model="form.cross_streets"
+          label="Número interior"
+          :error="form.errors.suite_number"
+          v-model="form.suite_number"
         >
           <template #floating-icon>
-            <Icon>alt_route</Icon>
+            <Icon>apartment</Icon>
           </template>
-        </TextField> -->
+        </TextField>
       </div>
     </div>
   </Form>
