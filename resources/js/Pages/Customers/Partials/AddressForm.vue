@@ -1,24 +1,63 @@
 <script setup lang="ts">
 import { Address } from '@/types/customers'
 
-import { InertiaForm } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
+import useVuelidate from '@vuelidate/core'
+import { required, minLength, alpha } from '@vuelidate/validators'
 
+import { ref } from 'vue'
+import AddedAddressesList from './AddedAddressesList.vue'
 import Form from '@/Components/Form.vue'
 import Icon from '@/Components/Icon.vue'
 import TextField from '@/Components/TextField.vue'
 
 defineProps<{
   submit: (e?: Event) => void
-  form: InertiaForm<Address>
 }>()
+
+const form = useForm<Address>({
+  main_street: '',
+  cross_streets: '',
+  neighborhood: '',
+  postal_code: '',
+  street_number: '',
+  suite_number: '',
+})
+
+const rules = {
+  main_street: { required, minLength: minLength(10), alpha },
+  cross_streets: {},
+  neighborhood: { required },
+  postal_code: { required },
+  street_number: {},
+  suite_number: {},
+}
+
+const v$ = useVuelidate(rules, form)
+
+const addressesList = ref<typeof AddedAddressesList | null>(null)
+
+const validateAddress = async () => {
+  const validate = await v$.value.$validate()
+
+  if (validate) {
+    addressesList.value?.addAddress({ ...form.data() })
+  }
+}
+
+defineExpose({
+  form,
+})
 </script>
 
 <template>
-  <h1
-    class="mb-4 text-xl font-medium text-light-on-background dark:text-dark-on-background"
-  >
-    Direcciones
-  </h1>
+  <div class="mb-4 flex items-center justify-between">
+    <h1 class="text-on-background text-xl font-medium">Direcciones</h1>
+    <md-filled-tonal-button @click="validateAddress">
+      Agregar dirección
+      <Icon slot="icon">add_location</Icon>
+    </md-filled-tonal-button>
+  </div>
   <Form
     class="flex flex-col"
     :submit="submit"
@@ -27,7 +66,11 @@ defineProps<{
       <TextField
         class="w-full flex-1"
         label="Calle principal"
-        :error="form.errors.main_street"
+        name='main_street'
+        :error="
+          form.errors.main_street ||
+          v$.main_street.$errors[0]?.$message.toString()
+        "
         required
         v-model="form.main_street"
       >
@@ -47,7 +90,7 @@ defineProps<{
       </TextField>
     </div>
     <div class="mb-6 flex flex-col items-start gap-6 md:flex-row">
-      <div class="flex flex-col gap-6 flex-1 w-full md:flex-row">
+      <div class="flex w-full flex-1 flex-col gap-6 md:flex-row">
         <TextField
           class="w-full flex-[3]"
           label="Colonia"
@@ -71,7 +114,7 @@ defineProps<{
           </template>
         </TextField>
       </div>
-      <div class="flex flex-1 w-full gap-6">
+      <div class="flex w-full flex-1 gap-6">
         <TextField
           class="w-full flex-1"
           label="Número Exterior"
@@ -95,4 +138,5 @@ defineProps<{
       </div>
     </div>
   </Form>
+  <AddedAddressesList ref="addressesList" />
 </template>
