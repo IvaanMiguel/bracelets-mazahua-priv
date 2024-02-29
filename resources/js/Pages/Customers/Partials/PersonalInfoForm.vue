@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Customer } from '@/types/customers'
 
-import { InertiaForm } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 
 import Form from '@/Components/Form.vue'
 import Icon from '@/Components/Icon.vue'
@@ -9,8 +9,19 @@ import TextField from '@/Components/TextField.vue'
 
 defineProps<{
   submit: (e?: Event) => void
-  form: InertiaForm<Customer>
 }>()
+
+const form = useForm<Customer>({
+  name: '',
+  last_name: '',
+  birth_date: '',
+  email: '',
+  phone_number: '',
+})
+
+defineExpose({
+  form,
+})
 </script>
 
 <template>
@@ -27,7 +38,7 @@ defineProps<{
       <TextField
         class="w-full flex-1"
         label="Nombre(s)"
-        :error="form.errors.name"
+        :error="$page.props.errors.name"
         required
         v-model="form.name"
       >
@@ -38,7 +49,7 @@ defineProps<{
       <TextField
         class="w-full flex-1"
         label="Apellido(s)"
-        :error="form.errors.last_name"
+        :error="$page.props.errors.last_name"
         required
         empty-floating-icon
         v-model="form.last_name"
@@ -48,7 +59,7 @@ defineProps<{
       <TextField
         class="w-full flex-1"
         label="Número celular"
-        :error="form.errors.phone_number"
+        :error="$page.props.errors.phone_number"
         required
         v-model="form.phone_number"
       >
@@ -59,7 +70,7 @@ defineProps<{
       <TextField
         class="w-full flex-1"
         label="Email"
-        :error="form.errors.email"
+        :error="$page.props.errors.email"
         v-model="form.email"
       >
         <template #floating-icon>
@@ -70,7 +81,7 @@ defineProps<{
     <TextField
       class="md:w-[calc(50%-(1.5rem/2))]"
       type="date"
-      :error="form.errors.birth_date"
+      :error="$page.props.errors.birth_date"
       label="Fecha de nacimiento"
       v-model="form.birth_date"
     >
