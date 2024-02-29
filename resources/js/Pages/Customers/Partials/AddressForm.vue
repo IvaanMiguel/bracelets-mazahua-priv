@@ -3,7 +3,16 @@ import { Address } from '@/types/customers'
 
 import { useForm } from '@inertiajs/vue3'
 import useVuelidate from '@vuelidate/core'
-import { required, minLength, alpha } from '@vuelidate/validators'
+import {
+  integer,
+  maxLength,
+  minLength,
+  minValue,
+  numeric,
+  required,
+} from '@vuelidate/validators'
+
+import { useFormErrors } from '@/composables/useFormErrors'
 
 import { ref } from 'vue'
 import AddedAddressesList from './AddedAddressesList.vue'
@@ -25,24 +34,44 @@ const form = useForm<Address>({
 })
 
 const rules = {
-  main_street: { required, minLength: minLength(10), alpha },
-  cross_streets: {},
-  neighborhood: { required },
-  postal_code: { required },
-  street_number: {},
-  suite_number: {},
+  main_street: { required, minLength: minLength(3), maxLength: maxLength(255) },
+  cross_streets: { minLength: minLength(3), maxLength: maxLength(255) },
+  neighborhood: {
+    required,
+    minLength: minLength(3),
+    maxLength: maxLength(255),
+  },
+  postal_code: {
+    required,
+    numeric,
+    integer,
+    minValue: minValue(1),
+    minLength: minLength(5),
+    maxLength: maxLength(5),
+  },
+  street_number: {
+    numeric,
+    integer,
+    minValue: minValue(1),
+    minLength: minLength(1),
+  },
+  suite_number: {
+    numeric,
+    integer,
+    minValue: minValue(1),
+    minLength: minLength(1),
+  },
 }
 
 const v$ = useVuelidate(rules, form)
+const { setErrors } = useFormErrors(v$, form)
 
 const addressesList = ref<typeof AddedAddressesList | null>(null)
 
 const validateAddress = async () => {
   const validate = await v$.value.$validate()
 
-  if (validate) {
-    addressesList.value?.addAddress({ ...form.data() })
-  }
+  validate ? addressesList.value?.addAddress({ ...form.data() }) : setErrors()
 }
 
 defineExpose({
@@ -66,11 +95,8 @@ defineExpose({
       <TextField
         class="w-full flex-1"
         label="Calle principal"
-        name='main_street'
-        :error="
-          form.errors.main_street ||
-          v$.main_street.$errors[0]?.$message.toString()
-        "
+        name="main_street"
+        :error="form.errors.main_street"
         required
         v-model="form.main_street"
       >
@@ -89,8 +115,8 @@ defineExpose({
         </template>
       </TextField>
     </div>
-    <div class="mb-6 flex flex-col items-start gap-6 md:flex-row">
-      <div class="flex w-full flex-1 flex-col gap-6 md:flex-row">
+    <div class="mb-6 flex flex-col gap-6 md:flex-row">
+      <div class="flex w-full flex-1 flex-col items-start gap-6 md:flex-row">
         <TextField
           class="w-full flex-[3]"
           label="Colonia"
@@ -114,7 +140,7 @@ defineExpose({
           </template>
         </TextField>
       </div>
-      <div class="flex w-full flex-1 gap-6">
+      <div class="flex w-full flex-1 items-start gap-6">
         <TextField
           class="w-full flex-1"
           label="Número Exterior"
