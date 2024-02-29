@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  .text-on-background {
+    @apply text-light-on-background dark:text-dark-on-background
+  }
+}
+
 @layer utilities {
   .md-elevation-0 {
     --md-elevation-level: 0
