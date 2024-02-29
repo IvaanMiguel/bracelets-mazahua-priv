@@ -6,7 +6,7 @@ import '@material/web/tabs/primary-tab'
 
 import Create from './Partials/Create.vue'
 import Icon from '@/Components/Icon.vue'
-import List from './Partials/List.vue'
+import CustomersList from './Partials/CustomersList.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import Tabs from '@/Components/Tabs.vue'
 
@@ -45,7 +45,7 @@ defineProps<{
         aria-labelledby="list-tab"
         role="tabpanel"
       >
-        <List
+        <CustomersList
           class="mx-auto w-full max-w-6xl"
           :customers="customers"
         />
