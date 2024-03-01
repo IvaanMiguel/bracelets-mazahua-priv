@@ -6,7 +6,6 @@ import { onUnmounted, onMounted, ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    id: string
     notCancellable?: boolean
   }>(),
   {
@@ -32,7 +31,7 @@ onUnmounted(() => {
 <template>
   <Teleport to="body">
     <md-dialog
-      :id="id"
+      class='max-h-[85%]'
       v-bind="$attrs"
       ref="modal"
     >
