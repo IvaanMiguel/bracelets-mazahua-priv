@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import Snackbar from '@/Components/Snackbar.vue';
+import { IdAddress } from '@/types/customers'
+
 import { useModal } from '@/composables/useModal'
-import { Address } from '@/types/customers'
-import Modal from '@/Components/Modal.vue';
+
+import { ref } from 'vue'
 import Icon from '@/Components/Icon.vue';
+import Modal from '@/Components/Modal.vue';
+import Snackbar from '@/Components/Snackbar.vue';
 
 const props = defineProps<{
-  addresses: (Address & { id: number })[]
-  selectedAddress: number | null
+  addresses: IdAddress[]
+  selectedAddress: IdAddress | null
 }>()
 
 const emit = defineEmits<{
@@ -21,7 +23,7 @@ const removedAddressSnackbar = ref<typeof Snackbar>()
 
 const removeAddress = () => {
   const i = props.addresses.findIndex(
-    (address) => address.id === props.selectedAddress
+    (address) => address.id === props.selectedAddress?.id
   )
 
   emit('unselectAddress')
