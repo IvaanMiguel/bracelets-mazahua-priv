@@ -20,3 +20,7 @@ export interface Address {
   suite_number: string | null
   postal_code: string
 }
+
+export type IdAddress = Address & {
+  id: number
+}
