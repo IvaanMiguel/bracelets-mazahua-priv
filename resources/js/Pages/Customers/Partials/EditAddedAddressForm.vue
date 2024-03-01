@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3'
+import { Address, IdAddress } from '@/types/customers'
 
+import { useForm } from '@inertiajs/vue3'
+import { editAddressRules } from '@/rules/address'
+
+import { useFormErrors } from '@/composables/useFormErrors'
 import { useModal } from '@/composables/useModal'
 
-import { watchEffect } from 'vue'
+import { ref } from 'vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import TextField from '@/Components/TextField.vue'
-import { Address } from '@/types/customers'
+import Snackbar from '@/Components/Snackbar.vue'
 
-const props = withDefaults(
-  defineProps<{
-    addresses: (Address & { id: number })[]
-    selectedAddress: number | null
-  }>(),
-  {}
-)
+const props = defineProps<{
+  addresses: IdAddress[]
+  selectedAddress: IdAddress | null
+}>()
 
 const form = useForm<Address>({
   main_street: '',
@@ -26,22 +27,57 @@ const form = useForm<Address>({
   suite_number: '',
 })
 
+const { v$ } = useFormErrors(editAddressRules, form)
 const { modal } = useModal('#edit-address-modal')
 
-watchEffect(() => {
-})
+const editedAddressSnackbar = ref<typeof Snackbar>()
 
+const updateAddress = () => {
+  const address = props.addresses.find(
+    (address) => address.id === props.selectedAddress?.id
+  )
+
+  address!.main_street = form.main_street || address!.main_street
+  address!.cross_streets = form.cross_streets || address!.cross_streets
+  address!.neighborhood = form.neighborhood || address!.neighborhood
+  address!.postal_code = form.postal_code || address!.postal_code
+  address!.street_number = form.street_number || address!.street_number
+  address!.suite_number = form.suite_number || address!.suite_number
+}
+
+const saveEdit = async () => {
+  const validate = await v$.value?.$validate()
+
+  if (validate) {
+    updateAddress()
+
+    form.reset()
+    form.clearErrors()
+    v$.value.$reset()
+    modal.value?.close()
+
+    editedAddressSnackbar.value?.show(true)
+  }
+}
+
+const cancelEdit = () => {
+
+}
 </script>
 
 <template>
-  <Modal id="edit-address-modal" not-cancellable>
+  <Modal
+    id="edit-address-modal"
+    not-cancellable
+  >
     <div slot="headline">Editar dirección agregada</div>
     <div slot="content">
       <div class="mb-6 flex flex-col gap-6">
         <TextField
           class="w-full flex-1"
           label="Calle principal"
-          :placeholder="addresses[Number(selectedAddress)]?.main_street"
+          :placeholder="selectedAddress?.main_street"
+          :error="form.errors.main_street"
           v-model="form.main_street"
         >
           <template #floating-icon>
@@ -51,7 +87,8 @@ watchEffect(() => {
         <TextField
           class="w-full flex-1"
           label="Calles adyacentes"
-          :placeholder="addresses[Number(selectedAddress)]?.cross_streets"
+          :placeholder="selectedAddress?.cross_streets"
+          :error="form.errors.cross_streets"
           v-model="form.cross_streets"
         >
           <template #floating-icon>
@@ -61,7 +98,8 @@ watchEffect(() => {
         <TextField
           class="w-full flex-[3]"
           label="Colonia"
-          :placeholder="addresses[Number(selectedAddress)]?.neighborhood"
+          :placeholder="selectedAddress?.neighborhood"
+          :error="form.errors.neighborhood"
           v-model="form.neighborhood"
         >
           <template #floating-icon>
@@ -71,7 +109,8 @@ watchEffect(() => {
         <TextField
           class="w-full flex-[2]"
           label="Código postal"
-          :placeholder="addresses[Number(selectedAddress)]?.postal_code"
+          :placeholder="selectedAddress?.postal_code"
+          :error="form.errors.postal_code"
           v-model="form.postal_code"
         >
           <template #floating-icon>
@@ -82,7 +121,8 @@ watchEffect(() => {
           <TextField
             class="w-full flex-1"
             label="Número Exterior"
-            :placeholder="addresses[Number(selectedAddress)]?.street_number"
+            :placeholder="selectedAddress?.street_number"
+            :error="form.errors.street_number"
             v-model="form.street_number"
           >
             <template #floating-icon>
@@ -92,7 +132,8 @@ watchEffect(() => {
           <TextField
             class="w-full flex-1"
             label="Número interior"
-            :placeholder="addresses[Number(selectedAddress)]?.suite_number"
+            :placeholder="selectedAddress?.suite_number"
+            :error="form.errors.suite_number"
             v-model="form.suite_number"
           >
             <template #floating-icon>
@@ -104,11 +145,21 @@ watchEffect(() => {
     </div>
     <div slot="actions">
       <md-text-button @click="modal?.close">Cancelar</md-text-button>
-      <md-text-button @click="">Guardar</md-text-button>
+      <md-text-button @click="saveEdit">Guardar cambios</md-text-button>
     </div>
   </Modal>
 
-  <Modal>
+  <Modal type="alert">
+    <md-elevation />
     <div slot="headline">Cancelar edición</div>
+    <div slot="content">Los cambios realizados aún no han sido guardados y se descartarán, ¿deseas continuar?</div>
+    <div slot="actions">
+      <md-text-button @click="">Cancelar</md-text-button>
+      <md-text-button @click="">Aceptar</md-text-button>
+    </div>
   </Modal>
+
+  <Snackbar ref="editedAddressSnackbar" close-button>
+    <template #content>Dirección modificada correctamente.</template>
+  </Snackbar>
 </template>
