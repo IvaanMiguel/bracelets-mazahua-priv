@@ -1,13 +1,22 @@
-import { Validation } from '@vuelidate/core'
-import { Ref } from 'vue'
+import { InertiaForm } from '@inertiajs/vue3'
+import { ValidationArgs } from '@vuelidate/core'
+import useVuelidate from '@vuelidate/core'
+import { watch } from 'vue'
 
-export function useFormErrors(validation: Ref<Validation>, form: any) {
-  const setErrors = () => {
+export function useFormErrors<
+  T extends { [key in keyof ValidationArgs]: any },
+  F extends { [key in keyof T]: any },
+>(
+  rules: T,
+  form: InertiaForm<F>
+) {
+  const v$ = useVuelidate(rules, form)
+
+  watch(v$, () => {
     for (const key in form.data()) {
-      console.log(validation.value[key].$errors[0]?.$message)
-      form.setError(key, validation.value[key].$errors[0]?.$message)
+      form.setError(key, v$.value[key].$errors[0]?.$message)
     }
-  }
+  })
 
-  return { setErrors }
+  return { v$ }
 }
