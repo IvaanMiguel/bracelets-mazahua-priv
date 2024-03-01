@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { MdDialog } from '@material/web/dialog/dialog'
-import { Address } from '@/types/customers'
+import { IdAddress } from '@/types/customers'
 
 import '@material/web/divider/divider'
 import '@material/web/iconbutton/icon-button'
@@ -16,21 +16,21 @@ import Snackbar from '@/Components/Snackbar.vue'
 import RemoveAddedAddress from './RemoveAddedAddress.vue'
 
 const addedAddressSnackbar = ref<typeof Snackbar>()
-const selectedAddress = ref<number | null>(null)
-const addresses = reactive<(Address & { id: number })[]>([])
+const selectedAddress = ref<IdAddress | null>(null)
+const addresses = reactive<IdAddress[]>([])
 let incrementalId = 0
 
 const { modal: removeAddressModal } = useModal('#remove-address-modal')
 const { modal: editAddressModal } = useModal('#edit-address-modal')
 
-const addAddress = (address: Address & { id: number }) => {
+const addAddress = (address: IdAddress) => {
   address.id = incrementalId
   addresses.push(address)
   incrementalId += 1
   addedAddressSnackbar.value?.show(true)
 }
 
-const createAddressDetails = (address: Address) => {
+const createAddressDetails = (address: IdAddress) => {
   const { cross_streets, street_number, suite_number } = address
   const addressDetails: (string | null)[] = [
     cross_streets,
@@ -41,8 +41,8 @@ const createAddressDetails = (address: Address) => {
   return addressDetails.join(', ')
 }
 
-const openModal = (modal: MdDialog | null, addressId: number) => {
-  selectedAddress.value = addressId
+const openModal = (modal: MdDialog | null, address: IdAddress) => {
+  selectedAddress.value = address
   modal?.show()
 }
 
@@ -87,13 +87,13 @@ defineExpose({
           {{ createAddressDetails(address) }}
         </span>
         <div slot="end">
-          <md-icon-button @click="openModal(editAddressModal, address.id)">
+          <md-icon-button @click="openModal(editAddressModal, address)">
             <Icon>edit</Icon>
           </md-icon-button>
           <md-icon-button
             id="remove-button"
             class="ms-4"
-            @click="openModal(removeAddressModal, address.id)"
+            @click="openModal(removeAddressModal, address)"
           >
             <Icon>remove</Icon>
           </md-icon-button>
@@ -105,7 +105,7 @@ defineExpose({
   <RemoveAddedAddress
     :addresses="addresses"
     :selected-address="selectedAddress"
-    @unselect-address="selectedAddress = null"
+    @unselect-address="() => { selectedAddress = null }"
   />
 
   <EditAddedAddressForm
