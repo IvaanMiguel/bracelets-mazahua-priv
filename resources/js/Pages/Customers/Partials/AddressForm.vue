@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import { Address } from '@/types/customers'
 
+import '@material/web/button/filled-tonal-button'
+
 import { useForm } from '@inertiajs/vue3'
-import useVuelidate from '@vuelidate/core'
-import {
-  integer,
-  maxLength,
-  minLength,
-  minValue,
-  numeric,
-  required,
-} from '@vuelidate/validators'
+import { addressRules } from '@/rules/address'
 
 import { useFormErrors } from '@/composables/useFormErrors'
 
@@ -33,45 +27,19 @@ const form = useForm<Address>({
   suite_number: '',
 })
 
-const rules = {
-  main_street: { required, minLength: minLength(3), maxLength: maxLength(255) },
-  cross_streets: { minLength: minLength(3), maxLength: maxLength(255) },
-  neighborhood: {
-    required,
-    minLength: minLength(3),
-    maxLength: maxLength(255),
-  },
-  postal_code: {
-    required,
-    numeric,
-    integer,
-    minValue: minValue(1),
-    minLength: minLength(5),
-    maxLength: maxLength(5),
-  },
-  street_number: {
-    numeric,
-    integer,
-    minValue: minValue(1),
-    minLength: minLength(1),
-  },
-  suite_number: {
-    numeric,
-    integer,
-    minValue: minValue(1),
-    minLength: minLength(1),
-  },
-}
-
-const v$ = useVuelidate(rules, form)
-const { setErrors } = useFormErrors(v$, form)
+const { v$ } = useFormErrors(addressRules, form)
 
 const addressesList = ref<typeof AddedAddressesList | null>(null)
 
 const validateAddress = async () => {
   const validate = await v$.value.$validate()
 
-  validate ? addressesList.value?.addAddress({ ...form.data() }) : setErrors()
+  if (validate) {
+    addressesList.value?.addAddress({ ...form.data() })
+    form.reset()
+    form.clearErrors()
+    v$.value.$reset()
+  }
 }
 
 defineExpose({
