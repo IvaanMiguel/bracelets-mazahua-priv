@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { MdDialog } from '@material/web/dialog/dialog.js'
 import '@material/web/dialog/dialog'
-import { MdDialog } from '@material/web/dialog/dialog'
-
-import { onUnmounted, onMounted, ref } from 'vue'
+import { useEventListener } from '@vueuse/core'
+import { ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -15,23 +15,17 @@ const props = withDefaults(
 
 const modal = ref<MdDialog | null>(null)
 
-const preventCancel = (e: Event) => e.preventDefault()
-
-onMounted(() => {
+useEventListener(modal, 'cancel', (e) => {
   if (props.notCancellable) {
-    modal.value?.addEventListener('cancel', preventCancel)
+    e.preventDefault()
   }
-})
-
-onUnmounted(() => {
-  modal.value?.removeEventListener('cancel', preventCancel)
 })
 </script>
 
 <template>
   <Teleport to="body">
     <md-dialog
-      class='max-h-[85%]'
+      class="max-h-[90%]"
       v-bind="$attrs"
       ref="modal"
     >
