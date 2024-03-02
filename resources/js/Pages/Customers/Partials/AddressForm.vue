@@ -4,7 +4,7 @@ import { Address } from '@/types/customers'
 import '@material/web/button/filled-tonal-button'
 
 import { useForm } from '@inertiajs/vue3'
-import { storeAddressRules } from '@/rules/address'
+import { addressRules } from '@/rules/address'
 
 import { useFormErrors } from '@/composables/useFormErrors'
 
@@ -27,7 +27,7 @@ const form = useForm<Address>({
   suite_number: '',
 })
 
-const { v$ } = useFormErrors(storeAddressRules, form)
+const { v$ } = useFormErrors(addressRules, form)
 
 const addressesList = ref<typeof AddedAddressesList | null>(null)
 
