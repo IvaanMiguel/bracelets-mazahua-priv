@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Address, IdAddress } from '@/types/customers'
 
+import { useEventListener } from '@vueuse/core'
 import { useForm } from '@inertiajs/vue3'
-import { editAddressRules } from '@/rules/address'
+import { addressRules } from '@/rules/address'
 
 import { useFormErrors } from '@/composables/useFormErrors'
 import { useModal } from '@/composables/useModal'
@@ -26,10 +27,16 @@ const form = useForm<Address>({
   street_number: '',
   suite_number: '',
 })
+const { v$ } = useFormErrors(addressRules, form, { $stopPropagation: true })
+const { modal: editAddressModal } = useModal('#edit-address-modal')
+const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
 
-const { v$ } = useFormErrors(editAddressRules, form)
-const { modal } = useModal('#edit-address-modal')
-
+// Flag to know when changes are discarded.
+const cancelledEdit = ref(false)
+// Flag to know when to not refresh modal form.
+const recoverForm = ref(false)
+// Flag to know when changes are saved.
+const savedChanges = ref(false)
 const editedAddressSnackbar = ref<typeof Snackbar>()
 
 const updateAddress = () => {
@@ -54,15 +61,53 @@ const saveEdit = async () => {
     form.reset()
     form.clearErrors()
     v$.value.$reset()
-    modal.value?.close()
+    editAddressModal.value?.close()
+
+    savedChanges.value = true
 
     editedAddressSnackbar.value?.show(true)
   }
 }
 
-const cancelEdit = () => {
-
+const notCancelEdit = () => {
+  cancelEditModal.value?.close()
+  recoverForm.value = true
 }
+
+const cancelEdit = () => {
+  cancelledEdit.value = true
+  cancelEditModal.value?.close()
+}
+
+useEventListener(editAddressModal, 'open', () => {
+  if (recoverForm.value) return
+
+  form.main_street = props.selectedAddress?.main_street || ''
+  form.cross_streets = props.selectedAddress?.cross_streets || ''
+  form.neighborhood = props.selectedAddress?.neighborhood || ''
+  form.postal_code = props.selectedAddress?.postal_code || ''
+  form.street_number = props.selectedAddress?.street_number || ''
+  form.suite_number = props.selectedAddress?.suite_number || ''
+})
+
+useEventListener(editAddressModal, 'close', () => {
+  if (!savedChanges.value) {
+    cancelEditModal.value?.show()
+  } else {
+    savedChanges.value = false
+  }
+  recoverForm.value = false
+})
+
+useEventListener(cancelEditModal, 'close', () => {
+  if (!cancelledEdit.value) {
+    editAddressModal.value?.show()
+  }
+})
+
+useEventListener(cancelEditModal, 'closed', () => {
+  cancelledEdit.value = false
+})
 </script>
 
 <template>
@@ -76,7 +121,6 @@ const cancelEdit = () => {
         <TextField
           class="w-full flex-1"
           label="Calle principal"
-          :placeholder="selectedAddress?.main_street"
           :error="form.errors.main_street"
           v-model="form.main_street"
         >
@@ -87,7 +131,6 @@ const cancelEdit = () => {
         <TextField
           class="w-full flex-1"
           label="Calles adyacentes"
-          :placeholder="selectedAddress?.cross_streets"
           :error="form.errors.cross_streets"
           v-model="form.cross_streets"
         >
@@ -98,7 +141,6 @@ const cancelEdit = () => {
         <TextField
           class="w-full flex-[3]"
           label="Colonia"
-          :placeholder="selectedAddress?.neighborhood"
           :error="form.errors.neighborhood"
           v-model="form.neighborhood"
         >
@@ -109,7 +151,6 @@ const cancelEdit = () => {
         <TextField
           class="w-full flex-[2]"
           label="Código postal"
-          :placeholder="selectedAddress?.postal_code"
           :error="form.errors.postal_code"
           v-model="form.postal_code"
         >
@@ -121,7 +162,6 @@ const cancelEdit = () => {
           <TextField
             class="w-full flex-1"
             label="Número Exterior"
-            :placeholder="selectedAddress?.street_number"
             :error="form.errors.street_number"
             v-model="form.street_number"
           >
@@ -132,7 +172,6 @@ const cancelEdit = () => {
           <TextField
             class="w-full flex-1"
             label="Número interior"
-            :placeholder="selectedAddress?.suite_number"
             :error="form.errors.suite_number"
             v-model="form.suite_number"
           >
@@ -144,22 +183,31 @@ const cancelEdit = () => {
       </div>
     </div>
     <div slot="actions">
-      <md-text-button @click="modal?.close">Cancelar</md-text-button>
+      <md-text-button @click="editAddressModal?.close">Cancelar</md-text-button>
       <md-text-button @click="saveEdit">Guardar cambios</md-text-button>
     </div>
   </Modal>
 
-  <Modal type="alert">
-    <md-elevation />
+  <Modal
+    id="cancel-edit-modal"
+    type="alert"
+  >
+    <Icon slot="icon">edit_off</Icon>
     <div slot="headline">Cancelar edición</div>
-    <div slot="content">Los cambios realizados aún no han sido guardados y se descartarán, ¿deseas continuar?</div>
+    <div slot="content">
+      Los cambios realizados aún no han sido guardados y se descartarán, ¿deseas
+      continuar?
+    </div>
     <div slot="actions">
-      <md-text-button @click="">Cancelar</md-text-button>
-      <md-text-button @click="">Aceptar</md-text-button>
+      <md-text-button @click="notCancelEdit">Cancelar</md-text-button>
+      <md-text-button @click="cancelEdit">Aceptar</md-text-button>
     </div>
   </Modal>
 
-  <Snackbar ref="editedAddressSnackbar" close-button>
+  <Snackbar
+    ref="editedAddressSnackbar"
+    close-button
+  >
     <template #content>Dirección modificada correctamente.</template>
   </Snackbar>
 </template>
