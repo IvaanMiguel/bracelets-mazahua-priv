@@ -7,8 +7,9 @@ import {
   required,
 } from '@vuelidate/validators'
 
-export const editAddressRules = {
+export const addressRules = {
   main_street: {
+    required,
     minLength: minLength(3),
     maxLength: maxLength(255),
   },
@@ -17,10 +18,12 @@ export const editAddressRules = {
     maxLength: maxLength(255),
   },
   neighborhood: {
+    required,
     minLength: minLength(3),
     maxLength: maxLength(255),
   },
   postal_code: {
+    required,
     numeric,
     integer,
     minValue: minValue(1),
@@ -39,22 +42,4 @@ export const editAddressRules = {
     minValue: minValue(1),
     minLength: minLength(1),
   },
-}
-
-export const storeAddressRules = {
-  main_street: {
-    required,
-    ...editAddressRules.main_street,
-  },
-  cross_streets: { ...editAddressRules.cross_streets },
-  neighborhood: {
-    required,
-    ...editAddressRules.neighborhood,
-  },
-  postal_code: {
-    required,
-    ...editAddressRules.postal_code,
-  },
-  street_number: { ...editAddressRules.street_number },
-  suite_number: { ...editAddressRules.suite },
 }
