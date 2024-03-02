@@ -1,5 +1,5 @@
 import { InertiaForm } from '@inertiajs/vue3'
-import { ValidationArgs } from '@vuelidate/core'
+import { GlobalConfig, ValidationArgs } from '@vuelidate/core'
 import useVuelidate from '@vuelidate/core'
 import { watch } from 'vue'
 
@@ -8,9 +8,10 @@ export function useFormErrors<
   F extends { [key in keyof T]: any },
 >(
   rules: T,
-  form: InertiaForm<F>
+  form: InertiaForm<F>,
+  globalConfig?: GlobalConfig
 ) {
-  const v$ = useVuelidate(rules, form)
+  const v$ = useVuelidate(rules, form, globalConfig)
 
   watch(v$, () => {
     for (const key in form.data()) {
