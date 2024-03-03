@@ -40,15 +40,17 @@ class CustomerController extends Controller
 
         $request['customer_id'] = $customer->id;
 
-        Address::create($request->only([
-            'main_street',
-            'cross_streets',
-            'neighborhood',
-            'postal_code',
-            'street_number',
-            'suite_number',
-            'customer_id'
-        ]));
+        if ($request->filled(['main_street', 'neighborhood', 'postal_code'])) {
+            Address::create($request->only([
+                'main_street',
+                'cross_streets',
+                'neighborhood',
+                'postal_code',
+                'street_number',
+                'suite_number',
+                'customer_id'
+            ]));
+        }
 
         if (count($request->addresses)) {
             $addresses = array_map(function ($item) use ($customer) {
