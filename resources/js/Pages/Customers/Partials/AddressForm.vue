@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Address } from '@/types/customers'
+import { Address, IdAddress } from '@/types/customers'
 
 import '@material/web/button/filled-tonal-button'
 
@@ -8,7 +8,7 @@ import { addressRules } from '@/rules/address'
 
 import { useFormErrors } from '@/composables/useFormErrors'
 
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import AddedAddressesList from './AddedAddressesList.vue'
 import Form from '@/Components/Form.vue'
 import Icon from '@/Components/Icon.vue'
@@ -18,6 +18,7 @@ defineProps<{
   submit: (e?: Event) => void
 }>()
 
+const addresses = reactive<IdAddress[]>([])
 const form = useForm<Address>({
   main_street: '',
   cross_streets: '',
@@ -42,8 +43,14 @@ const validateAddress = async () => {
   }
 }
 
+const resetAddresses = () => {
+  addresses.splice(0, addresses.length)
+}
+
 defineExpose({
   form,
+  addresses,
+  resetAddresses,
 })
 </script>
 
@@ -64,8 +71,10 @@ defineExpose({
         class="w-full flex-1"
         label="Calle principal"
         name="main_street"
-        :error="form.errors.main_street"
         required
+        minlength="3"
+        maxlength="255"
+        :error="form.errors.main_street"
         v-model="form.main_street"
       >
         <template #floating-icon>
@@ -75,6 +84,8 @@ defineExpose({
       <TextField
         class="w-full flex-1"
         label="Calles adyacentes"
+        minlength="3"
+        maxlength="255"
         :error="form.errors.cross_streets"
         v-model="form.cross_streets"
       >
@@ -88,8 +99,10 @@ defineExpose({
         <TextField
           class="w-full flex-[3]"
           label="Colonia"
-          :error="form.errors.neighborhood"
           required
+          minlength="3"
+          maxlength="255"
+          :error="form.errors.neighborhood"
           v-model="form.neighborhood"
         >
           <template #floating-icon>
@@ -99,8 +112,11 @@ defineExpose({
         <TextField
           class="w-full flex-[2]"
           label="Código postal"
-          :error="form.errors.postal_code"
           required
+          min="0"
+          minlength="5"
+          maxlength="5"
+          :error="form.errors.postal_code"
           v-model="form.postal_code"
         >
           <template #floating-icon>
@@ -112,6 +128,7 @@ defineExpose({
         <TextField
           class="w-full flex-1"
           label="Número Exterior"
+          min="0"
           :error="form.errors.street_number"
           v-model="form.street_number"
         >
@@ -122,6 +139,7 @@ defineExpose({
         <TextField
           class="w-full flex-1"
           label="Número interior"
+          min="0"
           :error="form.errors.suite_number"
           v-model="form.suite_number"
         >
@@ -132,5 +150,9 @@ defineExpose({
       </div>
     </div>
   </Form>
-  <AddedAddressesList ref="addressesList" />
+
+  <AddedAddressesList
+    ref="addressesList"
+    :addresses="addresses"
+  />
 </template>
