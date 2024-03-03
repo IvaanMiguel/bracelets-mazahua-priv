@@ -22,11 +22,16 @@ const submit = () => {
     route('customers.store'),
     {
       ...personalInfoForm.value?.form.data(),
+      ...addressForm.value?.form.data(),
+      addresses: addressForm.value?.addresses,
     },
     {
       onStart: () => (processing.value = true),
       onSuccess: () => {
         personalInfoForm.value?.form.reset()
+        addressForm.value?.form.reset()
+        addressForm.value?.resetAddresses()
+
         successSnackbar.value?.show(true)
       },
       onFinish: () => (processing.value = false),
@@ -46,7 +51,7 @@ const submit = () => {
     />
     <md-divider class="my-8" />
     <AddressForm
-      ref='addressForm'
+      ref="addressForm"
       :submit="submit"
     />
     <div class="text-end">
