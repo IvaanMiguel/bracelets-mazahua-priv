@@ -11,9 +11,11 @@ const props = withDefaults(
     action?: string
     onAction?: Function
     closeButton?: boolean
+    time?: number
   }>(),
   {
     closeButton: false,
+    time: 3
   }
 )
 
@@ -35,7 +37,7 @@ const closeOnTimeout = () => isVisible.value = false
 
 watch(isVisible, () => {
   if (isVisible.value) {
-    closeOnTimeoutId = setTimeout(closeOnTimeout, 5000)
+    closeOnTimeoutId = setTimeout(closeOnTimeout, props.time * 1000)
 
     return
   }
