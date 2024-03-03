@@ -1,45 +1,39 @@
 import {
   integer,
-  maxLength,
   minLength,
   minValue,
   numeric,
   required,
 } from '@vuelidate/validators'
+import { betweenLength, length } from './validators'
 
 export const addressRules = {
   main_street: {
     required,
-    minLength: minLength(3),
-    maxLength: maxLength(255),
+    lengthBetween: betweenLength(3, 100),
   },
   cross_streets: {
-    minLength: minLength(3),
-    maxLength: maxLength(255),
+    lengthBetween: betweenLength(3, 255),
   },
   neighborhood: {
     required,
-    minLength: minLength(3),
-    maxLength: maxLength(255),
+    lengthBetween: betweenLength(3, 255),
   },
   postal_code: {
     required,
     numeric,
     integer,
-    minValue: minValue(1),
-    minLength: minLength(5),
-    maxLength: maxLength(5),
+    minValue: minValue(0),
+    length: length(5),
   },
   street_number: {
     numeric,
     integer,
-    minValue: minValue(1),
-    minLength: minLength(1),
+    minValue: minValue(0),
   },
   suite_number: {
     numeric,
     integer,
-    minValue: minValue(1),
-    minLength: minLength(1),
+    minValue: minValue(0),
   },
 }
