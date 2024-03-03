@@ -93,6 +93,9 @@ useEventListener(editAddressModal, 'open', () => {
         <TextField
           class="w-full flex-1"
           label="Calle principal"
+          required
+          minlength="3"
+          maxlength="255"
           :error="form.errors.main_street"
           v-model="form.main_street"
         >
@@ -103,6 +106,8 @@ useEventListener(editAddressModal, 'open', () => {
         <TextField
           class="w-full flex-1"
           label="Calles adyacentes"
+          minlength="3"
+          maxlength="255"
           :error="form.errors.cross_streets"
           v-model="form.cross_streets"
         >
@@ -113,6 +118,9 @@ useEventListener(editAddressModal, 'open', () => {
         <TextField
           class="w-full flex-[3]"
           label="Colonia"
+          required
+          minlength="3"
+          maxlength="255"
           :error="form.errors.neighborhood"
           v-model="form.neighborhood"
         >
@@ -123,6 +131,10 @@ useEventListener(editAddressModal, 'open', () => {
         <TextField
           class="w-full flex-[2]"
           label="Código postal"
+          required
+          min="0"
+          minlength="5"
+          maxlength="5"
           :error="form.errors.postal_code"
           v-model="form.postal_code"
         >
@@ -134,6 +146,7 @@ useEventListener(editAddressModal, 'open', () => {
           <TextField
             class="w-full flex-1"
             label="Número Exterior"
+            min="0"
             :error="form.errors.street_number"
             v-model="form.street_number"
           >
@@ -144,6 +157,7 @@ useEventListener(editAddressModal, 'open', () => {
           <TextField
             class="w-full flex-1"
             label="Número interior"
+            min="0"
             :error="form.errors.suite_number"
             v-model="form.suite_number"
           >
