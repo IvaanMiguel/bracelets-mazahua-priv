@@ -31,12 +31,6 @@ const { v$ } = useFormErrors(addressRules, form, { $stopPropagation: true })
 const { modal: editAddressModal } = useModal('#edit-address-modal')
 const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
 
-// Flag to know when changes are discarded.
-const cancelledEdit = ref(false)
-// Flag to know when to not refresh modal form.
-const recoverForm = ref(false)
-// Flag to know when changes are saved.
-const savedChanges = ref(false)
 const editedAddressSnackbar = ref<typeof Snackbar>()
 
 const updateAddress = () => {
@@ -44,15 +38,15 @@ const updateAddress = () => {
     (address) => address.id === props.selectedAddress?.id
   )
 
-  address!.main_street = form.main_street || address!.main_street
-  address!.cross_streets = form.cross_streets || address!.cross_streets
-  address!.neighborhood = form.neighborhood || address!.neighborhood
-  address!.postal_code = form.postal_code || address!.postal_code
-  address!.street_number = form.street_number || address!.street_number
-  address!.suite_number = form.suite_number || address!.suite_number
+  address!.main_street = form.main_street || ''
+  address!.cross_streets = form.cross_streets || ''
+  address!.neighborhood = form.neighborhood || ''
+  address!.postal_code = form.postal_code || ''
+  address!.street_number = form.street_number || ''
+  address!.suite_number = form.suite_number || ''
 }
 
-const saveEdit = async () => {
+const saveChanges = async () => {
   const validate = await v$.value?.$validate()
 
   if (validate) {
@@ -63,24 +57,21 @@ const saveEdit = async () => {
     v$.value.$reset()
     editAddressModal.value?.close()
 
-    savedChanges.value = true
-
     editedAddressSnackbar.value?.show(true)
   }
 }
 
-const notCancelEdit = () => {
+const discardChanges = () => {
   cancelEditModal.value?.close()
-  recoverForm.value = true
-}
+  editAddressModal.value?.close()
 
-const cancelEdit = () => {
-  cancelledEdit.value = true
-  cancelEditModal.value?.close()
+  form.reset()
+  form.clearErrors()
+  v$.value.$reset()
 }
 
 useEventListener(editAddressModal, 'open', () => {
-  if (recoverForm.value) return
+  form.clearErrors()
 
   form.main_street = props.selectedAddress?.main_street || ''
   form.cross_streets = props.selectedAddress?.cross_streets || ''
@@ -88,25 +79,6 @@ useEventListener(editAddressModal, 'open', () => {
   form.postal_code = props.selectedAddress?.postal_code || ''
   form.street_number = props.selectedAddress?.street_number || ''
   form.suite_number = props.selectedAddress?.suite_number || ''
-})
-
-useEventListener(editAddressModal, 'close', () => {
-  if (!savedChanges.value) {
-    cancelEditModal.value?.show()
-  } else {
-    savedChanges.value = false
-  }
-  recoverForm.value = false
-})
-
-useEventListener(cancelEditModal, 'close', () => {
-  if (!cancelledEdit.value) {
-    editAddressModal.value?.show()
-  }
-})
-
-useEventListener(cancelEditModal, 'closed', () => {
-  cancelledEdit.value = false
 })
 </script>
 
@@ -183,8 +155,8 @@ useEventListener(cancelEditModal, 'closed', () => {
       </div>
     </div>
     <div slot="actions">
-      <md-text-button @click="editAddressModal?.close">Cancelar</md-text-button>
-      <md-text-button @click="saveEdit">Guardar cambios</md-text-button>
+      <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
+      <md-text-button @click="saveChanges">Guardar cambios</md-text-button>
     </div>
   </Modal>
 
@@ -199,8 +171,8 @@ useEventListener(cancelEditModal, 'closed', () => {
       continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="notCancelEdit">Cancelar</md-text-button>
-      <md-text-button @click="cancelEdit">Aceptar</md-text-button>
+      <md-text-button @click="cancelEditModal?.close">Cancelar</md-text-button>
+      <md-text-button @click="discardChanges">Aceptar</md-text-button>
     </div>
   </Modal>
 
