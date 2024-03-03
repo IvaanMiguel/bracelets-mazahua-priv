@@ -38,8 +38,10 @@ defineExpose({
       <TextField
         class="w-full flex-1"
         label="Nombre(s)"
-        :error="$page.props.errors.name"
         required
+        minlength="1"
+        maxlength="100"
+        :error="$page.props.errors.name"
         v-model="form.name"
       >
         <template #floating-icon>
@@ -49,9 +51,11 @@ defineExpose({
       <TextField
         class="w-full flex-1"
         label="Apellido(s)"
-        :error="$page.props.errors.last_name"
         required
+        minlength="1"
+        maxlength="100"
         empty-floating-icon
+        :error="$page.props.errors.last_name"
         v-model="form.last_name"
       />
     </div>
@@ -59,8 +63,11 @@ defineExpose({
       <TextField
         class="w-full flex-1"
         label="Número celular"
-        :error="$page.props.errors.phone_number"
+        type="tel"
         required
+        minlength="10"
+        maxlength="10"
+        :error="$page.props.errors.phone_number"
         v-model="form.phone_number"
       >
         <template #floating-icon>
@@ -70,6 +77,8 @@ defineExpose({
       <TextField
         class="w-full flex-1"
         label="Email"
+        type="email"
+        maxlength="255"
         :error="$page.props.errors.email"
         v-model="form.email"
       >
