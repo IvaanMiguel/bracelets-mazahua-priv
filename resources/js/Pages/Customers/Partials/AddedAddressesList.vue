@@ -9,15 +9,18 @@ import '@material/web/list/list-item'
 
 import { useModal } from '@/composables/useModal'
 
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import EditAddedAddressForm from './EditAddedAddressForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Snackbar from '@/Components/Snackbar.vue'
 import RemoveAddedAddress from './RemoveAddedAddress.vue'
 
+const props = defineProps<{
+  addresses: IdAddress[]
+}>()
+
 const addedAddressSnackbar = ref<typeof Snackbar>()
 const selectedAddress = ref<IdAddress | null>(null)
-const addresses = reactive<IdAddress[]>([])
 let incrementalId = 0
 
 const { modal: removeAddressModal } = useModal('#remove-address-modal')
@@ -25,7 +28,7 @@ const { modal: editAddressModal } = useModal('#edit-address-modal')
 
 const addAddress = (address: IdAddress) => {
   address.id = incrementalId
-  addresses.push(address)
+  props.addresses.push(address)
   incrementalId += 1
   addedAddressSnackbar.value?.show(true)
 }
@@ -105,7 +108,7 @@ defineExpose({
   <RemoveAddedAddress
     :addresses="addresses"
     :selected-address="selectedAddress"
-    @unselect-address="() => { selectedAddress = null }"
+    @unselect-address="() => (selectedAddress = null)"
   />
 
   <EditAddedAddressForm
