@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCustomerRequest;
+use App\Models\Address;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,8 +36,31 @@ class CustomerController extends Controller
 
     public function store(StoreCustomerRequest $request)
     {
-        Customer::create($request->all());
+        $customer = Customer::create($request->all());
 
+        $request['customer_id'] = $customer->id;
+
+        Address::create($request->only([
+            'main_street',
+            'cross_streets',
+            'neighborhood',
+            'postal_code',
+            'street_number',
+            'suite_number',
+            'customer_id'
+        ]));
+
+        if (count($request->addresses)) {
+            $addresses = array_map(function ($item) use ($customer) {
+                $item['customer_id'] = $customer->id;
+                $item['id'] = 0;
+    
+                return $item;
+            }, $request->addresses);
+
+            Address::insert($addresses);
+        }
+        
         return back();
     }
 
