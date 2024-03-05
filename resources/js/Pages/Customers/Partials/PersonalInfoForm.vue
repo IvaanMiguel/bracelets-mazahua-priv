@@ -3,6 +3,9 @@ import { Customer } from '@/types/customers'
 
 import { useForm } from '@inertiajs/vue3'
 
+import { customerRules } from '@/rules/customer'
+import { useFormErrors } from '@/composables/useFormErrors'
+
 import DatePicker from '@/Components/DatePicker.vue'
 import Form from '@/Components/Form.vue'
 import Icon from '@/Components/Icon.vue'
@@ -19,6 +22,7 @@ const form = useForm<Customer>({
   email: '',
   phone_number: '',
 })
+useFormErrors(customerRules, form, { $registerAs: 'personalInfo' })
 
 defineExpose({
   form,
@@ -42,7 +46,7 @@ defineExpose({
         required
         minlength="1"
         maxlength="100"
-        :error="$page.props.errors.name"
+        :error="form.errors.name"
         v-model="form.name"
       >
         <template #floating-icon>
@@ -56,7 +60,7 @@ defineExpose({
         minlength="1"
         maxlength="100"
         empty-floating-icon
-        :error="$page.props.errors.last_name"
+        :error="form.errors.last_name"
         v-model="form.last_name"
       />
     </div>
@@ -68,7 +72,7 @@ defineExpose({
         required
         minlength="10"
         maxlength="10"
-        :error="$page.props.errors.phone_number"
+        :error="form.errors.phone_number"
         v-model="form.phone_number"
       >
         <template #floating-icon>
@@ -80,7 +84,7 @@ defineExpose({
         label="Email"
         type="email"
         maxlength="255"
-        :error="$page.props.errors.email"
+        :error="form.errors.email"
         v-model="form.email"
       >
         <template #floating-icon>
@@ -89,7 +93,10 @@ defineExpose({
       </TextField>
     </div>
     <div class="md:w-[calc(50%-(1.5rem/2))]">
-      <DatePicker v-model="form.birth_date"> </DatePicker>
+      <DatePicker
+        v-model="form.birth_date"
+        :error="form.errors.birth_date"
+      />
     </div>
   </Form>
 </template>

@@ -28,7 +28,7 @@ const form = useForm<Address>({
   suite_number: '',
 })
 
-const { v$ } = useFormErrors(addressRules, form)
+const { v$ } = useFormErrors(addressRules, form, { $registerAs: 'address' })
 
 const addressesList = ref<InstanceType<typeof AddedAddressesList>>()
 
@@ -38,7 +38,6 @@ const validateAddress = async () => {
   if (validate) {
     addressesList.value?.addAddress({ id: -1, ...form.data() })
     form.reset()
-    form.clearErrors()
     v$.value.$reset()
   }
 }

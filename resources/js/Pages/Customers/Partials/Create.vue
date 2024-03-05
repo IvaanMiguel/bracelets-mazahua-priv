@@ -10,14 +10,27 @@ import PersonalInfoForm from './PersonalInfoForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Snackbar from '@/Components/Snackbar.vue'
 import AddressForm from './AddressForm.vue'
+import useVuelidate from '@vuelidate/core'
+
+const v = useVuelidate()
 
 const successSnackbar = ref<InstanceType<typeof Snackbar>>()
 const personalInfoForm = ref<InstanceType<typeof PersonalInfoForm>>()
 const addressForm = ref<InstanceType<typeof AddressForm>>()
-
 const processing = ref(false)
 
-const submit = () => {
+const submit = async () => {
+  let addressFormValidate = true
+  const personalInfoFormValidate = await (v.value.personalInfo.$validate() as Promise<boolean>)
+
+  if (addressForm.value?.addresses.length === 0 || addressForm.value?.form.isDirty) {
+    addressFormValidate = await (v.value.address.$validate() as Promise<boolean>)
+  } else {
+    v.value.address.$reset()
+  }
+
+  if (!addressFormValidate || !personalInfoFormValidate) return
+
   router.post(
     route('customers.store'),
     {
@@ -31,6 +44,8 @@ const submit = () => {
         personalInfoForm.value?.form.reset()
         addressForm.value?.form.reset()
         addressForm.value?.resetAddresses()
+
+        v.value.$reset()
 
         successSnackbar.value?.show(true)
       },
