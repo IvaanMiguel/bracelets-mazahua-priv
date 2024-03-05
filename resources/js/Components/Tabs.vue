@@ -2,7 +2,9 @@
 import '@material/web/tabs/tabs'
 import '@material/web/tabs/primary-tab'
 
-import { onMounted, onUnmounted, ref } from 'vue'
+import { useEventListener } from '@vueuse/core'
+
+import { onMounted, ref } from 'vue'
 import { MdTabs } from '@material/web/tabs/tabs'
 
 const tabs = ref<MdTabs | null>(null)
@@ -13,14 +15,10 @@ const tabsOnChange = () => {
   tabTranslation.value = `${-tabs.value!.activeTabIndex * 100}%`
 }
 
+useEventListener(tabs, 'change', tabsOnChange)
+
 onMounted(() => {
   tabsCount.value = tabs.value?.childElementCount
-
-  tabs.value?.addEventListener('change', tabsOnChange)
-})
-
-onUnmounted(() => {
-  tabs.value?.removeEventListener('change', tabsOnChange)
 })
 </script>
 
