@@ -40,11 +40,11 @@ class StoreCustomerRequest extends FormRequest
                 'string',
                 'numeric',
                 'integer',
-                'min:0',
+                'gte:0',
                 'digits:5'
             ],
-            'street_number' => ['bail', 'nullable', 'string', 'numeric', 'integer', 'min:0'],
-            'suite_number' => ['bail', 'nullable', 'string', 'numeric', 'integer', 'min:0'],
+            'street_number' => ['bail', 'nullable', 'string', 'numeric', 'integer', 'gte:0'],
+            'suite_number' => ['bail', 'nullable', 'string', 'numeric', 'integer', 'gte:0'],
         ];
 
         return [
