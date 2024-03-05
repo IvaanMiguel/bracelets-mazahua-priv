@@ -3,6 +3,7 @@ import { Customer } from '@/types/customers'
 
 import { useForm } from '@inertiajs/vue3'
 
+import DatePicker from '@/Components/DatePicker.vue'
 import Form from '@/Components/Form.vue'
 import Icon from '@/Components/Icon.vue'
 import TextField from '@/Components/TextField.vue'
@@ -14,7 +15,7 @@ defineProps<{
 const form = useForm<Customer>({
   name: '',
   last_name: '',
-  birth_date: '',
+  birth_date: '01/01/01',
   email: '',
   phone_number: '',
 })
@@ -87,16 +88,15 @@ defineExpose({
         </template>
       </TextField>
     </div>
-    <TextField
-      class="md:w-[calc(50%-(1.5rem/2))]"
-      type="date"
-      :error="$page.props.errors.birth_date"
-      label="Fecha de nacimiento"
-      v-model="form.birth_date"
-    >
-      <template #floating-icon>
-        <Icon>cake</Icon>
-      </template>
-    </TextField>
+    <div class="md:w-[calc(50%-(1.5rem/2))]">
+      <DatePicker v-model="form.birth_date"> </DatePicker>
+    </div>
   </Form>
 </template>
+
+<style>
+.dp-custom-input {
+  box-shadow: 0 0 6px #1976d2;
+  color: #1976d2;
+}
+</style>
