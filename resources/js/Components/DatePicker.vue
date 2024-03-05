@@ -17,7 +17,7 @@ const model = defineModel<ModelValue>({
   get: (v) => v || '2001/01/01',
 })
 
-const textfield = ref<InstanceType<typeof TextField> | null>(null)
+const textfield = ref<InstanceType<typeof TextField>>()
 const date = computed(() => new Date(`${model.value}`))
 
 const formatValue = () =>

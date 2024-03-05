@@ -31,7 +31,7 @@ const { v$ } = useFormErrors(addressRules, form, { $stopPropagation: true })
 const { modal: editAddressModal } = useModal('#edit-address-modal')
 const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
 
-const editedAddressSnackbar = ref<typeof Snackbar>()
+const editedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 
 const updateAddress = () => {
   const address = props.addresses.find(

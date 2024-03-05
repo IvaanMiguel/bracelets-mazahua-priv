@@ -11,9 +11,9 @@ import Icon from '@/Components/Icon.vue'
 import Snackbar from '@/Components/Snackbar.vue'
 import AddressForm from './AddressForm.vue'
 
-const successSnackbar = ref<typeof Snackbar | null>(null)
-const personalInfoForm = ref<typeof PersonalInfoForm | null>(null)
-const addressForm = ref<typeof AddressForm | null>(null)
+const successSnackbar = ref<InstanceType<typeof Snackbar>>()
+const personalInfoForm = ref<InstanceType<typeof PersonalInfoForm>>()
+const addressForm = ref<InstanceType<typeof AddressForm>>()
 
 const processing = ref(false)
 

@@ -30,13 +30,13 @@ const form = useForm<Address>({
 
 const { v$ } = useFormErrors(addressRules, form)
 
-const addressesList = ref<typeof AddedAddressesList | null>(null)
+const addressesList = ref<InstanceType<typeof AddedAddressesList>>()
 
 const validateAddress = async () => {
   const validate = await v$.value.$validate()
 
   if (validate) {
-    addressesList.value?.addAddress({ ...form.data() })
+    addressesList.value?.addAddress({ id: -1, ...form.data() })
     form.reset()
     form.clearErrors()
     v$.value.$reset()

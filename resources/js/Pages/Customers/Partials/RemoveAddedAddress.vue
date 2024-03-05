@@ -19,7 +19,7 @@ const emit = defineEmits<{
 
 const { modal } = useModal('#remove-address-modal')
 
-const removedAddressSnackbar = ref<typeof Snackbar>()
+const removedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 
 const removeAddress = () => {
   const i = props.addresses.findIndex(

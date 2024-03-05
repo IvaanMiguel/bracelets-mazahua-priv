@@ -19,7 +19,7 @@ const props = defineProps<{
   addresses: IdAddress[]
 }>()
 
-const addedAddressSnackbar = ref<typeof Snackbar>()
+const addedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 const selectedAddress = ref<IdAddress | null>(null)
 let incrementalId = 0
 
