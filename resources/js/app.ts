@@ -1,12 +1,13 @@
-import './bootstrap'
-import '../css/app.css'
+import './bootstrap';
+import '../css/app.css';
+import '@material/web/button/filled-button';
 
-import '@material/web/button/filled-button'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { createApp, DefineComponent, h } from 'vue';
 
-import { createApp, h, DefineComponent } from 'vue'
-import { createInertiaApp, Link } from '@inertiajs/vue3'
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
+import { createInertiaApp, Link } from '@inertiajs/vue3';
+
+import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 

@@ -1,6 +1,6 @@
 import {
-  helpers,
   email as _email,
+  helpers,
   integer as _integer,
   maxLength as _maxLength,
   numeric as _numeric,
