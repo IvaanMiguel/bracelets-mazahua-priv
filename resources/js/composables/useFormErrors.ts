@@ -11,7 +11,7 @@ export function useFormErrors<
 
   watch(() => v$.value.$errors, () => {
     for (const key in form.data()) {
-      form.setError(key, v$.value[key].$errors[0]?.$message)
+      form.setError(key, v$.value[key]?.$errors[0]?.$message)
     }
   })
 
