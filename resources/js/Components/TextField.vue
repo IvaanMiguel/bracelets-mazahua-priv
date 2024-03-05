@@ -1,25 +1,27 @@
 <script setup lang="ts">
 import '@material/web/textfield/outlined-text-field'
-// import '@material/web/textfield/filled-text-field'
 
+import { MdOutlinedTextField } from '@material/web/textfield/outlined-text-field'
+
+import { ref } from 'vue'
 import Icon from './Icon.vue'
 
 withDefaults(
   defineProps<{
-    // filled?: boolean
     emptyFloatingIcon?: boolean
     error?: string
   }>(),
   {
-    // filled: false,
     emptyFloatingIcon: false,
   }
 )
 
 const model = defineModel()
+const input = ref<MdOutlinedTextField | null>(null)
 
-// const onInput = (e: InputEvent) =>
-//   (model.value = (e.target as HTMLInputElement).value)
+defineExpose({
+  input,
+})
 </script>
 
 <template>
@@ -34,9 +36,8 @@ const model = defineModel()
     >
       <slot name="floating-icon" />
     </span>
-    <!-- :is="filled ? 'md-filled-text-field' : 'md-outlined-text-field'" -->
-    <!-- @input="onInput" -->
     <md-outlined-text-field
+      ref="input"
       class="!w-full"
       :error="error"
       :error-text="error"
