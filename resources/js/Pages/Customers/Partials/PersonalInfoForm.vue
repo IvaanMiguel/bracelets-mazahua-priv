@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { Customer } from '@/types/customers'
-
-import { useForm } from '@inertiajs/vue3'
-
-import { customerRules } from '@/rules/customer'
-import { useFormErrors } from '@/composables/useFormErrors'
-
 import DatePicker from '@/Components/DatePicker.vue'
 import Form from '@/Components/Form.vue'
 import Icon from '@/Components/Icon.vue'
 import TextField from '@/Components/TextField.vue'
+import { useFormErrors } from '@/composables/useFormErrors'
+import { customerRules } from '@/rules/customer'
+import { Customer } from '@/types/customers'
+import { useForm } from '@inertiajs/vue3'
 
 defineProps<{
   submit: (e?: Event) => void

@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { CustomerListItem } from '@/types/customers'
-import { Pagination } from '@/types'
-
-import '@material/web/divider/divider'
-import '@material/web/list/list'
-import '@material/web/list/list-item'
-
+import Icon from '@/Components/Icon.vue'
 import Paginator from '@/Components/Paginator.vue'
 import SearchBar from '@/Components/SearchBar.vue'
-import Icon from '@/Components/Icon.vue'
+import { Pagination } from '@/types'
+import { CustomerListItem } from '@/types/customers'
 
 defineProps<{
   customers: Pagination<CustomerListItem>

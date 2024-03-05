@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { CustomerListItem } from '@/types/customers'
-import { Pagination } from '@/types'
-
-import '@material/web/tabs/primary-tab'
-
-import Create from './Partials/Create.vue'
 import Icon from '@/Components/Icon.vue'
-import CustomersList from './Partials/CustomersList.vue'
-import MainLayout from '@/Layouts/MainLayout.vue'
 import Tabs from '@/Components/Tabs.vue'
+import MainLayout from '@/Layouts/MainLayout.vue'
+import { Pagination } from '@/types'
+import { CustomerListItem } from '@/types/customers'
+import '@material/web/button/filled-button'
+import '@material/web/button/filled-tonal-button'
+import '@material/web/divider/divider'
+import '@material/web/elevation/elevation'
+import '@material/web/iconbutton/icon-button'
+import '@material/web/list/list'
+import '@material/web/list/list-item'
+import '@material/web/tabs/primary-tab'
+import Create from './Partials/Create.vue'
+import CustomersList from './Partials/CustomersList.vue'
 
 defineOptions({
   layout: MainLayout,

@@ -1,16 +1,11 @@
 <script setup lang="ts">
-import '@material/web/button/filled-button'
-import '@material/web/divider/divider'
-import '@material/web/elevation/elevation'
-
-import { router } from '@inertiajs/vue3'
-
-import { ref } from 'vue'
-import PersonalInfoForm from './PersonalInfoForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import AddressForm from './AddressForm.vue'
+import { router } from '@inertiajs/vue3'
 import useVuelidate from '@vuelidate/core'
+import { ref } from 'vue'
+import AddressForm from './AddressForm.vue'
+import PersonalInfoForm from './PersonalInfoForm.vue'
 
 const v = useVuelidate()
 

@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { Address, IdAddress } from '@/types/customers'
-
-import '@material/web/button/filled-tonal-button'
-
-import { useForm } from '@inertiajs/vue3'
-import { addressRules } from '@/rules/address'
-
-import { useFormErrors } from '@/composables/useFormErrors'
-
-import { reactive, ref } from 'vue'
-import AddedAddressesList from './AddedAddressesList.vue'
 import Form from '@/Components/Form.vue'
 import Icon from '@/Components/Icon.vue'
 import TextField from '@/Components/TextField.vue'
+import { useFormErrors } from '@/composables/useFormErrors'
+import { addressRules } from '@/rules/address'
+import { Address, IdAddress } from '@/types/customers'
+import { useForm } from '@inertiajs/vue3'
+import { reactive, ref } from 'vue'
+import AddedAddressesList from './AddedAddressesList.vue'
 
 defineProps<{
   submit: (e?: Event) => void

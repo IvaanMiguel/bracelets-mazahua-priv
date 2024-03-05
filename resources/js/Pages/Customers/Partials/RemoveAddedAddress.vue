@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { IdAddress } from '@/types/customers'
-
-import { useModal } from '@/composables/useModal'
-
-import { ref } from 'vue'
 import Icon from '@/Components/Icon.vue';
 import Modal from '@/Components/Modal.vue';
 import Snackbar from '@/Components/Snackbar.vue';
+import { useModal } from '@/composables/useModal';
+import { IdAddress } from '@/types/customers';
+import { ref } from 'vue';
 
 const props = defineProps<{
   addresses: IdAddress[]

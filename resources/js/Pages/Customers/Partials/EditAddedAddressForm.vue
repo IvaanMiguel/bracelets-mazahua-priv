@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { Address, IdAddress } from '@/types/customers'
-
-import { useEventListener } from '@vueuse/core'
-import { useForm } from '@inertiajs/vue3'
-import { addressRules } from '@/rules/address'
-
-import { useFormErrors } from '@/composables/useFormErrors'
-import { useModal } from '@/composables/useModal'
-
-import { ref } from 'vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
-import TextField from '@/Components/TextField.vue'
 import Snackbar from '@/Components/Snackbar.vue'
+import TextField from '@/Components/TextField.vue'
+import { useFormErrors } from '@/composables/useFormErrors'
+import { useModal } from '@/composables/useModal'
+import { addressRules } from '@/rules/address'
+import { Address, IdAddress } from '@/types/customers'
+import { useForm } from '@inertiajs/vue3'
+import { useEventListener } from '@vueuse/core'
+import { ref } from 'vue'
 
 const props = defineProps<{
   addresses: IdAddress[]
