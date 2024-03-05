@@ -13,7 +13,9 @@ import { computed, ref } from 'vue'
 import Icon from './Icon.vue'
 import TextField from './TextField.vue'
 
-const model = defineModel<ModelValue>()
+const model = defineModel<ModelValue>({
+  get: (v) => v || '2001/01/01',
+})
 
 const textfield = ref<InstanceType<typeof TextField> | null>(null)
 const date = computed(() => new Date(`${model.value}`))
@@ -31,6 +33,7 @@ const formatPreview = (value: string) =>
     menu-class-name="dp__menu"
     calendar-cell-class-name="dp__calendar-cell"
     locale="es"
+    model-type="yyyy/MM/dd"
     :enable-time-picker="false"
     teleport="body"
     v-model="model"

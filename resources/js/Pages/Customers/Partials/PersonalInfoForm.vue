@@ -15,7 +15,7 @@ defineProps<{
 const form = useForm<Customer>({
   name: '',
   last_name: '',
-  birth_date: '01/01/01',
+  birth_date: '',
   email: '',
   phone_number: '',
 })
