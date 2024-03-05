@@ -13,6 +13,10 @@ import { computed, ref } from 'vue'
 import Icon from './Icon.vue'
 import TextField from './TextField.vue'
 
+defineProps<{
+  error?: string
+}>()
+
 const model = defineModel<ModelValue>({
   get: (v) => v || '2001/01/01',
 })
@@ -44,7 +48,7 @@ const formatPreview = (value: string) =>
         readonly
         type="text"
         label="Fecha de nacimiento"
-        :error="$page.props.errors.birth_date"
+        :error
         :value="formatValue()"
       >
         <template #floating-icon>
