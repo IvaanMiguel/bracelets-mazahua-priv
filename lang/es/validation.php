@@ -103,7 +103,7 @@ return [
     'missing_with_all'     => 'El campo :attribute no debe estar presente cuando los campos :values estén presentes.',
     'multiple_of'          => 'El campo :attribute debe ser múltiplo de :value',
     'not_in'               => 'El :attribute seleccionado no es válido.',
-    'not_regex'            => 'El formato del campo :attribute no es válido.',
+    'not_regex'            => 'El formato del campo no es válido.',
     'numeric'              => 'El campo debe ser numérico.',
     'password'             => [
         'letters'       => 'La :attribute debe contener al menos una letra.',
