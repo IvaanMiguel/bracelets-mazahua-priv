@@ -9,7 +9,6 @@ import Icon from './Icon.vue'
 withDefaults(
   defineProps<{
     emptyFloatingIcon?: boolean
-    error?: string
   }>(),
   {
     emptyFloatingIcon: false,
@@ -39,14 +38,13 @@ defineExpose({
     <md-outlined-text-field
       ref="input"
       class="!w-full"
-      :error="error"
-      :error-text="error"
+      :error-text="$attrs.error"
       v-bind="$attrs"
       v-model="model"
     >
       <slot />
       <Icon
-        v-if="error"
+        v-if="$attrs.error"
         slot="trailing-icon"
       >
         error
