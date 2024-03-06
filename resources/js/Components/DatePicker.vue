@@ -47,7 +47,7 @@ const formatPreview = (value: string) => {
     :enable-time-picker="false"
     v-model="model"
   >
-    <template #trigger>
+    <template #dp-input>
       <TextField
         ref="textfield"
         readonly
@@ -74,8 +74,18 @@ const formatPreview = (value: string) => {
       <md-elevation />
       {{ formatPreview(value) }}
     </template>
+
     <template #calendar-icon>
       <Icon>calendar_today</Icon>
+    </template>
+
+    <template #clear-icon="{ clear }">
+      <md-icon-button
+        @click="clear"
+        class="me-4"
+      >
+        <Icon>event_busy</Icon>
+      </md-icon-button>
     </template>
   </VueDatePicker>
 </template>
@@ -106,8 +116,5 @@ const formatPreview = (value: string) => {
 .dp__calendar-cell {
   border-radius: 50%;
   padding: 0;
-}
-.dp__calendar-row {
-  margin: 50px !important;
 }
 </style>
