@@ -11,8 +11,10 @@ import EditPersonalInfoForm from './EditPersonalInfoForm.vue'
 const page = usePage()
 
 const editPersonalInfoForm = ref<InstanceType<typeof EditPersonalInfoForm>>()
-const customer = ref(page.props.customer as Customer & { id: number })
-const currentDate = ref(page.props.current_date as string)
+const currentDate = computed(() => page.props.current_date as string)
+const customer = computed(() => {
+  return page.props.customer as Customer & { id: number }
+})
 const birthDate = computed(() => {
   return format(`${customer.value.birth_date}`, "iiii, dd 'de' MMMM 'de' y", {
     locale: es,
