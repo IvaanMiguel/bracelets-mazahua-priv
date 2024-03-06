@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DatePicker from '@/Components/DatePicker.vue'
+import Form from '@/Components/Form.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
@@ -78,9 +79,11 @@ defineExpose({ editPersonalInfoModal })
     not-cancellable
   >
     <div slot="headline">Editar datos personales</div>
-    <div
+    <Form
       slot="content"
+      id="edit-form"
       class="flex flex-col gap-6"
+      :submit="saveChanges"
     >
       <TextField
         label="Nombre(s)"
@@ -129,14 +132,19 @@ defineExpose({ editPersonalInfoModal })
       </TextField>
       <DatePicker
         six-weeks="center"
-        clearable
         v-model="form.birth_date"
         :error="form.errors.birth_date"
       />
-    </div>
+    </Form>
     <div slot="actions">
       <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
-      <md-text-button @click="saveChanges" :disabled="form.processing">Guardar cambios</md-text-button>
+      <md-text-button
+        type="submit"
+        form="edit-form"
+        :disabled="form.processing"
+      >
+        Guardar cambios
+      </md-text-button>
     </div>
   </Modal>
 
