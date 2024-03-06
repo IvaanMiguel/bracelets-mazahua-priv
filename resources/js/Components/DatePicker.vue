@@ -13,22 +13,27 @@ import { computed, ref } from 'vue'
 import Icon from './Icon.vue'
 import TextField from './TextField.vue'
 
-defineProps<{
-  error?: string
-}>()
+defineProps<{ error?: string }>()
 
-const model = defineModel<ModelValue>({
-  get: (v) => v || '2001/01/01',
-})
+const model = defineModel<ModelValue>()
 
 const textfield = ref<InstanceType<typeof TextField>>()
-const date = computed(() => new Date(`${model.value}`))
+const formatValue = computed(() => {
+  // For some reason, this needs to be here in order to properly display a date that already has been setted.
+  textfield.value?.$forceUpdate()
 
-const formatValue = computed(() =>
-  format(date.value, "iiii, dd 'de' MMMM 'de' y", { locale: es }))
+  if (!model.value) return
 
-const formatPreview = (value: string) =>
-  format(value, 'dd/MMMM/y', { locale: es })
+  return format(new Date(`${model.value}`), "iiii, dd 'de' MMMM 'de' y", {
+    locale: es,
+  })
+})
+
+const formatPreview = (value: string) => {
+  if (!value) return
+
+  return format(value, 'dd/MMMM/y', { locale: es })
+}
 </script>
 
 <template>
@@ -38,6 +43,7 @@ const formatPreview = (value: string) =>
     calendar-cell-class-name="dp__calendar-cell"
     locale="es"
     model-type="yyyy/MM/dd"
+    start-date="2001/01/01"
     :enable-time-picker="false"
     v-model="model"
   >
