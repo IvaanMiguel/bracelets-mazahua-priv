@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import '@material/web/textfield/outlined-text-field'
-
-import { router, usePage } from '@inertiajs/vue3'
-
-import { ref, watch } from 'vue'
-import Icon from './Icon.vue'
+import { router, usePage } from '@inertiajs/vue3';
+import '@material/web/textfield/outlined-text-field';
+import { ref, watch } from 'vue';
+import Icon from './Icon.vue';
 
 const search = ref(usePage().props.filters.search)
 

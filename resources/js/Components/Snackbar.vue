@@ -2,7 +2,6 @@
 import '@material/web/button/text-button'
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
-
 import { computed, ref, watch } from 'vue'
 import Icon from './Icon.vue'
 

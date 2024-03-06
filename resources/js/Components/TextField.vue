@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import '@material/web/textfield/outlined-text-field'
-
 import { MdOutlinedTextField } from '@material/web/textfield/outlined-text-field'
-
 import { ref } from 'vue'
 import Icon from './Icon.vue'
 

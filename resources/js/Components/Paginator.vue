@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { router } from '@inertiajs/vue3'
-
-import { MdOutlinedSelect } from '@material/web/select/outlined-select'
 import { Pagination } from '@/types'
-
+import { router } from '@inertiajs/vue3'
 import '@material/web/iconbutton/icon-button'
 import '@material/web/select/outlined-select'
+import { MdOutlinedSelect } from '@material/web/select/outlined-select'
 import '@material/web/select/select-option'
-
 import { ref, watch } from 'vue'
 import Icon from './Icon.vue'
 

@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import '@material/web/tabs/tabs'
 import '@material/web/tabs/primary-tab'
-
-import { useEventListener } from '@vueuse/core'
-
-import { onMounted, ref } from 'vue'
+import '@material/web/tabs/tabs'
 import { MdTabs } from '@material/web/tabs/tabs'
+import { useEventListener } from '@vueuse/core'
+import { onMounted, ref } from 'vue'
 
 const tabs = ref<MdTabs | null>(null)
 const tabsCount = ref<number | undefined>(0)
