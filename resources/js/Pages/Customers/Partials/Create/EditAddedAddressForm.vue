@@ -63,13 +63,10 @@ const discardChanges = () => {
   editAddressModal.value?.close()
 
   form.reset()
-  form.clearErrors()
   v$.value.$reset()
 }
 
 useEventListener(editAddressModal, 'open', () => {
-  form.clearErrors()
-
   form.main_street = props.selectedAddress?.main_street || ''
   form.cross_streets = props.selectedAddress?.cross_streets || ''
   form.neighborhood = props.selectedAddress?.neighborhood || ''
@@ -86,7 +83,7 @@ useEventListener(editAddressModal, 'open', () => {
   >
     <div slot="headline">Editar dirección agregada</div>
     <div slot="content">
-      <div class="mb-6 flex flex-col gap-6">
+      <div class="flex flex-col gap-6">
         <TextField
           class="w-full flex-1"
           label="Calle principal"

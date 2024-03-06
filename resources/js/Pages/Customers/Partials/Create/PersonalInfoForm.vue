@@ -85,22 +85,16 @@ defineExpose({
         v-model="form.email"
       >
         <template #floating-icon>
-          <Icon>email</Icon>
+          <Icon>alternate_email</Icon>
         </template>
       </TextField>
     </div>
     <div class="md:w-[calc(50%-(1.5rem/2))]">
       <DatePicker
+        teleport="body"
         v-model="form.birth_date"
         :error="form.errors.birth_date"
       />
     </div>
   </Form>
 </template>
-
-<style>
-.dp-custom-input {
-  box-shadow: 0 0 6px #1976d2;
-  color: #1976d2;
-}
-</style>
