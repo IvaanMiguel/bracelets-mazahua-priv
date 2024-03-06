@@ -16,6 +16,7 @@ Route::controller(CustomerController::class)->prefix('customers')->group(functio
     Route::get('/', 'index')->name('customers');
     Route::get('/{id}', 'show')->name('customers.show');
     Route::post('/', 'store')->name('customers.store');
+    Route::put('/{id}', 'update')->name('customers.update');
 });
 
 Route::controller(ProductController::class)->prefix('products')->group(function () {
