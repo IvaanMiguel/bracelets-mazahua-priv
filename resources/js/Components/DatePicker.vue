@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import '@material/web/elevation/elevation'
+import '@material/web/iconbutton/icon-button'
 import '@material/web/select/outlined-select'
 import '@material/web/select/select-option'
-import '@material/web/iconbutton/icon-button'
+import VueDatePicker, { ModelValue } from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import VueDatePicker, { ModelValue } from '@vuepic/vue-datepicker'
-
 import { computed, ref } from 'vue'
 import Icon from './Icon.vue'
 import TextField from './TextField.vue'
@@ -83,6 +81,8 @@ const formatPreview = (value: string) => {
       <md-icon-button
         @click="clear"
         class="me-4"
+        type="button"
+        title="Remover fecha seleccionada."
       >
         <Icon>event_busy</Icon>
       </md-icon-button>
