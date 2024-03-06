@@ -70,9 +70,9 @@ defineExpose({
     </div>
     <template
       v-else
-      v-for="address in addresses"
+      v-for="(address, i) in addresses"
     >
-      <md-divider inset />
+      <md-divider v-if="i !== 0" inset />
       <md-list-item>
         <span slot="headline">
           {{
