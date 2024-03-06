@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DisplayField from '@/Components/DisplayField.vue'
 import Icon from '@/Components/Icon.vue'
-import { Customer } from '@/types/customers'
+import { IdCustomer } from '@/types/customers'
 import { usePage } from '@inertiajs/vue3'
 import { differenceInYears, format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -13,7 +13,7 @@ const page = usePage()
 const editPersonalInfoForm = ref<InstanceType<typeof EditPersonalInfoForm>>()
 const currentDate = computed(() => page.props.current_date as string)
 const customer = computed(() => {
-  return page.props.customer as Customer & { id: number }
+  return page.props.customer as IdCustomer
 })
 const birthDate = computed(() => {
   return format(`${customer.value.birth_date}`, "iiii, dd 'de' MMMM 'de' y", {
@@ -27,7 +27,8 @@ const age = computed(() => {
 
 <template>
   <div
-    class="text-on-background mt-4 rounded-lg border border-light-outline-variant p-4 dark:border-dark-outline-variant"
+    class="text-on-background rounded-lg border border-light-outline-variant p-4 dark:border-dark-outline-variant"
+    v-bind="$attrs"
   >
     <h1
       class="mb-6 text-xl font-medium text-light-on-background dark:text-dark-on-background"

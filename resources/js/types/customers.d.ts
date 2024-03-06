@@ -12,6 +12,10 @@ export interface Customer {
   phone_number: string
 }
 
+export type IdCustomer = Customer & {
+  id: number
+}
+
 export interface Address {
   main_street: string,
   cross_streets: string | null
@@ -23,4 +27,8 @@ export interface Address {
 
 export type IdAddress = Address & {
   id: number
+}
+
+export type CustomerWithAddresses = IdCustomer & {
+  addresses: IdAddress[]
 }

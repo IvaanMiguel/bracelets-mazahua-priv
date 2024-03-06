@@ -8,7 +8,7 @@ import TextField from '@/Components/TextField.vue'
 import { useFormErrors } from '@/composables/useFormErrors'
 import { useModal } from '@/composables/useModal'
 import { customerRules } from '@/rules/customer'
-import { Customer } from '@/types/customers'
+import { Customer, IdCustomer } from '@/types/customers'
 import { useForm, usePage } from '@inertiajs/vue3'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -20,7 +20,7 @@ const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
 
 const editedCustomerSnackbar = ref<InstanceType<typeof Snackbar>>()
 const customer = computed(
-  () => page.props.customer as Customer & { id: number }
+  () => page.props.customer as IdCustomer
 )
 
 const form = useForm<Customer>({
