@@ -22,7 +22,7 @@ class CustomerController extends Controller
         $search = $request->input('search');
 
         return Inertia::render('Customers/Index', [
-            'customers' => Customer::where(DB::raw('CONCAT(name, " ", last_name)'), 'like', "{$search}%")
+            'customers' => fn () => Customer::where(DB::raw('CONCAT(name, " ", last_name)'), 'like', "{$search}%")
                 ->orderBy('name', 'asc')
                 ->orderBy('last_name', 'asc')
                 ->paginate($results, ['id', 'name', 'last_name'])
@@ -56,13 +56,13 @@ class CustomerController extends Controller
             $addresses = array_map(function ($item) use ($customer) {
                 $item['customer_id'] = $customer->id;
                 $item['id'] = 0;
-    
+
                 return $item;
             }, $request->addresses);
 
             Address::insert($addresses);
         }
-        
+
         return back();
     }
 

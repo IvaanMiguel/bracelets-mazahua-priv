@@ -4,10 +4,16 @@ import Paginator from '@/Components/Paginator.vue'
 import SearchBar from '@/Components/SearchBar.vue'
 import { Pagination } from '@/types'
 import { CustomerListItem } from '@/types/customers'
+import { router } from '@inertiajs/vue3'
+import { onMounted } from 'vue'
 
 defineProps<{
   customers: Pagination<CustomerListItem>
 }>()
+
+onMounted(() => {
+  router.reload({ only: ['customers'] })
+})
 </script>
 
 <template>
