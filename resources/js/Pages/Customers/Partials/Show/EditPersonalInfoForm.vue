@@ -2,21 +2,25 @@
 import DatePicker from '@/Components/DatePicker.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
+import Snackbar from '@/Components/Snackbar.vue'
 import TextField from '@/Components/TextField.vue'
+import { useFormErrors } from '@/composables/useFormErrors'
 import { useModal } from '@/composables/useModal'
+import { customerRules } from '@/rules/customer'
 import { Customer } from '@/types/customers'
 import { useForm, usePage } from '@inertiajs/vue3'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const page = usePage()
 const { modal: editPersonalInfoModal } = useModal('#edit-personal-info-modal')
 const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
 
-const customer = ref(page.props.customer as Customer & { id: number })
-
-// TODO: Add client validation.
+const editedCustomerSnackbar = ref<InstanceType<typeof Snackbar>>()
+const customer = computed(
+  () => page.props.customer as Customer & { id: number }
+)
 
 const form = useForm<Customer>({
   name: customer.value.name,
@@ -27,16 +31,40 @@ const form = useForm<Customer>({
   email: customer.value.email,
   phone_number: customer.value.phone_number,
 })
+const { v$ } = useFormErrors(customerRules, form)
 
 const discardChanges = () => {
   editPersonalInfoModal.value?.close()
   cancelEditModal.value?.close()
 
   form.reset()
+  v$.value.$reset()
 }
 
-const saveChanges = () => {
-  console.log('Submitting form.')
+const saveChanges = async () => {
+  const validate = await v$.value?.$validate()
+
+  if (!validate) return
+
+  form.put(route('customers.update', { id: customer.value.id }), {
+    onSuccess: () => {
+      form.defaults({
+        name: customer.value.name,
+        last_name: customer.value.last_name,
+        birth_date: customer.value.birth_date
+          ? format(`${customer.value.birth_date}`, 'y/MM/dd', { locale: es })
+          : null,
+        email: customer.value.email,
+        phone_number: customer.value.phone_number,
+      })
+
+      form.reset()
+      v$.value.$reset()
+
+      editPersonalInfoModal.value?.close()
+      editedCustomerSnackbar.value?.show(true)
+    },
+  })
 }
 
 // Just to be able to open it from parent PersonalInfo.
@@ -101,13 +129,14 @@ defineExpose({ editPersonalInfoModal })
       </TextField>
       <DatePicker
         six-weeks="center"
+        clearable
         v-model="form.birth_date"
         :error="form.errors.birth_date"
       />
     </div>
     <div slot="actions">
       <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
-      <md-text-button @click="saveChanges">Guardar cambios</md-text-button>
+      <md-text-button @click="saveChanges" :disabled="form.processing">Guardar cambios</md-text-button>
     </div>
   </Modal>
 
@@ -126,4 +155,11 @@ defineExpose({ editPersonalInfoModal })
       <md-text-button @click="discardChanges">Aceptar</md-text-button>
     </div>
   </Modal>
+
+  <Snackbar
+    ref="editedCustomerSnackbar"
+    close-button
+  >
+    <template #content>Cliente modificado correctamente.</template>
+  </Snackbar>
 </template>
