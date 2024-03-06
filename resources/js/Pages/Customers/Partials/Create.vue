@@ -4,8 +4,8 @@ import Snackbar from '@/Components/Snackbar.vue'
 import { router } from '@inertiajs/vue3'
 import useVuelidate from '@vuelidate/core'
 import { ref } from 'vue'
-import AddressForm from './AddressForm.vue'
-import PersonalInfoForm from './PersonalInfoForm.vue'
+import AddressForm from './Create/AddressForm.vue'
+import PersonalInfoForm from './Create/PersonalInfoForm.vue'
 
 const v = useVuelidate()
 
