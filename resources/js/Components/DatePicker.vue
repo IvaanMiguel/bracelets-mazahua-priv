@@ -24,8 +24,8 @@ const model = defineModel<ModelValue>({
 const textfield = ref<InstanceType<typeof TextField>>()
 const date = computed(() => new Date(`${model.value}`))
 
-const formatValue = () =>
-  format(date.value, "iiii, dd 'de' MMMM 'de' y", { locale: es })
+const formatValue = computed(() =>
+  format(date.value, "iiii, dd 'de' MMMM 'de' y", { locale: es }))
 
 const formatPreview = (value: string) =>
   format(value, 'dd/MMMM/y', { locale: es })
@@ -39,7 +39,6 @@ const formatPreview = (value: string) =>
     locale="es"
     model-type="yyyy/MM/dd"
     :enable-time-picker="false"
-    teleport="body"
     v-model="model"
   >
     <template #trigger>
@@ -49,7 +48,7 @@ const formatPreview = (value: string) =>
         type="text"
         label="Fecha de nacimiento"
         :error
-        :value="formatValue()"
+        :value="formatValue"
       >
         <template #floating-icon>
           <Icon>cake</Icon>
