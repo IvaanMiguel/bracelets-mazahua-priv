@@ -66,13 +66,11 @@ class CustomerController extends Controller
         return back();
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         return Inertia::render('Customers/Show', [
-            'customer' => Customer::find($id)
+            'customer' => Customer::find($id),
+            'current_date' => now()
         ]);
     }
 
