@@ -79,7 +79,7 @@ defineExpose({
       <md-list-item>
         <span slot="headline">
           {{
-            `${address.neighborhood}, calle ${address.main_street}, C. P. ${address.postal_code}`
+            `Colonia ${address.neighborhood}, calle ${address.main_street}, C. P. ${address.postal_code}`
           }}
         </span>
         <span slot="supporting-text">
