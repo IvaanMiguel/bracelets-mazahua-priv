@@ -3,6 +3,7 @@ import Icon from '@/Components/Icon.vue'
 import { CustomerWithAddresses, IdAddress } from '@/types/customers'
 import { usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
+import AddAddressForm from './AddAddressForm.vue'
 import DeleteAddress from './DeleteAddress.vue'
 import Snackbar from '@/Components/Snackbar.vue'
 
@@ -10,6 +11,7 @@ const page = usePage()
 
 const cantDeleteSnackbar = ref<InstanceType<typeof Snackbar>>()
 const deleteAddress = ref<InstanceType<typeof DeleteAddress>>()
+const addAddressForm = ref<InstanceType<typeof AddAddressForm>>()
 const selectedAddress = ref<IdAddress | null>(null)
 const addresses = computed(() => {
   const customer = page.props.customer as CustomerWithAddresses
@@ -43,11 +45,17 @@ const onDelete = (address: IdAddress) => {
     class="text-on-background rounded-lg border border-light-outline-variant pt-4 dark:border-dark-outline-variant"
     v-bind="$attrs"
   >
-    <h1
-      class="mx-4 mb-1 text-xl font-medium text-light-on-background dark:text-dark-on-background"
-    >
-      Direcciones
-    </h1>
+    <div class="mx-4 mb-1 flex items-center justify-between">
+      <h1
+        class="text-xl font-medium text-light-on-background dark:text-dark-on-background"
+      >
+        Direcciones
+      </h1>
+      <md-filled-button @click="addAddressForm?.addAddressModal?.show()">
+        Agregar
+        <Icon slot="icon">add</Icon>
+      </md-filled-button>
+    </div>
     <md-list
       class="rounded-b-lg bg-light-surface-container-lowest dark:bg-dark-surface-container"
     >
@@ -81,6 +89,10 @@ const onDelete = (address: IdAddress) => {
       </template>
     </md-list>
   </div>
+
+  <AddAddressForm
+    ref="addAddressForm"
+  />
 
   <DeleteAddress
     ref="deleteAddress"
