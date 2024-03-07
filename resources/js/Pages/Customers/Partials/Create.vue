@@ -16,10 +16,15 @@ const processing = ref(false)
 
 const submit = async () => {
   let addressFormValidate = true
-  const personalInfoFormValidate = await (v.value.personalInfo.$validate() as Promise<boolean>)
+  const personalInfoFormValidate =
+    await (v.value.personalInfo.$validate() as Promise<boolean>)
 
-  if (addressForm.value?.addresses.length === 0 || addressForm.value?.form.isDirty) {
-    addressFormValidate = await (v.value.address.$validate() as Promise<boolean>)
+  if (
+    addressForm.value?.addresses.length === 0 ||
+    addressForm.value?.form.isDirty
+  ) {
+    addressFormValidate =
+      await (v.value.address.$validate() as Promise<boolean>)
   } else {
     v.value.address.$reset()
   }
@@ -75,11 +80,8 @@ const submit = async () => {
     </div>
     <Snackbar
       ref="successSnackbar"
+      text="Información del cliente guardada con éxito."
       close-button
-    >
-      <template #content>
-        Información del cliente guardada con éxito.
-      </template>
-    </Snackbar>
+    />
   </div>
 </template>

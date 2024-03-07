@@ -19,9 +19,7 @@ const { modal: editPersonalInfoModal } = useModal('#edit-personal-info-modal')
 const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
 
 const editedCustomerSnackbar = ref<InstanceType<typeof Snackbar>>()
-const customer = computed(
-  () => page.props.customer as IdCustomer
-)
+const customer = computed(() => page.props.customer as IdCustomer)
 
 const form = useForm<Customer>({
   name: customer.value.name,
@@ -166,8 +164,7 @@ defineExpose({ editPersonalInfoModal })
 
   <Snackbar
     ref="editedCustomerSnackbar"
+    text="Cliente modificado correctamente."
     close-button
-  >
-    <template #content>Cliente modificado correctamente.</template>
-  </Snackbar>
+  />
 </template>

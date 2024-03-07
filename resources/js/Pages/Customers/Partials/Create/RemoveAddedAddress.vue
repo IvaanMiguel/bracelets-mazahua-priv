@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Icon from '@/Components/Icon.vue';
-import Modal from '@/Components/Modal.vue';
-import Snackbar from '@/Components/Snackbar.vue';
-import { useModal } from '@/composables/useModal';
-import { IdAddress } from '@/types/customers';
-import { ref } from 'vue';
+import Icon from '@/Components/Icon.vue'
+import Modal from '@/Components/Modal.vue'
+import Snackbar from '@/Components/Snackbar.vue'
+import { useModal } from '@/composables/useModal'
+import { IdAddress } from '@/types/customers'
+import { ref } from 'vue'
 
 const props = defineProps<{
   addresses: IdAddress[]
@@ -40,16 +40,13 @@ const removeAddress = () => {
       La dirección seleccionada será removida, ¿deseas continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="modal?.close">
-        Cancelar
-      </md-text-button>
+      <md-text-button @click="modal?.close">Cancelar</md-text-button>
       <md-text-button @click="removeAddress">Aceptar</md-text-button>
     </div>
   </Modal>
   <Snackbar
     ref="removedAddressSnackbar"
+    text="Dirección removida correctamente."
     close-button
-  >
-    <template #content>Dirección removida correctamente.</template>
-  </Snackbar>
+  />
 </template>

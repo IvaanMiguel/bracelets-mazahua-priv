@@ -72,7 +72,10 @@ defineExpose({
       v-else
       v-for="(address, i) in addresses"
     >
-      <md-divider v-if="i !== 0" inset />
+      <md-divider
+        v-if="i !== 0"
+        inset
+      />
       <md-list-item>
         <span slot="headline">
           {{
@@ -111,10 +114,9 @@ defineExpose({
 
   <Snackbar
     ref="addedAddressSnackbar"
+    text="Dirección agregada correctamente."
     close-button
-  >
-    <template #content>Dirección agregada correctamente.</template>
-  </Snackbar>
+  />
 </template>
 
 <style scoped>

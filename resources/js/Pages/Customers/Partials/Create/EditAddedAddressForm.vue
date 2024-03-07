@@ -186,8 +186,7 @@ useEventListener(editAddressModal, 'open', () => {
 
   <Snackbar
     ref="editedAddressSnackbar"
+    text="Dirección modificada correctamente."
     close-button
-  >
-    <template #content>Dirección modificada correctamente.</template>
-  </Snackbar>
+  />
 </template>
