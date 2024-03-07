@@ -11,6 +11,7 @@ const props = withDefaults(
     onAction?: Function
     closeButton?: boolean
     time?: number
+    text: string
   }>(),
   {
     closeButton: false,
@@ -69,7 +70,7 @@ defineExpose({
           <div
             class="overflow-hidden text-ellipsis text-nowrap text-sm text-light-inverse-on-surface dark:text-dark-inverse-on-surface"
           >
-            <slot name="content" />
+            {{ text }}
           </div>
           <div
             v-if="action || closeButton"
