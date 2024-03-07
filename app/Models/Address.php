@@ -21,6 +21,13 @@ class Address extends Model
         'customer_id'
     ];
 
+    protected $hidden = [
+        'customer_id',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
