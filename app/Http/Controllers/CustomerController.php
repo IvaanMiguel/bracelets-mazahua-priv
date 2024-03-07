@@ -69,7 +69,7 @@ class CustomerController extends Controller
     public function show(string $id)
     {
         return Inertia::render('Customers/Show', [
-            'customer' => Customer::find($id),
+            'customer' => Customer::with('addresses')->find($id),
             'current_date' => now()
         ]);
     }
