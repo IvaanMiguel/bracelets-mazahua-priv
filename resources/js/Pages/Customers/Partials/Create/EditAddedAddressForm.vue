@@ -83,7 +83,7 @@ useEventListener(editAddressModal, 'open', () => {
   >
     <div slot="headline">Editar dirección agregada</div>
     <div slot="content">
-      <div class="flex flex-col gap-6">
+      <div class="flex flex-col gap-4">
         <TextField
           class="w-full flex-1"
           label="Calle principal"
@@ -136,7 +136,7 @@ useEventListener(editAddressModal, 'open', () => {
             <Icon>local_post_office</Icon>
           </template>
         </TextField>
-        <div class="flex w-full flex-1 items-start gap-6">
+        <div class="flex w-full flex-1 items-start gap-4">
           <TextField
             class="w-full flex-1"
             label="Número Exterior"

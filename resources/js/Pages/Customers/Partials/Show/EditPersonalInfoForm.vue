@@ -58,6 +58,7 @@ const saveChanges = async () => {
       })
 
       form.reset()
+      form.clearErrors()
       v$.value.$reset()
 
       editPersonalInfoModal.value?.close()
@@ -80,7 +81,7 @@ defineExpose({ editPersonalInfoModal })
     <Form
       slot="content"
       id="edit-form"
-      class="flex flex-col gap-6"
+      class="flex flex-col gap-4"
       :submit="saveChanges"
     >
       <TextField
