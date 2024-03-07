@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
@@ -17,6 +18,10 @@ Route::controller(CustomerController::class)->prefix('customers')->group(functio
     Route::get('/{id}', 'show')->name('customers.show');
     Route::post('/', 'store')->name('customers.store');
     Route::put('/{id}', 'update')->name('customers.update');
+});
+
+Route::controller(AddressController::class)->prefix('addresses')->group(function () {
+    Route::delete('/{id}', 'destroy')->name('addresses.destroy');
 });
 
 Route::controller(ProductController::class)->prefix('products')->group(function () {
