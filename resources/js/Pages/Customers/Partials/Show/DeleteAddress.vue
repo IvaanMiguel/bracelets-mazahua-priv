@@ -41,7 +41,10 @@ defineExpose({ modal })
 </script>
 
 <template>
-  <Modal id="delete-address-modal">
+  <Modal
+    id="delete-address-modal"
+    type="alert"
+  >
     <Icon slot="icon">remove_road</Icon>
     <div slot="headline">Eliminar dirección</div>
     <div slot="content">
