@@ -98,7 +98,7 @@ const onDelete = (address: IdAddress) => {
 .dark #delete-button {
   --md-sys-color-on-surface-variant: theme(colors.dark.error);
 }
-°#delete-button {
+#delete-button {
   --md-sys-color-on-surface-variant: theme(colors.light.error);
 }
 </style>
