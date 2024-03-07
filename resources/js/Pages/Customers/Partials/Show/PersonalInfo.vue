@@ -30,11 +30,19 @@ const age = computed(() => {
     class="text-on-background rounded-lg border border-light-outline-variant p-4 dark:border-dark-outline-variant"
     v-bind="$attrs"
   >
-    <h1
-      class="mb-6 text-xl font-medium text-light-on-background dark:text-dark-on-background"
-    >
-      Datos personales
-    </h1>
+    <div class="mb-6 flex items-center justify-between">
+      <h1
+        class="text-xl font-medium text-light-on-background dark:text-dark-on-background"
+      >
+        Datos personales
+      </h1>
+      <md-filled-button
+        @click="editPersonalInfoForm?.editPersonalInfoModal?.show"
+      >
+        Editar
+        <Icon slot="icon">edit</Icon>
+      </md-filled-button>
+    </div>
     <div class="grid gap-6 md:grid-cols-2">
       <DisplayField
         label="Nombre completo"
@@ -79,14 +87,6 @@ const age = computed(() => {
           </template>
         </DisplayField>
       </template>
-    </div>
-    <div class="mt-6 text-end">
-      <md-filled-button
-        @click="editPersonalInfoForm?.editPersonalInfoModal?.show"
-      >
-        Editar
-        <Icon slot="icon">edit</Icon>
-      </md-filled-button>
     </div>
   </div>
   <EditPersonalInfoForm ref="editPersonalInfoForm" />
