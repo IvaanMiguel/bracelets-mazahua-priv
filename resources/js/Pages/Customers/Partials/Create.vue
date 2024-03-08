@@ -21,7 +21,7 @@ const store = async () => {
 
   if (
     addressForm.value?.addresses.length === 0 ||
-    addressForm.value?.form.isDirty
+    addressForm.value?.addressForm?.form.isDirty
   ) {
     addressFormValidate =
       await (v.value.address.$validate() as Promise<boolean>)
@@ -35,14 +35,14 @@ const store = async () => {
     route('customers.store'),
     {
       ...personalInfoForm.value?.form.data(),
-      ...addressForm.value?.form.data(),
+      ...addressForm.value?.addressForm?.form.data(),
       addresses: addressForm.value?.addresses,
     },
     {
       onStart: () => (processing.value = true),
       onSuccess: () => {
         personalInfoForm.value?.form.reset()
-        addressForm.value?.form.reset()
+        addressForm.value?.addressForm?.form.reset()
         addressForm.value?.resetAddresses()
 
         v.value.$reset()
@@ -60,9 +60,13 @@ const store = async () => {
     class="md-elevation-1 relative rounded-lg bg-light-surface-container-lowest p-4 dark:bg-dark-surface-container"
   >
     <md-elevation />
+
     <PersonalInfoForm ref="personalInfoForm" />
+
     <md-divider class="my-8" />
+
     <AddressForm ref="addressForm" />
+
     <div class="text-end">
       <md-filled-button
         @click="store"
@@ -72,6 +76,7 @@ const store = async () => {
         <Icon slot="icon">save</Icon>
       </md-filled-button>
     </div>
+
     <Snackbar
       ref="successSnackbar"
       text="Información del cliente guardada con éxito."

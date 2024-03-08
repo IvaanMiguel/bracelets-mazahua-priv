@@ -1,43 +1,32 @@
 <script setup lang="ts">
-import Form from '@/Components/Form.vue'
+import AddressForm from '@/Components/Forms/AddressForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import TextField from '@/Components/TextField.vue'
-import { useFormErrors } from '@/composables/useFormErrors'
 import { useModal } from '@/composables/useModal'
-import { addressRules } from '@/rules/address'
-import { Address, IdCustomer } from '@/types/customers'
-import { useForm, usePage } from '@inertiajs/vue3'
+import { IdCustomer } from '@/types/customers'
+import { usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 
 const page = usePage()
 const { modal: addAddressModal } = useModal('#add-address-modal')
 const { modal: cancelAddModal } = useModal('#cancel-add-modal')
-const form = useForm<Address>({
-  main_street: '',
-  cross_streets: '',
-  neighborhood: '',
-  postal_code: '',
-  street_number: '',
-  suite_number: '',
-})
-const { v$ } = useFormErrors(addressRules, form)
 
+const addressForm = ref<InstanceType<typeof AddressForm>>()
 const storedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 const customer = computed(() => page.props.customer as IdCustomer)
 
 const store = async () => {
-  const validate = await v$.value.$validate()
+  const validate = await addressForm.value?.v$.$validate()
 
   if (!validate) return
 
-  form
+  addressForm.value?.form
     .transform((data) => ({ ...data, customer_id: customer.value.id }))
     .post(route('addresses.store'), {
       onSuccess: () => {
-        form.reset()
-        v$.value.$reset()
+        addressForm.value?.form.reset()
+        addressForm.value?.v$.$reset()
 
         addAddressModal.value?.close()
         storedAddressSnackbar.value?.show(true)
@@ -49,8 +38,8 @@ const cancelStore = () => {
   addAddressModal.value?.close()
   cancelAddModal.value?.close()
 
-  form.reset()
-  v$.value.$reset()
+  addressForm.value?.form.reset()
+  addressForm.value?.v$.$reset()
 }
 
 defineExpose({ addAddressModal })
@@ -63,89 +52,19 @@ defineExpose({ addAddressModal })
     not-cancellable
   >
     <div slot="headline">Crear dirección nueva</div>
-    <Form
+
+    <AddressForm
+      ref="addressForm"
       slot="content"
       class="flex flex-col gap-4"
       :submit="store"
-    >
-      <TextField
-        label="Calle principal"
-        required
-        minlength="3"
-        maxlength="255"
-        :error="form.errors.main_street"
-        v-model="form.main_street"
-      >
-        <template #floating-icon>
-          <Icon>location_home</Icon>
-        </template>
-      </TextField>
-      <TextField
-        label="Calles adyacentes"
-        minlength="3"
-        maxlength="255"
-        :error="form.errors.cross_streets"
-        v-model="form.cross_streets"
-      >
-        <template #floating-icon>
-          <Icon>alt_route</Icon>
-        </template>
-      </TextField>
-      <TextField
-        label="Colonia"
-        required
-        minlength="3"
-        maxlength="255"
-        :error="form.errors.neighborhood"
-        v-model="form.neighborhood"
-      >
-        <template #floating-icon>
-          <Icon>warehouse</Icon>
-        </template>
-      </TextField>
-      <TextField
-        label="Código postal"
-        required
-        min="0"
-        minlength="5"
-        maxlength="5"
-        :error="form.errors.postal_code"
-        v-model="form.postal_code"
-      >
-        <template #floating-icon>
-          <Icon>local_post_office</Icon>
-        </template>
-      </TextField>
-      <div class="flex items-start gap-4">
-        <TextField
-          class="flex-1"
-          label="Número Exterior"
-          min="0"
-          :error="form.errors.street_number"
-          v-model="form.street_number"
-        >
-          <template #floating-icon>
-            <Icon>house</Icon>
-          </template>
-        </TextField>
-        <TextField
-          class="flex-1"
-          label="Número interior"
-          min="0"
-          :error="form.errors.suite_number"
-          v-model="form.suite_number"
-        >
-          <template #floating-icon>
-            <Icon>apartment</Icon>
-          </template>
-        </TextField>
-      </div>
-    </Form>
+    />
+    
     <div slot="actions">
       <md-text-button @click="cancelAddModal?.show">Cancelar</md-text-button>
       <md-text-button
         @click="store"
-        :disabled="form.processing"
+        :disabled="addressForm?.form.processing"
       >
         Guardar
       </md-text-button>

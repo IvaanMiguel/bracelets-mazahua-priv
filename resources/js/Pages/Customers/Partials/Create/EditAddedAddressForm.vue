@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import Form from '@/Components/Form.vue'
+import AddressForm from '@/Components/Forms/AddressForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import TextField from '@/Components/TextField.vue'
-import { useFormErrors } from '@/composables/useFormErrors'
 import { useModal } from '@/composables/useModal'
-import { addressRules } from '@/rules/address'
-import { Address, IdAddress } from '@/types/customers'
-import { useForm } from '@inertiajs/vue3'
+import { IdAddress } from '@/types/customers'
 import { useEventListener } from '@vueuse/core'
 import { ref } from 'vue'
 
@@ -17,24 +13,18 @@ const props = defineProps<{
   selectedAddress: IdAddress | null
 }>()
 
-const form = useForm<Address>({
-  main_street: '',
-  cross_streets: '',
-  neighborhood: '',
-  postal_code: '',
-  street_number: '',
-  suite_number: '',
-})
-const { v$ } = useFormErrors(addressRules, form, { $stopPropagation: true })
 const { modal: editAddressModal } = useModal('#edit-address-modal')
 const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
 
+const addressForm = ref<InstanceType<typeof AddressForm>>()
 const editedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 
 const updateAddress = () => {
   const address = props.addresses.find(
     (address) => address.id === props.selectedAddress?.id
   )
+
+  const form = addressForm.value!.form
 
   address!.main_street = form.main_street || ''
   address!.cross_streets = form.cross_streets || ''
@@ -45,14 +35,14 @@ const updateAddress = () => {
 }
 
 const saveChanges = async () => {
-  const validate = await v$.value?.$validate()
+  const validate = await addressForm.value!.v$.$validate()
 
   if (validate) {
     updateAddress()
 
-    form.reset()
-    form.clearErrors()
-    v$.value.$reset()
+    addressForm.value!.form.reset()
+    addressForm.value!.form.clearErrors()
+    addressForm.value!.v$.$reset()
     editAddressModal.value?.close()
 
     editedAddressSnackbar.value?.show(true)
@@ -63,11 +53,13 @@ const discardChanges = () => {
   cancelEditModal.value?.close()
   editAddressModal.value?.close()
 
-  form.reset()
-  v$.value.$reset()
+  addressForm.value!.form.reset()
+  addressForm.value!.v$.$reset()
 }
 
 useEventListener(editAddressModal, 'open', () => {
+  const form = addressForm.value!.form
+
   form.main_street = props.selectedAddress?.main_street || ''
   form.cross_streets = props.selectedAddress?.cross_streets || ''
   form.neighborhood = props.selectedAddress?.neighborhood || ''
@@ -84,87 +76,14 @@ useEventListener(editAddressModal, 'open', () => {
   >
     <div slot="headline">Editar dirección agregada</div>
     <div slot="content">
-      <Form
+
+      <AddressForm
+        ref="addressForm"
         class="flex flex-col gap-4"
         :submit="saveChanges"
-      >
-        <TextField
-          class="w-full flex-1"
-          label="Calle principal"
-          required
-          minlength="3"
-          maxlength="255"
-          :error="form.errors.main_street"
-          v-model="form.main_street"
-        >
-          <template #floating-icon>
-            <Icon>location_home</Icon>
-          </template>
-        </TextField>
-        <TextField
-          class="w-full flex-1"
-          label="Calles adyacentes"
-          minlength="3"
-          maxlength="255"
-          :error="form.errors.cross_streets"
-          v-model="form.cross_streets"
-        >
-          <template #floating-icon>
-            <Icon>alt_route</Icon>
-          </template>
-        </TextField>
-        <TextField
-          class="w-full flex-[3]"
-          label="Colonia"
-          required
-          minlength="3"
-          maxlength="255"
-          :error="form.errors.neighborhood"
-          v-model="form.neighborhood"
-        >
-          <template #floating-icon>
-            <Icon>warehouse</Icon>
-          </template>
-        </TextField>
-        <TextField
-          class="w-full flex-[2]"
-          label="Código postal"
-          required
-          min="0"
-          minlength="5"
-          maxlength="5"
-          :error="form.errors.postal_code"
-          v-model="form.postal_code"
-        >
-          <template #floating-icon>
-            <Icon>local_post_office</Icon>
-          </template>
-        </TextField>
-        <div class="flex w-full flex-1 items-start gap-4">
-          <TextField
-            class="w-full flex-1"
-            label="Número Exterior"
-            min="0"
-            :error="form.errors.street_number"
-            v-model="form.street_number"
-          >
-            <template #floating-icon>
-              <Icon>house</Icon>
-            </template>
-          </TextField>
-          <TextField
-            class="w-full flex-1"
-            label="Número interior"
-            min="0"
-            :error="form.errors.suite_number"
-            v-model="form.suite_number"
-          >
-            <template #floating-icon>
-              <Icon>apartment</Icon>
-            </template>
-          </TextField>
-        </div>
-      </Form>
+        :config="{ $stopPropagation: true }"
+      />
+
     </div>
     <div slot="actions">
       <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
