@@ -10,7 +10,7 @@ import {
 export const addressRules = {
   main_street: {
     required: required(),
-    lengthBetween: betweenLength(3, 100),
+    lengthBetween: betweenLength(3, 255),
   },
   cross_streets: {
     lengthBetween: betweenLength(3, 255),
