@@ -21,7 +21,7 @@ class StoreCustomerRequest extends FormRequest
                 'bail',
                 'nullable',
                 'string',
-                'between:3,100'
+                'between:3,255'
             ],
             'cross_streets' => ['bail', 'nullable', 'string', 'between:3,255'],
             'neighborhood' => [
