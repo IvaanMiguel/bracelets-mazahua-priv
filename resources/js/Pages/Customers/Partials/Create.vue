@@ -60,15 +60,9 @@ const submit = async () => {
     class="md-elevation-1 relative rounded-lg bg-light-surface-container-lowest p-4 dark:bg-dark-surface-container"
   >
     <md-elevation />
-    <PersonalInfoForm
-      ref="personalInfoForm"
-      :submit="submit"
-    />
+    <PersonalInfoForm ref="personalInfoForm" />
     <md-divider class="my-8" />
-    <AddressForm
-      ref="addressForm"
-      :submit="submit"
-    />
+    <AddressForm ref="addressForm" />
     <div class="text-end">
       <md-filled-button
         @click="submit"
