@@ -54,7 +54,7 @@ defineExpose({
     <h1 class="text-on-background px-4 py-3 text-xl font-medium">
       Direcciones agregadas
     </h1>
-    <md-divider inset />
+    <md-divider />
     <div
       v-if="!addresses.length"
       class="p-4 text-center"
