@@ -8,10 +8,6 @@ import { customerRules } from '@/rules/customer'
 import { Customer } from '@/types/customers'
 import { useForm } from '@inertiajs/vue3'
 
-defineProps<{
-  submit: (e?: Event) => void
-}>()
-
 const form = useForm<Customer>({
   name: '',
   last_name: '',
@@ -32,10 +28,7 @@ defineExpose({
   >
     Datos personales
   </h1>
-  <Form
-    class="flex flex-col"
-    :submit="submit"
-  >
+  <Form class="flex flex-col">
     <div class="mb-6 flex flex-col items-start gap-6 md:flex-row">
       <TextField
         class="w-full flex-1"
