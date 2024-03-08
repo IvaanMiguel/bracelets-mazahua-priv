@@ -29,7 +29,7 @@ const createAddressDetails = (address: IdAddress) => {
   return addressDetails.join(', ')
 }
 
-const onDelete = (address: IdAddress) => {
+const onDestroy = (address: IdAddress) => {
   if (addresses.value.length <= 1) {
     cantDeleteSnackbar.value?.show(true)
     return
@@ -81,7 +81,7 @@ const onDelete = (address: IdAddress) => {
             <md-icon-button
               id="delete-button"
               class="ms-4"
-              @click="onDelete(address)"
+              @click="onDestroy(address)"
             >
               <Icon>delete</Icon>
             </md-icon-button>

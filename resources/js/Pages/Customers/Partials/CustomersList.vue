@@ -7,9 +7,7 @@ import { CustomerListItem } from '@/types/customers'
 import { router } from '@inertiajs/vue3'
 import { onMounted } from 'vue'
 
-defineProps<{
-  customers: Pagination<CustomerListItem>
-}>()
+defineProps<{ customers: Pagination<CustomerListItem> }>()
 
 onMounted(() => {
   router.reload({ only: ['customers'] })

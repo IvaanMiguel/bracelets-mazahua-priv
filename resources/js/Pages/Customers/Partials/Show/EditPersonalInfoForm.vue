@@ -32,15 +32,7 @@ const form = useForm<Customer>({
 })
 const { v$ } = useFormErrors(customerRules, form)
 
-const discardChanges = () => {
-  editPersonalInfoModal.value?.close()
-  cancelEditModal.value?.close()
-
-  form.reset()
-  v$.value.$reset()
-}
-
-const saveChanges = async () => {
+const update = async () => {
   const validate = await v$.value?.$validate()
 
   if (!validate) return
@@ -58,6 +50,14 @@ const saveChanges = async () => {
   })
 }
 
+const cancelUpdate = () => {
+  editPersonalInfoModal.value?.close()
+  cancelEditModal.value?.close()
+
+  form.reset()
+  v$.value.$reset()
+}
+
 // Just to be able to open it from parent PersonalInfo.
 defineExpose({ editPersonalInfoModal })
 </script>
@@ -72,7 +72,7 @@ defineExpose({ editPersonalInfoModal })
     <Form
       slot="content"
       class="flex flex-col gap-4"
-      :submit="saveChanges"
+      :submit="update"
     >
       <TextField
         label="Nombre(s)"
@@ -128,7 +128,7 @@ defineExpose({ editPersonalInfoModal })
     <div slot="actions">
       <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
       <md-text-button
-        @click="saveChanges"
+        @click="update"
         :disabled="form.processing"
       >
         Guardar cambios
@@ -148,7 +148,7 @@ defineExpose({ editPersonalInfoModal })
     </div>
     <div slot="actions">
       <md-text-button @click="cancelEditModal?.close">Cancelar</md-text-button>
-      <md-text-button @click="discardChanges">Aceptar</md-text-button>
+      <md-text-button @click="cancelUpdate">Aceptar</md-text-button>
     </div>
   </Modal>
 

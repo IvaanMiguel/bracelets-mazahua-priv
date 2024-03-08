@@ -10,9 +10,7 @@ import '@material/web/list/list-item'
 import Addresses from './Partials/Show/Addresses.vue'
 import PersonalInfo from './Partials/Show/PersonalInfo.vue'
 
-defineOptions({
-  layout: MainLayout,
-})
+defineOptions({ layout: MainLayout })
 
 const back = () => history.back()
 </script>

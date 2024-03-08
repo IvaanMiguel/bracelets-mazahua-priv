@@ -19,7 +19,7 @@ const { modal } = useModal('#remove-address-modal')
 
 const removedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 
-const removeAddress = () => {
+const remove = () => {
   const i = props.addresses.findIndex(
     (address) => address.id === props.selectedAddress?.id
   )
@@ -41,7 +41,7 @@ const removeAddress = () => {
     </div>
     <div slot="actions">
       <md-text-button @click="modal?.close">Cancelar</md-text-button>
-      <md-text-button @click="removeAddress">Aceptar</md-text-button>
+      <md-text-button @click="remove">Aceptar</md-text-button>
     </div>
   </Modal>
   <Snackbar

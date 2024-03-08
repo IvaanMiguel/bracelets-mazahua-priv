@@ -17,9 +17,7 @@ const form = useForm<Customer>({
 })
 useFormErrors(customerRules, form, { $registerAs: 'personalInfo' })
 
-defineExpose({
-  form,
-})
+defineExpose({ form })
 </script>
 
 <template>

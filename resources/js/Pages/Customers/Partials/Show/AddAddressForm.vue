@@ -45,7 +45,7 @@ const store = async () => {
     })
 }
 
-const discard = () => {
+const cancelStore = () => {
   addAddressModal.value?.close()
   cancelAddModal.value?.close()
 
@@ -164,7 +164,7 @@ defineExpose({ addAddressModal })
     </div>
     <div slot="actions">
       <md-text-button @click="cancelAddModal?.close">Cancelar</md-text-button>
-      <md-text-button @click="discard">Aceptar</md-text-button>
+      <md-text-button @click="cancelStore">Aceptar</md-text-button>
     </div>
   </Modal>
 

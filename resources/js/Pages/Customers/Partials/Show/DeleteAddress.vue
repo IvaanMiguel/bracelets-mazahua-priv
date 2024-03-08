@@ -7,9 +7,7 @@ import { CustomerWithAddresses, IdAddress } from '@/types/customers'
 import { router, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 
-const props = defineProps<{
-  selectedAddress: IdAddress | null
-}>()
+const props = defineProps<{ selectedAddress: IdAddress | null }>()
 
 const page = usePage()
 const { modal } = useModal('#delete-address-modal')
@@ -21,7 +19,7 @@ const addresses = computed(() => {
   return customer.addresses
 })
 
-const deleteAddress = () => {
+const destroy = () => {
   if (addresses.value.length <= 1) return
 
   router.delete(
@@ -52,8 +50,8 @@ defineExpose({ modal })
       puede deshacerse, ¿deseas continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="modal?.close"> Cancelar </md-text-button>
-      <md-text-button @click="deleteAddress">Aceptar</md-text-button>
+      <md-text-button @click="modal?.close">Cancelar</md-text-button>
+      <md-text-button @click="destroy">Aceptar</md-text-button>
     </div>
   </Modal>
 

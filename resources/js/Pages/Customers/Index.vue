@@ -15,13 +15,8 @@ import '@material/web/tabs/primary-tab'
 import Create from './Partials/Create.vue'
 import CustomersList from './Partials/CustomersList.vue'
 
-defineOptions({
-  layout: MainLayout,
-})
-
-defineProps<{
-  customers: Pagination<CustomerListItem>
-}>()
+defineOptions({ layout: MainLayout })
+defineProps<{ customers: Pagination<CustomerListItem> }>()
 </script>
 
 <template>

@@ -8,9 +8,7 @@ import { ref } from 'vue'
 import EditAddedAddressForm from './EditAddedAddressForm.vue'
 import RemoveAddedAddress from './RemoveAddedAddress.vue'
 
-const props = defineProps<{
-  addresses: IdAddress[]
-}>()
+const props = defineProps<{ addresses: IdAddress[] }>()
 
 const addedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 const selectedAddress = ref<IdAddress | null>(null)
@@ -42,9 +40,7 @@ const openModal = (modal: MdDialog | null, address: IdAddress) => {
   modal?.show()
 }
 
-defineExpose({
-  addAddress,
-})
+defineExpose({ addAddress })
 </script>
 1
 <template>

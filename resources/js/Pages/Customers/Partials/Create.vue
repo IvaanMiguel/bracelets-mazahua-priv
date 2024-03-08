@@ -14,7 +14,7 @@ const personalInfoForm = ref<InstanceType<typeof PersonalInfoForm>>()
 const addressForm = ref<InstanceType<typeof AddressForm>>()
 const processing = ref(false)
 
-const submit = async () => {
+const store = async () => {
   let addressFormValidate = true
   const personalInfoFormValidate =
     await (v.value.personalInfo.$validate() as Promise<boolean>)
@@ -65,7 +65,7 @@ const submit = async () => {
     <AddressForm ref="addressForm" />
     <div class="text-end">
       <md-filled-button
-        @click="submit"
+        @click="store"
         :disabled="processing"
       >
         Guardar cliente
