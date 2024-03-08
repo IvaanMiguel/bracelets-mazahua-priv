@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Form from '@/Components/Form.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
@@ -83,7 +84,10 @@ useEventListener(editAddressModal, 'open', () => {
   >
     <div slot="headline">Editar dirección agregada</div>
     <div slot="content">
-      <div class="flex flex-col gap-4">
+      <Form
+        class="flex flex-col gap-4"
+        :submit="saveChanges"
+      >
         <TextField
           class="w-full flex-1"
           label="Calle principal"
@@ -160,7 +164,7 @@ useEventListener(editAddressModal, 'open', () => {
             </template>
           </TextField>
         </div>
-      </div>
+      </Form>
     </div>
     <div slot="actions">
       <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
