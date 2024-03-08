@@ -28,66 +28,56 @@ defineExpose({
   >
     Datos personales
   </h1>
-  <Form class="flex flex-col">
-    <div class="mb-6 flex flex-col items-start gap-6 md:flex-row">
-      <TextField
-        class="w-full flex-1"
-        label="Nombre(s)"
-        required
-        minlength="1"
-        maxlength="100"
-        :error="form.errors.name"
-        v-model="form.name"
-      >
-        <template #floating-icon>
-          <Icon>person</Icon>
-        </template>
-      </TextField>
-      <TextField
-        class="w-full flex-1"
-        label="Apellido(s)"
-        required
-        minlength="1"
-        maxlength="100"
-        empty-floating-icon
-        :error="form.errors.last_name"
-        v-model="form.last_name"
-      />
-    </div>
-    <div class="mb-6 flex flex-col items-start gap-6 md:flex-row">
-      <TextField
-        class="w-full flex-1"
-        label="Número celular"
-        type="tel"
-        required
-        minlength="10"
-        maxlength="10"
-        :error="form.errors.phone_number"
-        v-model="form.phone_number"
-      >
-        <template #floating-icon>
-          <Icon>phone</Icon>
-        </template>
-      </TextField>
-      <TextField
-        class="w-full flex-1"
-        label="Email"
-        type="email"
-        maxlength="255"
-        :error="form.errors.email"
-        v-model="form.email"
-      >
-        <template #floating-icon>
-          <Icon>alternate_email</Icon>
-        </template>
-      </TextField>
-    </div>
-    <div class="md:w-[calc(50%-(1.5rem/2))]">
-      <DatePicker
-        teleport="body"
-        v-model="form.birth_date"
-        :error="form.errors.birth_date"
-      />
-    </div>
+  <Form class="grid gap-6 md:grid-cols-2">
+    <TextField
+      label="Nombre(s)"
+      required
+      minlength="1"
+      maxlength="100"
+      :error="form.errors.name"
+      v-model="form.name"
+    >
+      <template #floating-icon>
+        <Icon>person</Icon>
+      </template>
+    </TextField>
+    <TextField
+      label="Apellido(s)"
+      required
+      minlength="1"
+      maxlength="100"
+      empty-floating-icon
+      :error="form.errors.last_name"
+      v-model="form.last_name"
+    />
+    <TextField
+      label="Número celular"
+      type="tel"
+      required
+      minlength="10"
+      maxlength="10"
+      :error="form.errors.phone_number"
+      v-model="form.phone_number"
+    >
+      <template #floating-icon>
+        <Icon>phone</Icon>
+      </template>
+    </TextField>
+    <TextField
+      label="Email"
+      type="email"
+      maxlength="255"
+      :error="form.errors.email"
+      v-model="form.email"
+    >
+      <template #floating-icon>
+        <Icon>alternate_email</Icon>
+      </template>
+    </TextField>
+    <DatePicker
+      teleport="body"
+      v-model="form.birth_date"
+      :error="form.errors.birth_date"
+    />
   </Form>
 </template>
