@@ -45,7 +45,7 @@ const onDelete = (address: IdAddress) => {
     class="text-on-background rounded-lg border border-light-outline-variant pt-4 dark:border-dark-outline-variant"
     v-bind="$attrs"
   >
-    <div class="mx-4 mb-1 flex items-center justify-between">
+    <div class="mx-4 mb-4 flex items-center justify-between">
       <h1
         class="text-xl font-medium text-light-on-background dark:text-dark-on-background"
       >
@@ -56,6 +56,7 @@ const onDelete = (address: IdAddress) => {
         <Icon slot="icon">add</Icon>
       </md-filled-button>
     </div>
+    <md-divider />
     <md-list
       class="rounded-b-lg bg-light-surface-container-lowest dark:bg-dark-surface-container"
     >
