@@ -71,7 +71,6 @@ defineExpose({ editPersonalInfoModal })
     <div slot="headline">Editar datos personales</div>
     <Form
       slot="content"
-      id="edit-form"
       class="flex flex-col gap-4"
       :submit="saveChanges"
     >
@@ -129,8 +128,7 @@ defineExpose({ editPersonalInfoModal })
     <div slot="actions">
       <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
       <md-text-button
-        type="submit"
-        form="edit-form"
+        @click="saveChanges"
         :disabled="form.processing"
       >
         Guardar cambios
