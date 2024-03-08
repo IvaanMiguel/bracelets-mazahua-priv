@@ -47,16 +47,7 @@ const saveChanges = async () => {
 
   form.put(route('customers.update', { id: customer.value.id }), {
     onSuccess: () => {
-      form.defaults({
-        name: customer.value.name,
-        last_name: customer.value.last_name,
-        birth_date: customer.value.birth_date
-          ? format(`${customer.value.birth_date}`, 'y/MM/dd', { locale: es })
-          : null,
-        email: customer.value.email,
-        phone_number: customer.value.phone_number,
-      })
-
+      form.defaults()
       form.reset()
       form.clearErrors()
       v$.value.$reset()
