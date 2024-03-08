@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAddressRequest;
 use App\Models\Address;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class AddressController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreAddressRequest $request)
     {
-        //
+        Address::create($request->all());
+
+        return back();
     }
 
     public function update(Request $request, string $id)
