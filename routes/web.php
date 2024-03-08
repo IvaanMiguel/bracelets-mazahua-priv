@@ -21,6 +21,7 @@ Route::controller(CustomerController::class)->prefix('customers')->group(functio
 });
 
 Route::controller(AddressController::class)->prefix('addresses')->group(function () {
+    Route::post('/', 'store')->name('addresses.store');
     Route::delete('/{id}', 'destroy')->name('addresses.destroy');
 });
 
