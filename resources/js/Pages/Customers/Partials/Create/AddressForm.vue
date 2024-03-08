@@ -9,11 +9,6 @@ import { useForm } from '@inertiajs/vue3'
 import { reactive, ref } from 'vue'
 import AddedAddressesList from './AddedAddressesList.vue'
 
-defineProps<{
-  submit: (e?: Event) => void
-}>()
-
-const addresses = reactive<IdAddress[]>([])
 const form = useForm<Address>({
   main_street: '',
   cross_streets: '',
@@ -22,19 +17,22 @@ const form = useForm<Address>({
   street_number: '',
   suite_number: '',
 })
-
 const { v$ } = useFormErrors(addressRules, form, { $registerAs: 'address' })
 
+const mainStreetField = ref<InstanceType<typeof TextField>>()
 const addressesList = ref<InstanceType<typeof AddedAddressesList>>()
+const addresses = reactive<IdAddress[]>([])
 
 const validateAddress = async () => {
   const validate = await v$.value.$validate()
 
-  if (validate) {
-    addressesList.value?.addAddress({ id: -1, ...form.data() })
-    form.reset()
-    v$.value.$reset()
-  }
+  if (!validate) return
+
+  addressesList.value?.addAddress({ id: -1, ...form.data() })
+  form.reset()
+  v$.value.$reset()
+
+  mainStreetField.value?.input?.focus()
 }
 
 const resetAddresses = () => {
@@ -58,10 +56,11 @@ defineExpose({
   </div>
   <Form
     class="flex flex-col"
-    :submit="submit"
+    :submit="validateAddress"
   >
     <div class="mb-6 flex flex-col items-start gap-6 md:flex-row">
       <TextField
+        ref="mainStreetField"
         class="w-full flex-1"
         label="Calle principal"
         name="main_street"
