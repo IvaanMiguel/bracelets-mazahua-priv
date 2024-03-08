@@ -1,18 +1,33 @@
 <script setup lang="ts">
+import AddressForm from '@/Components/Forms/AddressForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Snackbar from '@/Components/Snackbar.vue'
 import { router } from '@inertiajs/vue3'
 import useVuelidate from '@vuelidate/core'
 import { ref } from 'vue'
-import AddressForm from './Create/AddressForm.vue'
+import AddedAddressesList from './Create/AddedAddressesList.vue'
 import PersonalInfoForm from './Create/PersonalInfoForm.vue'
 
 const v = useVuelidate()
 
-const successSnackbar = ref<InstanceType<typeof Snackbar>>()
+const processing = ref(false)
 const personalInfoForm = ref<InstanceType<typeof PersonalInfoForm>>()
 const addressForm = ref<InstanceType<typeof AddressForm>>()
-const processing = ref(false)
+const addedAddressesList = ref<InstanceType<typeof AddedAddressesList>>()
+const successSnackbar = ref<InstanceType<typeof Snackbar>>()
+
+const validateAddress = async () => {
+  const validate = await addressForm.value?.v$.$validate()
+
+  if (!validate) return
+
+  addedAddressesList.value?.addAddress({
+    id: -1,
+    ...addressForm.value!.form.data(),
+  })
+  addressForm.value?.form.reset()
+  addressForm.value?.v$.$reset()
+}
 
 const store = async () => {
   let addressFormValidate = true
@@ -20,8 +35,8 @@ const store = async () => {
     await (v.value.personalInfo.$validate() as Promise<boolean>)
 
   if (
-    addressForm.value?.addresses.length === 0 ||
-    addressForm.value?.addressForm?.form.isDirty
+    addedAddressesList.value?.addresses.length === 0 ||
+    addressForm.value?.form.isDirty
   ) {
     addressFormValidate =
       await (v.value.address.$validate() as Promise<boolean>)
@@ -35,15 +50,15 @@ const store = async () => {
     route('customers.store'),
     {
       ...personalInfoForm.value?.form.data(),
-      ...addressForm.value?.addressForm?.form.data(),
-      addresses: addressForm.value?.addresses,
+      ...addressForm.value?.form.data(),
+      addresses: addedAddressesList.value?.addresses,
     },
     {
       onStart: () => (processing.value = true),
       onSuccess: () => {
         personalInfoForm.value?.form.reset()
-        addressForm.value?.addressForm?.form.reset()
-        addressForm.value?.resetAddresses()
+        addressForm.value?.form.reset()
+        addedAddressesList.value?.resetAddresses()
 
         v.value.$reset()
 
@@ -64,8 +79,22 @@ const store = async () => {
     <PersonalInfoForm ref="personalInfoForm" />
 
     <md-divider class="my-8" />
+    <div class="mb-4 flex items-center justify-between">
+      <h1 class="text-on-background text-xl font-medium">Direcciones</h1>
+      <md-filled-tonal-button @click="validateAddress">
+        Agregar dirección
+        <Icon slot="icon">add_location</Icon>
+      </md-filled-tonal-button>
+    </div>
 
-    <AddressForm ref="addressForm" />
+    <AddressForm
+      ref="addressForm"
+      class="mb-6 grid gap-6 md:grid-cols-2"
+      :submit="validateAddress"
+      :config="{ $registerAs: 'address' }"
+    />
+
+    <AddedAddressesList ref="addedAddressesList" />
 
     <div class="text-end">
       <md-filled-button

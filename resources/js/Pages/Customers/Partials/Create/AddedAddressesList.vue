@@ -4,12 +4,11 @@ import Snackbar from '@/Components/Snackbar.vue'
 import { useModal } from '@/composables/useModal'
 import { IdAddress } from '@/types/customers'
 import { MdDialog } from '@material/web/dialog/dialog'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import EditAddedAddressForm from './EditAddedAddressForm.vue'
 import RemoveAddedAddress from './RemoveAddedAddress.vue'
 
-const props = defineProps<{ addresses: IdAddress[] }>()
-
+const addresses = reactive<IdAddress[]>([])
 const addedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 const selectedAddress = ref<IdAddress | null>(null)
 let incrementalId = 0
@@ -19,9 +18,13 @@ const { modal: editAddressModal } = useModal('#edit-address-modal')
 
 const addAddress = (address: IdAddress) => {
   address.id = incrementalId
-  props.addresses.push(address)
+  addresses.push(address)
   incrementalId += 1
   addedAddressSnackbar.value?.show(true)
+}
+
+const resetAddresses = () => {
+  addresses.splice(0, addresses.length)
 }
 
 const createAddressDetails = (address: IdAddress) => {
@@ -40,7 +43,7 @@ const openModal = (modal: MdDialog | null, address: IdAddress) => {
   modal?.show()
 }
 
-defineExpose({ addAddress })
+defineExpose({ addAddress, resetAddresses, addresses })
 </script>
 1
 <template>
