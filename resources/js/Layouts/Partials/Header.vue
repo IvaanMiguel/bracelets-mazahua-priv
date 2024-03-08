@@ -11,7 +11,7 @@ import ColorMode from '@/Components/ColorMode.vue'
     >
       Bracelets Mazahua
     </h1>
-    <ColorMode class="ms-auto me-4" />
+    <ColorMode class="me-4 ms-auto" />
     <h6 class="text-lg text-light-on-background dark:text-dark-on-background">
       {{ $page.props.auth.user.username }}
     </h6>

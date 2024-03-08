@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import Icon from '@/Components/Icon.vue'
 import '@material/web/elevation/elevation'
 import '@material/web/focus/md-focus-ring'
 import '@material/web/ripple/ripple'
-import Icon from '@/Components/Icon.vue'
 
 withDefaults(
   defineProps<{
@@ -10,7 +10,7 @@ withDefaults(
     active?: boolean
   }>(),
   {
-    active: false
+    active: false,
   }
 )
 </script>

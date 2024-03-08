@@ -4,21 +4,14 @@ import { MdOutlinedTextField } from '@material/web/textfield/outlined-text-field
 import { ref } from 'vue'
 import Icon from './Icon.vue'
 
-withDefaults(
-  defineProps<{
-    emptyFloatingIcon?: boolean
-  }>(),
-  {
-    emptyFloatingIcon: false,
-  }
-)
+withDefaults(defineProps<{ emptyFloatingIcon?: boolean }>(), {
+  emptyFloatingIcon: false,
+})
 
 const model = defineModel()
 const input = ref<MdOutlinedTextField | null>(null)
 
-defineExpose({
-  input,
-})
+defineExpose({ input })
 </script>
 
 <template>

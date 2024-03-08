@@ -9,11 +9,9 @@ const tabs = ref<MdTabs | null>(null)
 const tabsCount = ref<number | undefined>(0)
 const tabTranslation = ref<string | null>(null)
 
-const tabsOnChange = () => {
+useEventListener(tabs, 'change', () => {
   tabTranslation.value = `${-tabs.value!.activeTabIndex * 100}%`
-}
-
-useEventListener(tabs, 'change', tabsOnChange)
+})
 
 onMounted(() => {
   tabsCount.value = tabs.value?.childElementCount

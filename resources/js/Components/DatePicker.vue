@@ -12,7 +12,6 @@ import Icon from './Icon.vue'
 import TextField from './TextField.vue'
 
 defineProps<{ error?: string }>()
-
 const model = defineModel<ModelValue>()
 
 const textfield = ref<InstanceType<typeof TextField>>()

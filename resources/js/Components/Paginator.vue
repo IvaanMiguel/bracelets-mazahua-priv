@@ -22,6 +22,7 @@ const props = withDefaults(
 )
 
 const results = ref<number | null>(null)
+
 const selectOption = (i: number) => {
   if (
     props.selectedResults &&

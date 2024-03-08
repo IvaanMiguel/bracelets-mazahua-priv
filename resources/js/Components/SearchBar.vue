@@ -1,19 +1,14 @@
 <script setup lang="ts">
-import { router, usePage } from '@inertiajs/vue3';
-import '@material/web/textfield/outlined-text-field';
-import { ref, watch } from 'vue';
-import Icon from './Icon.vue';
+import { router, usePage } from '@inertiajs/vue3'
+import '@material/web/textfield/outlined-text-field'
+import { ref, watch } from 'vue'
+import Icon from './Icon.vue'
 
 const search = ref(usePage().props.filters.search)
 
-const props = withDefaults(
-  defineProps<{
-    baseUrl?: string
-  }>(),
-  {
-    baseUrl: route().current(),
-  }
-)
+const props = withDefaults(defineProps<{ baseUrl?: string }>(), {
+  baseUrl: route().current(),
+})
 
 watch(search, (value) => {
   router.get(

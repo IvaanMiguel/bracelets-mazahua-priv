@@ -1,24 +1,17 @@
 <script setup lang="ts">
-import { MdDialog } from '@material/web/dialog/dialog.js'
 import '@material/web/dialog/dialog'
+import { MdDialog } from '@material/web/dialog/dialog.js'
 import { useEventListener } from '@vueuse/core'
 import { ref } from 'vue'
 
-const props = withDefaults(
-  defineProps<{
-    notCancellable?: boolean
-  }>(),
-  {
-    notCancellable: false,
-  }
-)
+const props = withDefaults(defineProps<{ notCancellable?: boolean }>(), {
+  notCancellable: false,
+})
 
 const modal = ref<MdDialog | null>(null)
 
 useEventListener(modal, 'cancel', (e) => {
-  if (props.notCancellable) {
-    e.preventDefault()
-  }
+  if (props.notCancellable) e.preventDefault()
 })
 </script>
 

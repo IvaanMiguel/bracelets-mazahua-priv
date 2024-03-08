@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { useEventListener } from '@vueuse/core'
+import { ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -13,20 +14,14 @@ const props = withDefaults(
 
 const form = ref<HTMLFormElement | null>(null)
 
-const submitFormOnEnter = (e: KeyboardEvent) => {
-  if (e.code !== 'Enter' && e.code !== 'NumpadEnter') return
+useEventListener(form, 'keydown', (e: KeyboardEvent) => {
+  if (
+    (e.code !== 'Enter' && e.code !== 'NumpadEnter') ||
+    props.notSubmitOnEnter
+  )
+    return
 
   if (props.submit) props.submit()
-}
-
-onMounted(() => {
-  if (props.notSubmitOnEnter) return
-
-  form.value?.addEventListener('keydown', submitFormOnEnter)
-})
-
-onUnmounted(() => {
-  form.value?.removeEventListener('keydown', submitFormOnEnter)
 })
 </script>
 

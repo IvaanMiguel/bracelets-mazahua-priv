@@ -11,14 +11,15 @@ const props = withDefaults(
     onAction?: Function
     closeButton?: boolean
     time?: number
-    text: string
+    text?: string
   }>(),
   {
     closeButton: false,
-    time: 3
+    time: 3,
   }
 )
 
+const isVisible = ref(false)
 const paddingEnd = computed(() => {
   if (props.closeButton) {
     return 'pe-3'
@@ -29,11 +30,9 @@ const paddingEnd = computed(() => {
   }
 })
 
-const isVisible = ref(false)
-
-let closeOnTimeoutId:number | undefined = undefined
+let closeOnTimeoutId: number | undefined
 const show = (bool: boolean) => (isVisible.value = bool)
-const closeOnTimeout = () => isVisible.value = false
+const closeOnTimeout = () => (isVisible.value = false)
 
 watch(isVisible, () => {
   if (isVisible.value) {
@@ -45,16 +44,12 @@ watch(isVisible, () => {
   clearTimeout(closeOnTimeoutId)
 })
 
-defineExpose({
-  show
-})
+defineExpose({ show })
 </script>
 
 <template>
   <Teleport to="body">
-    <div
-      class="absolute inset-x-0 bottom-4 z-[1] mx-auto h-fit w-fit"
-    >
+    <div class="absolute inset-x-0 bottom-4 z-[1] mx-auto h-fit w-fit">
       <Transition
         enter-from-class="translate-y-20"
         enter-active-class="transition-transform duration-300 ease-out"

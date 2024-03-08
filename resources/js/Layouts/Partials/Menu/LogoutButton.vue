@@ -1,31 +1,20 @@
 <script setup lang="ts">
-import '@material/web/button/text-button'
-import Modal from '@/Components/Modal.vue'
-import MenuButton from './MenuButton.vue'
 import Icon from '@/Components/Icon.vue'
+import Modal from '@/Components/Modal.vue'
+import { useModal } from '@/composables/useModal'
+import '@material/web/button/text-button'
+import MenuButton from './MenuButton.vue'
 
-import { ref, onMounted } from 'vue'
-import { MdDialog } from '@material/web/dialog/dialog'
+defineProps<{ isExpanded: boolean }>()
 
-defineProps<{
-  isExpanded: boolean
-}>()
-
-const modal = ref<MdDialog | null>(null)
-
-const openModal = () => modal.value?.show()
-const closeModal = () => modal.value?.close()
-
-onMounted(() => {
-  modal.value = document.querySelector('#logout-modal')
-})
+const { modal } = useModal('#logout-modal')
 </script>
 
 <template>
   <MenuButton
     class="mt-auto"
     icon="logout"
-    @click="openModal"
+    @click="modal?.show()"
   >
     <template v-if="isExpanded">Cerrar sesión</template>
   </MenuButton>
@@ -35,7 +24,7 @@ onMounted(() => {
     <div slot="headline">Cerrar sesión</div>
     <div slot="content">¿Deseas cerrar la sesión actual?</div>
     <div slot="actions">
-      <md-text-button @click="closeModal">Cancelar</md-text-button>
+      <md-text-button @click="modal?.close()">Cancelar</md-text-button>
       <Link
         tabindex="-1"
         :href="route('logout')"

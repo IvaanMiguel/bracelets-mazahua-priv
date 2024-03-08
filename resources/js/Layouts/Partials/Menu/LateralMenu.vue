@@ -1,13 +1,11 @@
 <script setup lang="ts">
+import Icon from '@/Components/Icon.vue'
 import { MenuButton as MenuButtonType } from '@/types'
-
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
-import Icon from '@/Components/Icon.vue'
-import MenuButton from './MenuButton.vue'
-
 import { ref } from 'vue'
 import LogoutButton from './LogoutButton.vue'
+import MenuButton from './MenuButton.vue'
 
 const buttons: MenuButtonType[] = [
   {

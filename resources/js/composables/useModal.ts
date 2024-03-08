@@ -8,5 +8,5 @@ export function useModal(querySelector: string) {
     modal.value = document.body.querySelector(querySelector)
   })
 
-  return { modal: modal }
+  return { modal }
 }
