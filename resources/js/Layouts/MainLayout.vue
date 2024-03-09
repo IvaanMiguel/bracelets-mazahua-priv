@@ -1,6 +1,17 @@
 <script setup lang="ts">
+import Snackbar from '@/Components/Snackbar.vue'
+import { router } from '@inertiajs/vue3'
+import { onMounted, ref } from 'vue'
 import Header from './Partials/Header.vue'
 import LateralMenu from './Partials/Menu/LateralMenu.vue'
+
+const backendSnackbar = ref<InstanceType<typeof Snackbar>>()
+
+onMounted(() => {
+  router.on('error', () => {
+    backendSnackbar.value?.show(true)
+  })
+})
 </script>
 
 <template>
@@ -13,4 +24,10 @@ import LateralMenu from './Partials/Menu/LateralMenu.vue'
       </main>
     </div>
   </div>
+
+  <Snackbar
+    ref="backendSnackbar"
+    :text="$page.props.errors.internal_error"
+    close-button
+  />
 </template>
