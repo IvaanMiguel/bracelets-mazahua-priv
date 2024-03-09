@@ -7,7 +7,7 @@ import { CustomerWithAddresses, IdAddress } from '@/types/customers'
 import { router, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 
-const props = defineProps<{ selectedAddress: IdAddress | null }>()
+const props = defineProps<{ selectedAddress?: IdAddress }>()
 
 const page = usePage()
 const { modal } = useModal('#delete-address-modal')
