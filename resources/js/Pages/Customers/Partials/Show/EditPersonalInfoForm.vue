@@ -14,7 +14,7 @@ import { computed, ref } from 'vue'
 const v = useVuelidate()
 const page = usePage()
 const { modal: editPersonalInfoModal } = useModal('#edit-personal-info-modal')
-const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
+const { modal: cancelEditModal } = useModal('#cancel-edit-personal-info-modal')
 
 const customerForm = ref<InstanceType<typeof CustomerForm>>()
 const editedCustomerSnackbar = ref<InstanceType<typeof Snackbar>>()
@@ -92,7 +92,7 @@ defineExpose({ editPersonalInfoModal })
   </Modal>
 
   <Modal
-    id="cancel-edit-modal"
+    id="cancel-edit-personal-info-modal"
     type="alert"
   >
     <Icon slot="icon">edit_off</Icon>
