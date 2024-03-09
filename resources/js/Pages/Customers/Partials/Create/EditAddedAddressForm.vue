@@ -39,16 +39,16 @@ const updateAddress = () => {
 const saveChanges = async () => {
   const validate = await v.value.$validate()
 
-  if (validate) {
-    updateAddress()
+  if (!validate) return
 
-    addressForm.value!.form.reset()
-    addressForm.value!.form.clearErrors()
-    v.value.$reset()
-    editAddressModal.value?.close()
+  updateAddress()
 
-    editedAddressSnackbar.value?.show(true)
-  }
+  addressForm.value!.form.reset()
+  addressForm.value!.form.clearErrors()
+  v.value.$reset()
+  editAddressModal.value?.close()
+
+  editedAddressSnackbar.value?.show(true)
 }
 
 const discardChanges = () => {
@@ -60,14 +60,10 @@ const discardChanges = () => {
 }
 
 useEventListener(editAddressModal, 'open', () => {
-  const form = addressForm.value!.form
+  if (!addressForm.value?.form) return
 
-  form.main_street = props.selectedAddress?.main_street || ''
-  form.cross_streets = props.selectedAddress?.cross_streets || ''
-  form.neighborhood = props.selectedAddress?.neighborhood || ''
-  form.postal_code = props.selectedAddress?.postal_code || ''
-  form.street_number = props.selectedAddress?.street_number || ''
-  form.suite_number = props.selectedAddress?.suite_number || ''
+  addressForm.value.form.defaults({ ...props.selectedAddress })
+  addressForm.value.form.reset()
 })
 </script>
 
