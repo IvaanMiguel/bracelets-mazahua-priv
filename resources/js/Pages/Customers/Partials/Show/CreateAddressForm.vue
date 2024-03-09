@@ -6,8 +6,10 @@ import Snackbar from '@/Components/Snackbar.vue'
 import { useModal } from '@/composables/useModal'
 import { IdCustomer } from '@/types/customers'
 import { usePage } from '@inertiajs/vue3'
+import useVuelidate from '@vuelidate/core'
 import { computed, ref } from 'vue'
 
+const v = useVuelidate()
 const page = usePage()
 const { modal: addAddressModal } = useModal('#add-address-modal')
 const { modal: cancelAddModal } = useModal('#cancel-add-modal')
@@ -17,7 +19,7 @@ const storedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 const customer = computed(() => page.props.customer as IdCustomer)
 
 const store = async () => {
-  const validate = await addressForm.value?.v$.$validate()
+  const validate = await v.value.$validate()
 
   if (!validate) return
 
@@ -26,7 +28,7 @@ const store = async () => {
     .post(route('addresses.store'), {
       onSuccess: () => {
         addressForm.value?.form.reset()
-        addressForm.value?.v$.$reset()
+        v.value.$reset()
 
         addAddressModal.value?.close()
         storedAddressSnackbar.value?.show(true)
@@ -39,7 +41,7 @@ const cancelStore = () => {
   cancelAddModal.value?.close()
 
   addressForm.value?.form.reset()
-  addressForm.value?.v$.$reset()
+  v.value.$reset()
 }
 
 defineExpose({ addAddressModal })
@@ -59,7 +61,7 @@ defineExpose({ addAddressModal })
       class="flex flex-col gap-4"
       :submit="store"
     />
-    
+
     <div slot="actions">
       <md-text-button @click="cancelAddModal?.show">Cancelar</md-text-button>
       <md-text-button

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useFormErrors } from '@/composables/useFormErrors'
+import { InertiaForm } from '@inertiajs/vue3'
+import { GlobalConfig, ValidationArgs } from '@vuelidate/core'
 import { useEventListener } from '@vueuse/core'
 import { ref } from 'vue'
 
@@ -6,14 +9,18 @@ const props = withDefaults(
   defineProps<{
     submit?: (e?: Event) => void
     notSubmitOnEnter?: boolean
+    inertiaForm: InertiaForm<any>
+    rules: ValidationArgs
+    config?: GlobalConfig
   }>(),
   {
     notSubmitOnEnter: false,
   }
 )
 
-const form = ref<HTMLFormElement | null>(null)
+useFormErrors(props.rules, props.inertiaForm, props.config)
 
+const form = ref<HTMLFormElement>()
 useEventListener(form, 'keydown', (e: KeyboardEvent) => {
   if (
     (e.code !== 'Enter' && e.code !== 'NumpadEnter') ||

@@ -1,23 +1,23 @@
 <script setup lang="ts">
 import AddressForm from '@/Components/Forms/AddressForm.vue'
+import CustomerForm from '@/Components/Forms/CustomerForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Snackbar from '@/Components/Snackbar.vue'
 import { router } from '@inertiajs/vue3'
-import useVuelidate from '@vuelidate/core'
+import useVuelidate, { Validation } from '@vuelidate/core'
 import { ref } from 'vue'
 import AddedAddressesList from './Create/AddedAddressesList.vue'
-import PersonalInfoForm from './Create/PersonalInfoForm.vue'
 
 const v = useVuelidate()
 
 const processing = ref(false)
-const personalInfoForm = ref<InstanceType<typeof PersonalInfoForm>>()
+const customerForm = ref<InstanceType<typeof CustomerForm>>()
 const addressForm = ref<InstanceType<typeof AddressForm>>()
 const addedAddressesList = ref<InstanceType<typeof AddedAddressesList>>()
 const successSnackbar = ref<InstanceType<typeof Snackbar>>()
 
 const validateAddress = async () => {
-  const validate = await addressForm.value?.v$.$validate()
+  const validate = await (v.value.address as Validation).$validate()
 
   if (!validate) return
 
@@ -26,7 +26,7 @@ const validateAddress = async () => {
     ...addressForm.value!.form.data(),
   })
   addressForm.value?.form.reset()
-  addressForm.value?.v$.$reset()
+  v.value.address.$reset()
 }
 
 const store = async () => {
@@ -49,14 +49,14 @@ const store = async () => {
   router.post(
     route('customers.store'),
     {
-      ...personalInfoForm.value?.form.data(),
+      ...customerForm.value?.form.data(),
       ...addressForm.value?.form.data(),
       addresses: addedAddressesList.value?.addresses,
     },
     {
       onStart: () => (processing.value = true),
       onSuccess: () => {
-        personalInfoForm.value?.form.reset()
+        customerForm.value?.form.reset()
         addressForm.value?.form.reset()
         addedAddressesList.value?.resetAddresses()
 
@@ -76,7 +76,12 @@ const store = async () => {
   >
     <md-elevation />
 
-    <PersonalInfoForm ref="personalInfoForm" />
+    <CustomerForm
+      ref="customerForm"
+      class="grid gap-6 md:grid-cols-2"
+      :config="{ $registerAs: 'personalInfo' }"
+      :date-picker-config="{ teleport: 'body' }"
+    />
 
     <md-divider class="my-8" />
     <div class="mb-4 flex items-center justify-between">

@@ -1,27 +1,26 @@
 <script setup lang="ts">
-import DatePicker from '@/Components/DatePicker.vue'
-import Form from '@/Components/Form.vue'
+import CustomerForm from '@/Components/Forms/CustomerForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import TextField from '@/Components/TextField.vue'
-import { useFormErrors } from '@/composables/useFormErrors'
 import { useModal } from '@/composables/useModal'
-import { customerRules } from '@/rules/customer'
-import { Customer, IdCustomer } from '@/types/customers'
-import { useForm, usePage } from '@inertiajs/vue3'
+import { IdCustomer } from '@/types/customers'
+import { usePage } from '@inertiajs/vue3'
+import useVuelidate from '@vuelidate/core'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { computed, ref } from 'vue'
 
+const v = useVuelidate()
 const page = usePage()
 const { modal: editPersonalInfoModal } = useModal('#edit-personal-info-modal')
 const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
 
+const customerForm = ref<InstanceType<typeof CustomerForm>>()
 const editedCustomerSnackbar = ref<InstanceType<typeof Snackbar>>()
 const customer = computed(() => page.props.customer as IdCustomer)
 
-const form = useForm<Customer>({
+const formDefaults = {
   name: customer.value.name,
   last_name: customer.value.last_name,
   birth_date: customer.value.birth_date
@@ -29,33 +28,35 @@ const form = useForm<Customer>({
     : null,
   email: customer.value.email,
   phone_number: customer.value.phone_number,
-})
-const { v$ } = useFormErrors(customerRules, form)
+}
 
 const update = async () => {
-  const validate = await v$.value?.$validate()
+  const validate = await v.value?.$validate()
 
   if (!validate) return
 
-  form.put(route('customers.update', { id: customer.value.id }), {
-    onSuccess: () => {
-      form.defaults()
-      form.reset()
-      form.clearErrors()
-      v$.value.$reset()
+  customerForm.value?.form.put(
+    route('customers.update', { id: customer.value.id }),
+    {
+      onSuccess: () => {
+        customerForm.value?.form.defaults()
+        customerForm.value?.form.reset()
+        customerForm.value?.form.clearErrors()
+        v.value.$reset()
 
-      editPersonalInfoModal.value?.close()
-      editedCustomerSnackbar.value?.show(true)
-    },
-  })
+        editPersonalInfoModal.value?.close()
+        editedCustomerSnackbar.value?.show(true)
+      },
+    }
+  )
 }
 
 const cancelUpdate = () => {
   editPersonalInfoModal.value?.close()
   cancelEditModal.value?.close()
 
-  form.reset()
-  v$.value.$reset()
+  customerForm.value?.form.reset()
+  v.value.$reset()
 }
 
 // Just to be able to open it from parent PersonalInfo.
@@ -69,67 +70,21 @@ defineExpose({ editPersonalInfoModal })
     not-cancellable
   >
     <div slot="headline">Editar datos personales</div>
-    <Form
+
+    <CustomerForm
       slot="content"
+      ref="customerForm"
       class="flex flex-col gap-4"
       :submit="update"
-    >
-      <TextField
-        label="Nombre(s)"
-        required
-        minlength="1"
-        maxlength="100"
-        :error="form.errors.name"
-        v-model="form.name"
-      >
-        <template #floating-icon>
-          <Icon>person</Icon>
-        </template>
-      </TextField>
-      <TextField
-        label="Apellido(s)"
-        required
-        minlength="1"
-        maxlength="100"
-        empty-floating-icon
-        :error="form.errors.last_name"
-        v-model="form.last_name"
-      />
-      <TextField
-        label="Número celular"
-        type="tel"
-        required
-        minlength="10"
-        maxlength="10"
-        :error="form.errors.phone_number"
-        v-model="form.phone_number"
-      >
-        <template #floating-icon>
-          <Icon>phone</Icon>
-        </template>
-      </TextField>
-      <TextField
-        label="Email"
-        type="email"
-        maxlength="255"
-        :error="form.errors.email"
-        v-model="form.email"
-      >
-        <template #floating-icon>
-          <Icon>alternate_email</Icon>
-        </template>
-      </TextField>
-      <DatePicker
-        six-weeks="center"
-        v-model="form.birth_date"
-        :error="form.errors.birth_date"
-      />
-    </Form>
+      :defaults="formDefaults"
+      :date-picker-config="{ 'six-weeks': 'center' }"
+    />
+
     <div slot="actions">
       <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
       <md-text-button
         @click="update"
-        :disabled="form.processing"
+        :disabled="customerForm?.form.processing"
       >
         Guardar cambios
       </md-text-button>

@@ -5,6 +5,7 @@ import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
 import { useModal } from '@/composables/useModal'
 import { IdAddress } from '@/types/customers'
+import useVuelidate from '@vuelidate/core'
 import { useEventListener } from '@vueuse/core'
 import { ref } from 'vue'
 
@@ -13,6 +14,7 @@ const props = defineProps<{
   selectedAddress: IdAddress | null
 }>()
 
+const v = useVuelidate()
 const { modal: editAddressModal } = useModal('#edit-address-modal')
 const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
 
@@ -35,14 +37,14 @@ const updateAddress = () => {
 }
 
 const saveChanges = async () => {
-  const validate = await addressForm.value!.v$.$validate()
+  const validate = await v.value.$validate()
 
   if (validate) {
     updateAddress()
 
     addressForm.value!.form.reset()
     addressForm.value!.form.clearErrors()
-    addressForm.value!.v$.$reset()
+    v.value.$reset()
     editAddressModal.value?.close()
 
     editedAddressSnackbar.value?.show(true)
@@ -54,7 +56,7 @@ const discardChanges = () => {
   editAddressModal.value?.close()
 
   addressForm.value!.form.reset()
-  addressForm.value!.v$.$reset()
+  v.value.$reset()
 }
 
 useEventListener(editAddressModal, 'open', () => {
@@ -75,16 +77,14 @@ useEventListener(editAddressModal, 'open', () => {
     not-cancellable
   >
     <div slot="headline">Editar dirección agregada</div>
-    <div slot="content">
 
-      <AddressForm
-        ref="addressForm"
-        class="flex flex-col gap-4"
-        :submit="saveChanges"
-        :config="{ $stopPropagation: true }"
-      />
+    <AddressForm
+      ref="addressForm"
+      slot="content"
+      class="flex flex-col gap-4"
+      :submit="saveChanges"
+    />
 
-    </div>
     <div slot="actions">
       <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
       <md-text-button @click="saveChanges">Guardar cambios</md-text-button>

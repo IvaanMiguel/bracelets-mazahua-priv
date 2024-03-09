@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { useFormErrors } from '@/composables/useFormErrors'
 import { addressRules } from '@/rules/address'
 import { Address } from '@/types/customers'
 import { useForm } from '@inertiajs/vue3'
-import { GlobalConfig } from '@vuelidate/core'
 import Form from '../Form.vue'
 import Icon from '../Icon.vue'
 import TextField from '../TextField.vue'
-
-const props = defineProps<{ config?: GlobalConfig }>()
 
 const form = useForm<Address>({
   main_street: '',
@@ -18,13 +14,15 @@ const form = useForm<Address>({
   street_number: '',
   suite_number: '',
 })
-const { v$ } = useFormErrors(addressRules, form, props.config)
 
-defineExpose({ v$, form })
+defineExpose({ form })
 </script>
 
 <template>
-  <Form>
+  <Form
+    :inertia-form="form"
+    :rules="addressRules"
+  >
     <TextField
       label="Calle principal"
       required

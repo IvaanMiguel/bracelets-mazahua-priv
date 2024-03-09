@@ -1,32 +1,33 @@
 <script setup lang="ts">
-import DatePicker from '@/Components/DatePicker.vue'
-import Form from '@/Components/Form.vue'
-import Icon from '@/Components/Icon.vue'
-import TextField from '@/Components/TextField.vue'
-import { useFormErrors } from '@/composables/useFormErrors'
 import { customerRules } from '@/rules/customer'
 import { Customer } from '@/types/customers'
 import { useForm } from '@inertiajs/vue3'
+import DatePicker from '../DatePicker.vue'
+import Form from '../Form.vue'
+import Icon from '../Icon.vue'
+import TextField from '../TextField.vue'
+
+const props = defineProps<{
+  defaults?: Customer
+  datePickerConfig?: Object
+}>()
 
 const form = useForm<Customer>({
-  name: '',
-  last_name: '',
-  birth_date: '',
-  email: '',
-  phone_number: '',
+  name: props.defaults?.name || '',
+  last_name: props.defaults?.last_name || '',
+  phone_number: props.defaults?.phone_number || '',
+  email: props.defaults?.email || '',
+  birth_date: props.defaults?.birth_date || '',
 })
-useFormErrors(customerRules, form, { $registerAs: 'personalInfo' })
 
 defineExpose({ form })
 </script>
 
 <template>
-  <h1
-    class="mb-4 text-xl font-medium text-light-on-background dark:text-dark-on-background"
+  <Form
+    :inertia-form="form"
+    :rules="customerRules"
   >
-    Datos personales
-  </h1>
-  <Form class="grid gap-6 md:grid-cols-2">
     <TextField
       label="Nombre(s)"
       required
@@ -73,9 +74,9 @@ defineExpose({ form })
       </template>
     </TextField>
     <DatePicker
-      teleport="body"
       v-model="form.birth_date"
       :error="form.errors.birth_date"
+      v-bind="datePickerConfig"
     />
   </Form>
 </template>

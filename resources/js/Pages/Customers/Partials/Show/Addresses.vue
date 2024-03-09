@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
+import Snackbar from '@/Components/Snackbar.vue'
 import { CustomerWithAddresses, IdAddress } from '@/types/customers'
 import { usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 import CreateAddressForm from './CreateAddressForm.vue'
 import DeleteAddress from './DeleteAddress.vue'
-import Snackbar from '@/Components/Snackbar.vue'
+import EditAddressForm from './EditAddressForm.vue'
 
 const page = usePage()
 
@@ -91,9 +92,9 @@ const onDestroy = (address: IdAddress) => {
     </md-list>
   </div>
 
-  <CreateAddressForm
-    ref="createAddressForm"
-  />
+  <CreateAddressForm ref="createAddressForm" />
+
+  <EditAddressForm />
 
   <DeleteAddress
     ref="deleteAddress"
@@ -115,4 +116,3 @@ const onDestroy = (address: IdAddress) => {
   --md-sys-color-on-surface-variant: theme(colors.light.error);
 }
 </style>
-./CreateAddressForm.vue
