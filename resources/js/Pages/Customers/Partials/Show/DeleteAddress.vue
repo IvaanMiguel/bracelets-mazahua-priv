@@ -12,7 +12,6 @@ const props = defineProps<{ selectedAddress?: IdAddress }>()
 const page = usePage()
 const { modal } = useModal('#delete-address-modal')
 
-const backendSnackbar = ref<InstanceType<typeof Snackbar>>()
 const deletedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 const addresses = computed(() => {
   const customer = page.props.customer as CustomerWithAddresses
@@ -28,11 +27,9 @@ const destroy = () => {
     }),
     {
       onSuccess: () => deletedAddressSnackbar.value?.show(true),
-      onError: () => backendSnackbar.value?.show(true),
+      onFinish: () => modal.value?.close(),
     }
   )
-
-  modal.value?.close()
 }
 
 defineExpose({ modal })
@@ -58,12 +55,6 @@ defineExpose({ modal })
   <Snackbar
     ref="deletedAddressSnackbar"
     text="La dirección ha sido eliminada con éxito."
-    close-button
-  />
-
-  <Snackbar
-    ref="backendSnackbar"
-    :text="$page.props.errors.internal_error"
     close-button
   />
 </template>
