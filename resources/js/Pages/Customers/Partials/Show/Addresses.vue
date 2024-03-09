@@ -10,10 +10,11 @@ import EditAddressForm from './EditAddressForm.vue'
 
 const page = usePage()
 
+const createAddressForm = ref<InstanceType<typeof CreateAddressForm>>()
+const editAddressForm = ref<InstanceType<typeof EditAddressForm>>()
 const cantDeleteSnackbar = ref<InstanceType<typeof Snackbar>>()
 const deleteAddress = ref<InstanceType<typeof DeleteAddress>>()
-const createAddressForm = ref<InstanceType<typeof CreateAddressForm>>()
-const selectedAddress = ref<IdAddress | null>(null)
+const selectedAddress = ref<IdAddress>()
 const addresses = computed(() => {
   const customer = page.props.customer as CustomerWithAddresses
   return customer.addresses
@@ -28,6 +29,11 @@ const createAddressDetails = (address: IdAddress) => {
   ].filter(Boolean)
 
   return addressDetails.join(', ')
+}
+
+const onUpdate = (address: IdAddress) => {
+  selectedAddress.value = address
+  editAddressForm.value?.editAddressModal?.show()
 }
 
 const onDestroy = (address: IdAddress) => {
@@ -76,7 +82,7 @@ const onDestroy = (address: IdAddress) => {
             {{ createAddressDetails(address) }}
           </span>
           <div slot="end">
-            <md-icon-button @click="">
+            <md-icon-button @click="onUpdate(address)">
               <Icon>edit</Icon>
             </md-icon-button>
             <md-icon-button
@@ -94,7 +100,10 @@ const onDestroy = (address: IdAddress) => {
 
   <CreateAddressForm ref="createAddressForm" />
 
-  <EditAddressForm />
+  <EditAddressForm
+    ref="editAddressForm"
+    :selected-address
+  />
 
   <DeleteAddress
     ref="deleteAddress"
