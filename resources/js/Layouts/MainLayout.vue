@@ -26,6 +26,7 @@ onMounted(() => {
   </div>
 
   <Snackbar
+    v-if="$page.props.errors.internal_error"
     ref="backendSnackbar"
     :text="$page.props.errors.internal_error"
     close-button
