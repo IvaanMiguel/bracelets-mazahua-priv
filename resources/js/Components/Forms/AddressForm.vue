@@ -6,13 +6,15 @@ import Form from '../Form.vue'
 import Icon from '../Icon.vue'
 import TextField from '../TextField.vue'
 
+const props = defineProps<{ defaults?: Address }>()
+
 const form = useForm<Address>({
-  main_street: '',
-  cross_streets: '',
-  neighborhood: '',
-  postal_code: '',
-  street_number: '',
-  suite_number: '',
+  main_street: props.defaults?.main_street || '',
+  cross_streets: props.defaults?.cross_streets || '',
+  neighborhood: props.defaults?.neighborhood || '',
+  postal_code: props.defaults?.postal_code || '',
+  street_number: props.defaults?.street_number || '',
+  suite_number: props.defaults?.suite_number || '',
 })
 
 defineExpose({ form })
