@@ -6,7 +6,6 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)
@@ -22,6 +21,7 @@ Route::controller(CustomerController::class)->prefix('customers')->group(functio
 
 Route::controller(AddressController::class)->prefix('addresses')->group(function () {
     Route::post('/', 'store')->name('addresses.store');
+    Route::put('/{id}', 'update')->name('addresses.update');
     Route::delete('/{id}', 'destroy')->name('addresses.destroy');
 });
 

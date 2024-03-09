@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAddressRequest;
+use App\Http\Requests\UpdateAddressRequest;
 use App\Models\Address;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -16,16 +17,26 @@ class AddressController extends Controller
         return back();
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateAddressRequest $request, string $id)
     {
-        //
+        try {
+            $address = Address::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors([
+                'internal_error' => 'Ha ocurrido un error el editar la dirección seleccionada.'
+            ]);
+        }
+
+        $address->update($request->all());
+
+        return back();
     }
 
     public function destroy(string $id)
     {
         try {
             $address = Address::findOrFail($id);
-        } catch (ModelNotFoundException $modelNotFoundException) {
+        } catch (ModelNotFoundException $e) {
             return back()->withErrors([
                 'internal_error' => 'Ha ocurrido un error al eliminar la dirección seleccionada.'
             ]);
