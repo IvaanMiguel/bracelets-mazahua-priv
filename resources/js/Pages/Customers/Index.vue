@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
+import Snackbar from '@/Components/Snackbar.vue'
 import Tabs from '@/Components/Tabs.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { Pagination } from '@/types'
@@ -12,11 +13,23 @@ import '@material/web/iconbutton/icon-button'
 import '@material/web/list/list'
 import '@material/web/list/list-item'
 import '@material/web/tabs/primary-tab'
+import { onMounted, ref } from 'vue'
 import Create from './Partials/Create.vue'
 import CustomersList from './Partials/CustomersList.vue'
 
 defineOptions({ layout: MainLayout })
-defineProps<{ customers: Pagination<CustomerListItem> }>()
+const props = defineProps<{
+  customers: Pagination<CustomerListItem>
+  destroyed?: boolean
+}>()
+
+const destroyedCustomerSnackbar = ref<InstanceType<typeof Snackbar>>()
+
+onMounted(() => {
+  if (!props.destroyed) return
+
+  destroyedCustomerSnackbar.value?.show(true)
+})
 </script>
 
 <template>
@@ -48,6 +61,12 @@ defineProps<{ customers: Pagination<CustomerListItem> }>()
         <CustomersList
           class="mx-auto w-full max-w-6xl"
           :customers="customers"
+        />
+
+        <Snackbar
+          ref="destroyedCustomerSnackbar"
+          text="Cliente eliminado con éxito."
+          close-button
         />
       </div>
 

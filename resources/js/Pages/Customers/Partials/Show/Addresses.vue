@@ -102,12 +102,12 @@ const onDestroy = (address: IdAddress) => {
 
   <EditAddressForm
     ref="editAddressForm"
-    :selected-address
+    :selectedAddress
   />
 
   <DeleteAddress
     ref="deleteAddress"
-    :selected-address
+    :selectedAddress
   />
 
   <Snackbar

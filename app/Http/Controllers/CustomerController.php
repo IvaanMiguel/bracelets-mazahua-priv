@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Models\Address;
 use App\Models\Customer;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class CustomerController extends Controller
@@ -30,7 +32,8 @@ class CustomerController extends Controller
             'filters' => [
                 'results' => intval($results),
                 'search' => $search
-            ]
+            ],
+            'destroyed' => Session::get('destroyed')
         ]);
     }
 
@@ -82,11 +85,18 @@ class CustomerController extends Controller
         return back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        try {
+            $customer = Customer::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors([
+                'internal_error' => 'Ha ocurrido un error al eliminar el cliente seleccionado.'
+            ]);
+        }
+
+        $customer->delete();
+
+        return to_route('customers')->with('destroyed', true);
     }
 }
