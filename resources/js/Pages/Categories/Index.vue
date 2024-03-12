@@ -4,7 +4,7 @@ import Paginator from '@/Components/Paginator.vue'
 import SearchBar from '@/Components/SearchBar.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { Pagination } from '@/types'
-import { Category, CategoryListItem, IdCategory } from '@/types/categories'
+import { CategoryListItem, IdCategory } from '@/types/categories'
 import '@material/web/button/filled-button'
 import '@material/web/divider/divider'
 import '@material/web/elevation/elevation'
@@ -15,11 +15,13 @@ import '@material/web/menu/menu'
 import '@material/web/menu/menu-item'
 import { ref } from 'vue'
 import CategoryItem from './Partials/CategoryItem.vue'
+import CreateCategoryForm from './Partials/CreateCategoryForm.vue'
 import EditCategoryForm from './Partials/EditCategoryForm.vue'
 
 defineOptions({ layout: MainLayout })
 defineProps<{ categories: Pagination<CategoryListItem> }>()
 
+const createCategoryForm = ref<InstanceType<typeof CreateCategoryForm>>()
 const editCategoryForm = ref<InstanceType<typeof EditCategoryForm>>()
 const selectedCategory = ref<IdCategory>()
 
@@ -29,7 +31,7 @@ const onEdit = (category: IdCategory) => () => {
   selectedCategory.value = category
 }
 
-const onDelete = () => {}
+const onDelete = (category: IdCategory) => () => {}
 </script>
 
 <template>
@@ -51,7 +53,9 @@ const onDelete = () => {}
           :base-url="route('categories')"
         />
 
-        <md-filled-button>
+        <md-filled-button
+          @click="createCategoryForm?.createCategoryModal?.show()"
+        >
           <Icon slot="icon">add</Icon>
           Agregar
         </md-filled-button>
@@ -73,7 +77,7 @@ const onDelete = () => {}
           <CategoryItem
             :category
             :onEdit="onEdit(category)"
-            :onDelete
+            :onDelete="onDelete(category)"
           />
           <md-divider inset />
         </template>
@@ -106,6 +110,8 @@ const onDelete = () => {}
       />
     </div>
   </div>
+
+  <CreateCategoryForm ref="createCategoryForm" />
 
   <EditCategoryForm
     ref="editCategoryForm"

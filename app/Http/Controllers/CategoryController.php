@@ -37,7 +37,9 @@ class CategoryController extends Controller
 
     public function store(StoreCategoryRequest $request)
     {
-        //
+        Category::create($request->all());
+
+        return back();
     }
 
     public function update(UpdateCategoryRequest $request, string $id)
@@ -57,6 +59,16 @@ class CategoryController extends Controller
 
     public function destroy(string $id)
     {
-        //
+        try {
+            $category = Category::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors([
+                'internal_error' => 'Ha ocurrido un error al eliminar la categoría seleccionada.'
+            ]);
+        }
+
+        $category->delete();
+
+        return back();
     }
 }
