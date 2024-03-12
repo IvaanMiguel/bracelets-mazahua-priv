@@ -23,7 +23,7 @@ onMounted(() => {
       <h1
         class="text-2xl font-medium text-light-on-background dark:text-dark-on-background"
       >
-        {{ customers.total }} clientes
+        {{ `${customers.total} cliente${customers.total !== 1 ? 's' : ''}` }}
       </h1>
       <SearchBar
         placeholder="Buscar por nombre..."
@@ -65,9 +65,9 @@ onMounted(() => {
         <span
           class="block text-xl font-medium text-light-on-background dark:text-dark-on-background"
         >
-          No se han encontrado coincidencias para "{{
-            $page.props.filters.search
-          }}".
+          {{
+            `No se han encontrado coincidencias para "${$page.props.filters.search}".`
+          }}
         </span>
       </div>
       <md-divider inset />
