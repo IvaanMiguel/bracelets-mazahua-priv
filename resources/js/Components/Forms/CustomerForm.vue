@@ -77,6 +77,7 @@ defineExpose({ form })
       v-model="form.birth_date"
       :error="form.errors.birth_date"
       v-bind="datePickerConfig"
+      :max-date="new Date()"
     />
   </Form>
 </template>
