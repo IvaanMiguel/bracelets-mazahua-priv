@@ -12,6 +12,13 @@ class StoreCustomerRequest extends FormRequest
         return true;
     }
 
+    public function messages(): array
+    {
+        return [
+            'birth_date.before_or_equal' => 'La fecha de nacimiento debe ser anterior o igual a hoy.'
+        ];
+    }
+
     public function rules(): array
     {
         $addressRules = [
@@ -50,7 +57,7 @@ class StoreCustomerRequest extends FormRequest
         return [
             'name' => ['bail', 'required', 'string', 'not_regex:/\d/', 'between:3,100'],
             'last_name' => ['bail', 'required', 'string', 'not_regex:/\d/', 'between:3,100'],
-            'birth_date' => ['bail', 'date', 'nullable'],
+            'birth_date' => ['bail', 'nullable', 'date', 'before_or_equal:today'],
             'email' => ['bail', 'email', 'max:255', 'unique:customers,email', 'nullable'],
             'phone_number' => ['bail', 'required', 'string', 'numeric', 'digits:10', 'unique:customers,phone_number'],
             ...$addressRules,
