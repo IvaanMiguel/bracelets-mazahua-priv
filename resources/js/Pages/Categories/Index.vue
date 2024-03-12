@@ -3,9 +3,9 @@ import Icon from '@/Components/Icon.vue'
 import Paginator from '@/Components/Paginator.vue'
 import SearchBar from '@/Components/SearchBar.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
-import { useMenu } from '@/composables/useMenu'
 import { Pagination } from '@/types'
-import { CategoryListItem } from '@/types/categories'
+import { Category, CategoryListItem, IdCategory } from '@/types/categories'
+import '@material/web/button/filled-button'
 import '@material/web/divider/divider'
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
@@ -13,18 +13,23 @@ import '@material/web/list/list'
 import '@material/web/list/list-item'
 import '@material/web/menu/menu'
 import '@material/web/menu/menu-item'
-import '@material/web/button/filled-button'
-import { onMounted } from 'vue'
+import { ref } from 'vue'
+import CategoryItem from './Partials/CategoryItem.vue'
+import EditCategoryForm from './Partials/EditCategoryForm.vue'
 
 defineOptions({ layout: MainLayout })
-const props = defineProps<{ categories: Pagination<CategoryListItem> }>()
+defineProps<{ categories: Pagination<CategoryListItem> }>()
 
-  // TODO: bug al filtrar categorías. Menú no abre.
-onMounted(() => {
-  props.categories.data.forEach((category) => {
-    useMenu(`#options-anchor-${category.id}`, `#options-menu-${category.id}`)
-  })
-})
+const editCategoryForm = ref<InstanceType<typeof EditCategoryForm>>()
+const selectedCategory = ref<IdCategory>()
+
+const onEdit = (category: IdCategory) => () => {
+  editCategoryForm.value?.editCategoryModal?.show()
+
+  selectedCategory.value = category
+}
+
+const onDelete = () => {}
 </script>
 
 <template>
@@ -47,7 +52,7 @@ onMounted(() => {
         />
 
         <md-filled-button>
-          <Icon slot='icon'>add</Icon>
+          <Icon slot="icon">add</Icon>
           Agregar
         </md-filled-button>
       </div>
@@ -65,29 +70,11 @@ onMounted(() => {
       >
         <md-divider inset />
         <template v-for="category in categories.data">
-          <md-list-item>
-            {{ category.name }}
-            <div slot="trailing-supporting-text">
-              {{ `${category.stock} productos` }}
-            </div>
-            <div slot="end">
-              <md-icon-button :id="`options-anchor-${category.id}`">
-                <Icon>more_vert</Icon>
-              </md-icon-button>
-              <md-menu
-                :id="`options-menu-${category.id}`"
-                :anchor="`options-anchor-${category.id}`"
-                positioning="popover"
-              >
-                <md-menu-item>
-                  <div slot="headline">Editar</div>
-                </md-menu-item>
-                <md-menu-item>
-                  <div slot="headline">Eliminar</div>
-                </md-menu-item>
-              </md-menu>
-            </div>
-          </md-list-item>
+          <CategoryItem
+            :category
+            :onEdit="onEdit(category)"
+            :onDelete
+          />
           <md-divider inset />
         </template>
       </md-list>
@@ -119,4 +106,9 @@ onMounted(() => {
       />
     </div>
   </div>
+
+  <EditCategoryForm
+    ref="editCategoryForm"
+    :selectedCategory
+  />
 </template>
