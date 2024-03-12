@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -12,9 +14,22 @@ class CategoryController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Categories/Index');
+        $results = $request->input('results', 15);
+        $search = $request->input('search');
+
+        return Inertia::render('Categories/Index', [
+            'categories' => DB::table('view_categories_stock')
+                ->where('name', 'like', "{$search}%")
+                ->orderBy('name', 'asc')
+                ->paginate($results)
+                ->appends(['search' => $search, 'results' => $results]),
+            'filters' => [
+                'results' => intval($results),
+                'search' => $search
+            ],
+        ]);
     }
 
     /**
