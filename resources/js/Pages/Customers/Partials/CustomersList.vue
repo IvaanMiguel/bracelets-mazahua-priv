@@ -10,7 +10,7 @@ import { onMounted } from 'vue'
 defineProps<{ customers: Pagination<CustomerListItem> }>()
 
 onMounted(() => {
-  router.reload({ only: ['customers'] })
+  router.reload({ only: ['customers', 'destroyed'] })
 })
 </script>
 
