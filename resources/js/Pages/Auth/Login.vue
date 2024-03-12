@@ -1,26 +1,23 @@
 <script setup lang="ts">
+import ColorMode from '@/Components/ColorMode.vue'
+import LoginForm from '@/Components/Forms/LoginForm.vue'
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
 import '@material/web/textfield/outlined-text-field'
-import Icon from '@/Components/Icon.vue'
-import { computed, ref } from 'vue'
-import ColorMode from '@/Components/ColorMode.vue'
-import { useForm } from '@inertiajs/vue3'
-import Form from '@/Components/Form.vue'
+import useVuelidate from '@vuelidate/core'
+import { ref } from 'vue'
 
-const showPassword = ref(false)
-const fieldType = computed(() => (showPassword.value ? 'text' : 'password'))
+const v = useVuelidate()
 
-const form = useForm({
-  email: '',
-  password: '',
-})
+const loginForm = ref<InstanceType<typeof LoginForm>>()
 
-const toggleVisibility = () => (showPassword.value = !showPassword.value)
+const login = async () => {
+  const validate = await v.value.$validate()
 
-const submit = () => {
-  form.post(route('login'), {
-    onFinish: () => form.reset('password'),
+  if (!validate) return
+
+  loginForm.value?.form.post(route('login'), {
+    onFinish: () => loginForm.value?.form.reset('password'),
   })
 }
 </script>
@@ -38,55 +35,21 @@ const submit = () => {
       >
         Inicia sesión
       </h1>
-      <Form
+
+      <LoginForm
+        ref="loginForm"
         class="flex flex-col gap-6"
-        :submit="submit"
-      >
-        <md-outlined-text-field
-          autofocus
-          autocomplete="username"
-          :error="form.errors.email"
-          :error-text="form.errors.email"
-          v-model="form.email"
-          label="Email"
-        >
-          <Icon slot="leading-icon">email</Icon>
-          <Icon
-            v-if="form.errors.email"
-            slot="trailing-icon"
-          >
-            error
-          </Icon>
-        </md-outlined-text-field>
+        :submit="login"
+      />
 
-        <md-outlined-text-field
-          id="password-field"
-          :type="fieldType"
-          autocomplete="current-password"
-          :error="form.errors.password"
-          :error-text="form.errors.password"
-          v-model="form.password"
-          label="Contraseña"
-        >
-          <Icon slot="leading-icon">password</Icon>
-          <md-icon-button
-            slot="trailing-icon"
-            type="button"
-            @click="toggleVisibility"
-            toggle
-          >
-            <Icon>visibility</Icon>
-            <Icon slot="selected">visibility_off</Icon>
-          </md-icon-button>
-        </md-outlined-text-field>
-
+      <div class="mt-6 text-center">
         <md-filled-button
-          class="mx-auto w-fit"
-          :disabled="form.processing"
+          @click="login"
+          :disabled="loginForm?.form.processing"
         >
           Iniciar sesión
         </md-filled-button>
-      </Form>
+      </div>
       <md-elevation />
     </div>
   </div>
