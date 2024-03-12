@@ -4,8 +4,12 @@ import { MdOutlinedTextField } from '@material/web/textfield/outlined-text-field
 import { ref } from 'vue'
 import Icon from './Icon.vue'
 
-withDefaults(defineProps<{ emptyFloatingIcon?: boolean }>(), {
+withDefaults(defineProps<{
+  emptyFloatingIcon?: boolean
+  noErrorIcon?: boolean
+}>(), {
   emptyFloatingIcon: false,
+  noErrorIcon: false
 })
 
 const model = defineModel()
@@ -34,12 +38,14 @@ defineExpose({ input })
       v-model="model"
     >
       <slot />
-      <Icon
-        v-if="$attrs.error"
-        slot="trailing-icon"
-      >
-        error
-      </Icon>
+      <template v-if='!noErrorIcon'>
+        <Icon
+          v-if="$attrs.error"
+          slot="trailing-icon"
+        >
+          error
+        </Icon>
+      </template>
     </md-outlined-text-field>
   </div>
 </template>

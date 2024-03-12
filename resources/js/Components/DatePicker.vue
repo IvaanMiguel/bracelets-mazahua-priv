@@ -50,6 +50,7 @@ const formatPreview = (value: string) => {
         readonly
         type="text"
         label="Fecha de nacimiento"
+        no-error-icon
         :error
         :value="formatValue"
       >
@@ -96,6 +97,7 @@ const formatPreview = (value: string) => {
   --dp-text-color: theme(colors.dark.on-background);
   --dp-secondary-color: theme(colors.dark.on-surface-variant);
   --dp-primary-text-color: theme(colors.dark.on-primary);
+  --dp-disabled-color: theme(colors.neutral.10);
 }
 .dp__theme_light {
   --dp-background-color: theme(colors.light.surface-container-high);
@@ -115,5 +117,9 @@ const formatPreview = (value: string) => {
 .dp__calendar-cell {
   border-radius: 50%;
   padding: 0;
+}
+.dp__clear_icon {
+  top: .5rem;
+  transform: unset;
 }
 </style>
