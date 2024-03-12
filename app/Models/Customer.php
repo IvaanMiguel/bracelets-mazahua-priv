@@ -29,6 +29,15 @@ class Customer extends Model
         'deleted_at'
     ];
 
+    protected static function booted(): void
+    {
+        static::deleting(function (Customer $customer) {
+            foreach ($customer->addresses as $address) {
+                $address->delete();
+            }
+        });
+    }
+
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
