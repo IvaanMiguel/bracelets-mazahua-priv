@@ -72,15 +72,30 @@ class CustomerController extends Controller
 
     public function show(string $id)
     {
+        try {
+            $customer = Customer::with('addresses')->findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors([
+                'internal_error' => 'No se ha podido encontrar el cliente solicitado.'
+            ]);
+        }
+
         return Inertia::render('Customers/Show', [
-            'customer' => Customer::with('addresses')->find($id),
+            'customer' => $customer,
             'current_date' => now()
         ]);
     }
 
     public function update(UpdateCustomerRequest $request, string $id)
     {
-        $customer = Customer::findOrFail($id);
+        try {
+            $customer = Customer::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors([
+                'internal_error' => 'Ha ocurrido un error el editar el cliente seleccionado.'
+            ]);
+        }
+
         $customer->update($request->all());
 
         return back();
