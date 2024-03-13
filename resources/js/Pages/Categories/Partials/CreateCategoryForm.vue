@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CategoryForm from '@/Components/Forms/CategoryForm.vue'
 import Modal from '@/Components/Modal.vue'
+import Snackbar from '@/Components/Snackbar.vue'
 import { useModal } from '@/composables/useModal'
 import useVuelidate from '@vuelidate/core'
 import { ref } from 'vue'
@@ -11,6 +12,7 @@ const { modal: cancelCreateCategoryModal } = useModal(
   '#cancel-create-category-modal'
 )
 
+const createdCategorySnackbar = ref<InstanceType<typeof Snackbar>>()
 const categoryForm = ref<InstanceType<typeof CategoryForm>>()
 
 const store = async () => {
@@ -24,6 +26,7 @@ const store = async () => {
       v.value.$reset()
 
       createCategoryModal.value?.close()
+      createdCategorySnackbar.value?.show(true)
     },
   })
 }
@@ -82,4 +85,10 @@ defineExpose({ createCategoryModal })
       <md-text-button @click="cancelStore">Aceptar</md-text-button>
     </div>
   </Modal>
+
+  <Snackbar
+    ref="createdCategorySnackbar"
+    text="Categoría creada con éxito."
+    close-button
+  />
 </template>

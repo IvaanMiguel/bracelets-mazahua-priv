@@ -46,7 +46,10 @@ useEventListener(menuButton, 'click', openMenu)
         <md-menu-item @click="onEdit()">
           <div slot="headline">Editar</div>
         </md-menu-item>
-        <md-menu-item @click="onDelete()">
+        <md-menu-item
+          v-if="!category.stock"
+          @click="onDelete()"
+        >
           <div slot="headline">Eliminar</div>
         </md-menu-item>
       </md-menu>

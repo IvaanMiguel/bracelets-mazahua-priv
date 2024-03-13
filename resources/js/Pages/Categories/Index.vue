@@ -6,6 +6,7 @@ import MainLayout from '@/Layouts/MainLayout.vue'
 import { Pagination } from '@/types'
 import { CategoryListItem, IdCategory } from '@/types/categories'
 import '@material/web/button/filled-button'
+import { MdDialog } from '@material/web/dialog/dialog'
 import '@material/web/divider/divider'
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
@@ -16,6 +17,7 @@ import '@material/web/menu/menu-item'
 import { ref } from 'vue'
 import CategoryItem from './Partials/CategoryItem.vue'
 import CreateCategoryForm from './Partials/CreateCategoryForm.vue'
+import DeleteCategory from './Partials/DeleteCategory.vue'
 import EditCategoryForm from './Partials/EditCategoryForm.vue'
 
 defineOptions({ layout: MainLayout })
@@ -23,15 +25,13 @@ defineProps<{ categories: Pagination<CategoryListItem> }>()
 
 const createCategoryForm = ref<InstanceType<typeof CreateCategoryForm>>()
 const editCategoryForm = ref<InstanceType<typeof EditCategoryForm>>()
+const deleteCategory = ref<InstanceType<typeof DeleteCategory>>()
 const selectedCategory = ref<IdCategory>()
 
-const onEdit = (category: IdCategory) => () => {
-  editCategoryForm.value?.editCategoryModal?.show()
-
+const onAction = (category: IdCategory, modal: MdDialog | null | undefined) => () => {
+  modal!.show()
   selectedCategory.value = category
 }
-
-const onDelete = (category: IdCategory) => () => {}
 </script>
 
 <template>
@@ -76,8 +76,8 @@ const onDelete = (category: IdCategory) => () => {}
         <template v-for="category in categories.data">
           <CategoryItem
             :category
-            :onEdit="onEdit(category)"
-            :onDelete="onDelete(category)"
+            :onEdit="onAction(category, editCategoryForm?.editCategoryModal)"
+            :onDelete="onAction(category, deleteCategory?.modal)"
           />
           <md-divider inset />
         </template>
@@ -115,6 +115,11 @@ const onDelete = (category: IdCategory) => () => {}
 
   <EditCategoryForm
     ref="editCategoryForm"
+    :selectedCategory
+  />
+
+  <DeleteCategory
+    ref="deleteCategory"
     :selectedCategory
   />
 </template>
