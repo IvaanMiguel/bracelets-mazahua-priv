@@ -16,6 +16,7 @@ return new class extends Migration
             FROM
                 categories
                 LEFT JOIN products ON categories.id = products.category_id
+            WHERE categories.deleted_at IS NULL
             GROUP BY categories.id
             ORDER BY categories.name ASC
         ');
