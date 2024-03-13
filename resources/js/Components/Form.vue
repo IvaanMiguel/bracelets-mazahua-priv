@@ -22,6 +22,8 @@ useFormErrors(props.rules, props.inertiaForm, props.config)
 
 const form = ref<HTMLFormElement>()
 useEventListener(form, 'keydown', (e: KeyboardEvent) => {
+  if (props.inertiaForm.processing) return
+
   if (
     (e.code !== 'Enter' && e.code !== 'NumpadEnter') ||
     props.notSubmitOnEnter
