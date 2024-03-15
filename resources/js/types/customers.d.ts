@@ -2,6 +2,7 @@ export interface CustomerListItem {
   id: number
   name: string
   last_name: string
+  phone_number: string
 }
 
 export interface Customer {
