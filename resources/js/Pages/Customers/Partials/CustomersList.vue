@@ -30,27 +30,30 @@ onMounted(() => {
         :base-url="route('customers')"
       />
     </div>
-    <Paginator
-      class="justify-end p-4 pt-2"
-      :pagination="customers"
-      :selected-results="$page.props.filters.results"
-      :base-url="route('customers')"
-    />
+    <div class="grid h-14 grid-cols-3 px-4 font-medium text-on-background">
+      <div class="flex items-center">Nombre(s)</div>
+      <div class="flex items-center">Apellido(s)</div>
+      <div class="inline-flex items-center justify-end">Número celular</div>
+    </div>
     <md-list
       v-if="customers.data.length"
-      class="bg-light-surface-container-lowest dark:bg-dark-surface-container"
+      class="bg-light-surface-container-lowest py-0 dark:bg-dark-surface-container"
     >
-      <md-divider inset />
+      <md-divider />
       <template v-for="customer in customers.data">
         <Link
           :href="route('customers.show', { id: customer.id })"
           tabindex="-1"
         >
           <md-list-item type="button">
-            {{ customer.name }} {{ customer.last_name }}
+            <div class="grid grid-cols-3">
+              <div>{{ customer.name }}</div>
+              <div>{{ customer.last_name }}</div>
+              <div class="text-end">{{ customer.phone_number }}</div>
+            </div>
           </md-list-item>
         </Link>
-        <md-divider inset />
+        <md-divider />
       </template>
     </md-list>
     <template v-else>
@@ -73,7 +76,7 @@ onMounted(() => {
       <md-divider inset />
     </template>
     <Paginator
-      class="justify-end p-4 pt-2"
+      class="justify-end px-4 py-2"
       :pagination="customers"
       :selected-results="$page.props.filters.results"
       :base-url="route('customers')"
