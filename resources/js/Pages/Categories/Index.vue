@@ -28,10 +28,11 @@ const editCategoryForm = ref<InstanceType<typeof EditCategoryForm>>()
 const deleteCategory = ref<InstanceType<typeof DeleteCategory>>()
 const selectedCategory = ref<IdCategory>()
 
-const onAction = (category: IdCategory, modal: MdDialog | null | undefined) => () => {
-  modal!.show()
-  selectedCategory.value = category
-}
+const onAction =
+  (category: IdCategory, modal: MdDialog | null | undefined) => () => {
+    modal!.show()
+    selectedCategory.value = category
+  }
 </script>
 
 <template>
@@ -61,16 +62,15 @@ const onAction = (category: IdCategory, modal: MdDialog | null | undefined) => (
         </md-filled-button>
       </div>
 
-      <Paginator
-        class="justify-end p-4 pt-2"
-        :pagination="categories"
-        :selected-results="$page.props.filters.results"
-        :base-url="route('categories')"
-      />
-
+      <div
+        class="text-on-background grid h-14 grid-cols-[1fr,1fr,3.5rem] px-4 font-medium"
+      >
+        <span class="flex items-center">Nombre</span>
+        <span class="flex items-center">Productos</span>
+      </div>
       <md-list
         v-if="categories.data.length"
-        class="bg-light-surface-container-lowest dark:bg-dark-surface-container"
+        class="bg-light-surface-container-lowest py-0 dark:bg-dark-surface-container"
       >
         <md-divider inset />
         <template v-for="category in categories.data">
@@ -103,7 +103,7 @@ const onAction = (category: IdCategory, modal: MdDialog | null | undefined) => (
       </template>
 
       <Paginator
-        class="justify-end p-4 pt-2"
+        class="justify-end px-4 py-2"
         :pagination="categories"
         :selected-results="$page.props.filters.results"
         :base-url="route('categories')"

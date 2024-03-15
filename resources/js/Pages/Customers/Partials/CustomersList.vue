@@ -30,10 +30,10 @@ onMounted(() => {
         :base-url="route('customers')"
       />
     </div>
-    <div class="grid h-14 grid-cols-3 px-4 font-medium text-on-background">
+    <div class="text-on-background grid h-14 grid-cols-3 px-4 font-medium">
       <div class="flex items-center">Nombre(s)</div>
       <div class="flex items-center">Apellido(s)</div>
-      <div class="inline-flex items-center justify-end">Número celular</div>
+      <div class="inline-flex items-center">Número celular</div>
     </div>
     <md-list
       v-if="customers.data.length"
@@ -47,9 +47,9 @@ onMounted(() => {
         >
           <md-list-item type="button">
             <div class="grid grid-cols-3">
-              <div>{{ customer.name }}</div>
-              <div>{{ customer.last_name }}</div>
-              <div class="text-end">{{ customer.phone_number }}</div>
+              <span>{{ customer.name }}</span>
+              <span>{{ customer.last_name }}</span>
+              <span>{{ customer.phone_number }}</span>
             </div>
           </md-list-item>
         </Link>

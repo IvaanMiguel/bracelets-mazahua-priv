@@ -26,9 +26,9 @@ useEventListener(menuButton, 'click', openMenu)
 
 <template>
   <md-list-item>
-    {{ category.name }}
-    <div slot="trailing-supporting-text">
-      {{ `${category.stock ?? 0} productos` }}
+    <div class="grid grid-cols-2">
+      <span>{{ category.name }}</span>
+      <span>{{ category.stock ?? 0 }}</span>
     </div>
     <div slot="end">
       <md-icon-button
