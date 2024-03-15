@@ -16,7 +16,7 @@ const props = withDefaults(
     baseUrl?: string
   }>(),
   {
-    rowsPerPage: () => [15, 30, 50],
+    rowsPerPage: () => [10, 25, 50],
     baseUrl: route().current(),
   }
 )
