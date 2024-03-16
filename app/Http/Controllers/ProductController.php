@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,9 +13,23 @@ class ProductController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Products/Index');
+        $results = $request->input('results', 10);
+        $search = $request->input('search');
+
+        return Inertia::render('Products/Index', [
+            'products' => Product::with('category')
+                ->where('name', 'like', "{$search}%")
+                ->orWhere('name', 'like', "{$search}%")
+                ->orderBy('name', 'asc')
+                ->paginate($results)
+                ->withQueryString(),
+            'filters' => [
+                'results' => intval($results),
+                'search' => $search
+            ]
+        ]);
     }
 
     /**
