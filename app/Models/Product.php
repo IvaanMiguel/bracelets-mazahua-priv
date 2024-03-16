@@ -18,6 +18,12 @@ class Product extends Model
         'stock'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

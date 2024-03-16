@@ -15,6 +15,12 @@ class Category extends Model
         'name'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
