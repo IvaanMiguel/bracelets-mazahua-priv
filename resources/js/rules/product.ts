@@ -24,6 +24,6 @@ export const productRules = {
   stock: {
     numeric: numeric(),
     integer: integer(),
-    betweenNumeric: betweenNumeric(1, 999),
+    betweenNumeric: betweenNumeric(0, 999),
   },
 }

@@ -17,13 +17,15 @@ import CreateProductForm from './Partials/CreateProductForm.vue'
 import ProductItem from './Partials/ProductItem.vue'
 import DeleteProduct from './Partials/DeleteProduct.vue'
 import { MdDialog } from '@material/web/dialog/dialog'
+import EditProductForm from './Partials/EditProductForm.vue'
 
 defineOptions({ layout: MainLayout })
 defineProps<{ products: Pagination<ProductListItem> }>()
 
-const createProductForm = ref<InstanceType<typeof CreateProductForm>>()
-const deleteProduct = ref<InstanceType<typeof DeleteProduct>>()
 const selectedProduct = ref<IdProduct>()
+const createProductForm = ref<InstanceType<typeof CreateProductForm>>()
+const editProductForm = ref<InstanceType<typeof EditProductForm>>()
+const deleteProduct = ref<InstanceType<typeof DeleteProduct>>()
 
 const onAction = (product: IdProduct, modal?: MdDialog | null) => () => {
   selectedProduct.value = product
@@ -71,7 +73,7 @@ const onAction = (product: IdProduct, modal?: MdDialog | null) => () => {
         <template v-for="product in products.data">
           <ProductItem
             :product
-            :onEdit="() => {}"
+            :onEdit="onAction(product, editProductForm?.editModal!.modal)"
             :onDelete="onAction(product, deleteProduct?.deleteModal!.modal)"
           />
           <md-divider inset />
@@ -108,6 +110,11 @@ const onAction = (product: IdProduct, modal?: MdDialog | null) => () => {
   </div>
 
   <CreateProductForm ref="createProductForm" />
+
+  <EditProductForm
+    ref="editProductForm"
+    :selectedProduct
+  />
 
   <DeleteProduct
     ref="deleteProduct"

@@ -29,6 +29,7 @@ Route::controller(AddressController::class)->prefix('addresses')->group(function
 Route::controller(ProductController::class)->prefix('products')->group(function () {
     Route::get('/', 'index')->name('products');
     Route::post('/', 'store')->name('products.store');
+    Route::put('/{id}', 'update')->name('products.update');
     Route::delete('/{id}', 'destroy')->name('products.destroy');
 });
 
