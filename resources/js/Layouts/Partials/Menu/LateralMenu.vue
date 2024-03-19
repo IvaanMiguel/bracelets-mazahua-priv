@@ -33,7 +33,7 @@ const buttons: MenuButtonType[] = [
     component: 'Categories',
   },
   {
-    icon: 'inventory',
+    icon: 'orders',
     label: 'Pedidos',
     routeName: 'orders',
     component: 'Orders',
