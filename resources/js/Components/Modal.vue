@@ -13,6 +13,8 @@ const modal = ref<MdDialog | null>(null)
 useEventListener(modal, 'cancel', (e) => {
   if (props.notCancellable) e.preventDefault()
 })
+
+defineExpose({ modal })
 </script>
 
 <template>
@@ -26,16 +28,3 @@ useEventListener(modal, 'cancel', (e) => {
     </md-dialog>
   </Teleport>
 </template>
-
-<style scoped>
-.dark md-dialog {
-  --md-dialog-container-color: theme(colors.dark.background);
-  --md-dialog-headline-color: theme(colors.dark.on-background);
-  --md-dialog-supporting-text-color: theme(colors.dark.on-background);
-}
-md-dialog {
-  --md-dialog-container-color: theme(colors.light.background);
-  --md-dialog-headline-color: theme(colors.light.on-background);
-  --md-dialog-supporting-text-color: theme(colors.light.on-background);
-}
-</style>
