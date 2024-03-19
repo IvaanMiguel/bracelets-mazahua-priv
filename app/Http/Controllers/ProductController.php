@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,10 +23,10 @@ class ProductController extends Controller
         return Inertia::render('Products/Index', [
             'products' => Product::with('category')
                 ->where('name', 'like', "{$search}%")
-                ->orWhere('name', 'like', "{$search}%")
                 ->orderBy('name', 'asc')
                 ->paginate($results)
                 ->withQueryString(),
+            'categories' => Category::orderBy('name')->get(),
             'filters' => [
                 'results' => intval($results),
                 'search' => $search
@@ -32,20 +34,11 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreProductRequest $request)
     {
-        //
-    }
+        Product::create($request->all());
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return back();
     }
 
     /**

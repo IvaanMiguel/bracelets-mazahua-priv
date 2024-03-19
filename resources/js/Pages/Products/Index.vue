@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import Icon from '@/Components/Icon.vue'
+import Paginator from '@/Components/Paginator.vue'
+import SearchBar from '@/Components/SearchBar.vue'
+import MainLayout from '@/Layouts/MainLayout.vue'
+import { Pagination } from '@/types'
+import { ProductListItem } from '@/types/products'
 import '@material/web/button/filled-button'
 import '@material/web/divider/divider'
 import '@material/web/elevation/elevation'
@@ -6,17 +12,14 @@ import '@material/web/list/list'
 import '@material/web/list/list-item'
 import '@material/web/menu/menu'
 import '@material/web/menu/menu-item'
-
-import Icon from '@/Components/Icon.vue'
-import Paginator from '@/Components/Paginator.vue'
-import SearchBar from '@/Components/SearchBar.vue'
-import MainLayout from '@/Layouts/MainLayout.vue'
-import { Pagination } from '@/types'
-import { ProductListItem } from '@/types/products'
+import { ref } from 'vue'
+import CreateProductForm from './Partials/CreateProductForm.vue'
 import ProductItem from './Partials/ProductItem.vue'
 
 defineOptions({ layout: MainLayout })
 defineProps<{ products: Pagination<ProductListItem> }>()
+
+const createProductForm = ref<InstanceType<typeof CreateProductForm>>()
 </script>
 
 <template>
@@ -37,7 +40,7 @@ defineProps<{ products: Pagination<ProductListItem> }>()
           :base-url="route('products')"
         />
 
-        <md-filled-button @click="">
+        <md-filled-button @click="createProductForm?.createProductModal?.show">
           <Icon slot="icon">add</Icon>
           Agregar
         </md-filled-button>
@@ -94,4 +97,6 @@ defineProps<{ products: Pagination<ProductListItem> }>()
       />
     </div>
   </div>
+
+  <CreateProductForm ref="createProductForm" />
 </template>

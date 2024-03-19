@@ -28,6 +28,7 @@ Route::controller(AddressController::class)->prefix('addresses')->group(function
 
 Route::controller(ProductController::class)->prefix('products')->group(function () {
     Route::get('/', 'index')->name('products');
+    Route::post('/', 'store')->name('products.store');
 });
 
 Route::controller(CategoryController::class)->prefix('categories')->group(function () {

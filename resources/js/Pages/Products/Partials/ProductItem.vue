@@ -28,7 +28,7 @@ useEventListener(menuButton, 'click', () => {
       <span class="truncate">{{ product.name }}</span>
       <span class="truncate">{{ product.category.name }}</span>
       <span class="truncate">{{ `$${product.price}` }}</span>
-      <span class="truncate">{{ product.stock }}</span>
+      <span class="truncate">{{ product.stock || 0 }}</span>
     </div>
     <div slot="end">
       <md-icon-button
