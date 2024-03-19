@@ -65,3 +65,21 @@ export const notRegex = (regex: RegExp) => {
     (value: string) => !helpers.req(value) || !regex.test(value)
   )
 }
+
+export const betweenNumeric = (min: number, max: number) => {
+  return helpers.withMessage(
+    `El campo debe estar entre ${min} y ${max}.`,
+    (value: number) => !helpers.req(value) || (value >= min && value <= max)
+  )
+}
+
+export const decimalCount = (min: number, max: number) => {
+  return helpers.withMessage(
+    `El campo debe tener ${min}-${max} cifras decimales.`,
+    (value: number) => {
+      const decimals = value.toString().split('.')[1]
+      const decimalCount = decimals ? decimals.length : 0
+      return !helpers.req(value) || (decimalCount >= min && decimalCount <= max)
+    }
+  )
+}
