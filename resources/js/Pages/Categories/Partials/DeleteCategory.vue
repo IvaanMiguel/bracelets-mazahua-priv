@@ -14,15 +14,11 @@ const { modal } = useModal('#delete-category-modal')
 const deletedCategorySnackbar = ref<InstanceType<typeof Snackbar>>()
 
 const destroy = () => {
-  console.log(props.selectedCategory?.id)
-
   router.delete(
     route('categories.destroy', { id: props.selectedCategory?.id }),
     {
-      onSuccess: () => {
-        deletedCategorySnackbar.value?.show(true)
-      },
-      onFinish: () => modal.value?.close()
+      onSuccess: () => deletedCategorySnackbar.value?.show(true),
+      onFinish: () => modal.value?.close(),
     }
   )
 }

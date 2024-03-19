@@ -4,7 +4,7 @@ import Paginator from '@/Components/Paginator.vue'
 import SearchBar from '@/Components/SearchBar.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { Pagination } from '@/types'
-import { ProductListItem } from '@/types/products'
+import { IdProduct, ProductListItem } from '@/types/products'
 import '@material/web/button/filled-button'
 import '@material/web/divider/divider'
 import '@material/web/elevation/elevation'
@@ -15,11 +15,20 @@ import '@material/web/menu/menu-item'
 import { ref } from 'vue'
 import CreateProductForm from './Partials/CreateProductForm.vue'
 import ProductItem from './Partials/ProductItem.vue'
+import DeleteProduct from './Partials/DeleteProduct.vue'
+import { MdDialog } from '@material/web/dialog/dialog'
 
 defineOptions({ layout: MainLayout })
 defineProps<{ products: Pagination<ProductListItem> }>()
 
 const createProductForm = ref<InstanceType<typeof CreateProductForm>>()
+const deleteProduct = ref<InstanceType<typeof DeleteProduct>>()
+const selectedProduct = ref<IdProduct>()
+
+const onAction = (product: IdProduct, modal?: MdDialog | null) => () => {
+  selectedProduct.value = product
+  modal?.show()
+}
 </script>
 
 <template>
@@ -63,7 +72,7 @@ const createProductForm = ref<InstanceType<typeof CreateProductForm>>()
           <ProductItem
             :product
             :onEdit="() => {}"
-            :onDelete="() => {}"
+            :onDelete="onAction(product, deleteProduct?.deleteModal!.modal)"
           />
           <md-divider inset />
         </template>
@@ -99,4 +108,9 @@ const createProductForm = ref<InstanceType<typeof CreateProductForm>>()
   </div>
 
   <CreateProductForm ref="createProductForm" />
+
+  <DeleteProduct
+    ref="deleteProduct"
+    :selectedProduct
+  />
 </template>

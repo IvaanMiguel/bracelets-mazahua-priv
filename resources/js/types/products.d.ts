@@ -15,3 +15,7 @@ export interface Product {
   price?: number,
   stock?: number
 }
+
+export type IdProduct = Product & {
+  id: number
+}
