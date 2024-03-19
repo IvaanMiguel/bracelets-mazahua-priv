@@ -8,3 +8,10 @@ export interface ProductListItem {
   stock: number,
   category: IdCategory
 }
+
+export interface Product {
+  name: string,
+  category_id?: number,
+  price?: number,
+  stock?: number
+}
