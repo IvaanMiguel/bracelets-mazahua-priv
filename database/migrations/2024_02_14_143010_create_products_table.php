@@ -16,7 +16,7 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->decimal('price', 6);
-            $table->integer('stock')->default(0);
+            $table->integer('stock')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
