@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('date');
             $table->time('time');
             $table->foreignId('address_id')
+                ->nullable()
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();

@@ -21,7 +21,7 @@ class Delivery extends Model
 
     protected $casts = [
         'date' => 'date',
-        'time' => 'time'
+        // 'time' => 'time'
     ];
 
     protected $hidden = [
