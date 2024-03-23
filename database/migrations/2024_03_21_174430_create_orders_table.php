@@ -18,7 +18,7 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-            $table->string('details');
+            $table->string('details')->nullable();
             $table->decimal('total')->default(0);
             $table->decimal('advance')->default(0);
             $table->integer('products_total')->default(0);

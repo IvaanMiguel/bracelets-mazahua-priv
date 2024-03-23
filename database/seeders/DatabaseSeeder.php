@@ -13,7 +13,10 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
             CategorySeeder::class,
             DeliveryTypeSeeder::class,
-            DeliveryAppSeeder::class
+            DeliveryAppSeeder::class,
+            PaymentTypeSeeder::class,
+            OrderSeeder::class,
+            OrderProductSeeder::class
         ]);
     }
 }
