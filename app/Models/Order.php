@@ -25,7 +25,8 @@ class Order extends Model
     ];
 
     protected $cast = [
-        'paid' => 'boolean'
+        'paid' => 'boolean',
+        'total' => 'float'
     ];
 
     protected $hidden = [
@@ -51,9 +52,9 @@ class Order extends Model
         return $this->belongsTo(PaymentType::class);
     }
 
-    public function delivery(): HasOne
+    public function delivery(): BelongsTo
     {
-        return $this->hasOne(Delivery::class);
+        return $this->belongsTo(Delivery::class);
     }
 
     public function products(): BelongsToMany

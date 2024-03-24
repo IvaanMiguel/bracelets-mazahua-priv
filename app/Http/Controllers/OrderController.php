@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -12,9 +15,41 @@ class OrderController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Orders/Index');
+        $results = $request->input('results', 10);
+        $search = $request->input('search');
+
+        return Inertia::render('Orders/Index', [
+            'orders' => Order::select([
+                'total',
+                'paid',
+                'customer_id',
+                'delivery_id',
+                'payment_type_id',
+            ])->with([
+                'customer:id,name,last_name',
+                'delivery:id,date,delivery_type_id',
+                'delivery.deliveryType',
+                'paymentType'
+            ])->join('deliveries', 'orders.delivery_id', '=', 'deliveries.id')
+                ->orWhereRelation('customer', DB::raw('CONCAT(name, " ", last_name)'), 'like', "{$search}%")
+                ->orWhereRelation('delivery.deliveryType', 'name', 'like', "{$search}%")
+                ->orWhereRelation('paymentType', 'name', 'like', "{$search}%")
+                ->orWhereRelation('delivery', DB::raw('DATE_FORMAT(date, "%d/%b/%Y")'), 'like', "{$search}%")
+                ->orWhereRelation('delivery', DB::raw('DATE_FORMAT(date, "%e/%b/%Y")'), 'like', "{$search}%")
+                ->orWhereRelation('delivery', DB::raw('DAY(date)'), 'like', "{$search}%")
+                ->orWhereRelation('delivery', DB::raw('MONTHNAME(date)'), 'like', "{$search}%")
+                ->orWhereRelation('delivery', DB::raw('YEAR(date)'), 'like', "{$search}%")
+                ->orderBy('paid', 'asc')
+                ->orderBy('deliveries.date', 'desc')
+                ->paginate($results)
+                ->withQueryString(),
+            'filters' => [
+                'results' => intval($results),
+                'search' => $search
+            ],
+        ]);
     }
 
     /**
