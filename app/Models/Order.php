@@ -21,11 +21,11 @@ class Order extends Model
         'advance',
         'products_total',
         'delivery_id',
-        'paid'
+        'completed'
     ];
 
     protected $cast = [
-        'paid' => 'boolean',
+        'completed' => 'boolean',
         'total' => 'float'
     ];
 

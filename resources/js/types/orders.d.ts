@@ -24,7 +24,7 @@ export interface OrderListItem {
   customer: Customer
   delivery_id: number
   delivery: Delivery 
-  paid: number
+  completed: number
   payment_type_id: number
   payment_type: PaymentType
   total: number

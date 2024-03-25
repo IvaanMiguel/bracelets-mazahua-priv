@@ -27,7 +27,7 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-            $table->boolean('paid')->default(false);
+            $table->boolean('completed')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -42,7 +42,7 @@ console.log(props.orders.data)
 
         <md-filled-button @click="">
           <Icon slot="icon">add</Icon>
-          Agregar
+          Nuevo pedido
         </md-filled-button>
       </div>
 
@@ -81,7 +81,7 @@ console.log(props.orders.data)
                   formatDate(order.delivery.date)
                 }}</span>
                 <span class="truncate">
-                  {{ order.paid ? 'Pagado' : 'Sin pagar' }}
+                  {{ order.completed ? 'Completado' : 'Pendiente' }}
                 </span>
               </div>
             </md-list-item>

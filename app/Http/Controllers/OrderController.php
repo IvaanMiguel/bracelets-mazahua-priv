@@ -22,8 +22,8 @@ class OrderController extends Controller
 
         return Inertia::render('Orders/Index', [
             'orders' => Order::select([
+                'completed',
                 'total',
-                'paid',
                 'customer_id',
                 'delivery_id',
                 'payment_type_id',
@@ -41,7 +41,7 @@ class OrderController extends Controller
                 ->orWhereRelation('delivery', DB::raw('DAY(date)'), 'like', "{$search}%")
                 ->orWhereRelation('delivery', DB::raw('MONTHNAME(date)'), 'like', "{$search}%")
                 ->orWhereRelation('delivery', DB::raw('YEAR(date)'), 'like', "{$search}%")
-                ->orderBy('paid', 'asc')
+                ->orderBy('completed', 'asc')
                 ->orderBy('deliveries.date', 'desc')
                 ->paginate($results)
                 ->withQueryString(),

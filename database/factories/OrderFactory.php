@@ -27,7 +27,7 @@ class OrderFactory extends Factory
                 ->create()
                 ->first()
                 ->id,
-            'paid' => fake()->boolean()
+            'completed' => fake()->boolean()
         ];
     }
 
