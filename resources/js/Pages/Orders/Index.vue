@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
-import Paginator from '@/Components/Paginator.vue'
 import SearchBar from '@/Components/SearchBar.vue'
+import Table from '@/Components/Table.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { Pagination } from '@/types'
 import { OrderListItem } from '@/types/orders'
@@ -13,19 +13,17 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
 defineOptions({ layout: MainLayout })
-const props = defineProps<{ orders: Pagination<OrderListItem> }>()
+defineProps<{ orders: Pagination<OrderListItem> }>()
 
 const formatDate = (date: string) => {
   return format(date, 'dd/MMM/y', { locale: es })
 }
-
-console.log(props.orders.data)
 </script>
 
 <template>
-  <div class="grid h-full grid-cols-1 overflow-y-auto p-4">
+  <div class="h-full p-4">
     <div
-      class="md-elevation-1 relative mx-auto h-fit w-full max-w-6xl rounded-lg bg-light-surface-container-lowest dark:bg-dark-surface-container"
+      class="md-elevation-1 relative mx-auto flex h-full w-full max-w-6xl flex-col rounded-lg bg-light-surface-container-lowest dark:bg-dark-surface-container"
     >
       <md-elevation />
       <div class="flex items-center gap-4 p-4 pb-2">
@@ -34,35 +32,38 @@ console.log(props.orders.data)
         </h1>
 
         <SearchBar
-          class="ms-auto"
+          class="ms-auto w-full max-w-96"
           placeholder="Buscar..."
           lder="Buscar por nombre..."
           :base-url="route('orders')"
         />
 
-        <md-filled-button @click="">
-          <Icon slot="icon">add</Icon>
-          Nuevo pedido
-        </md-filled-button>
+        <Link
+          as="button"
+          :href="route('orders.create')"
+          tabindex="-1"
+        >
+          <md-filled-button>
+            <Icon slot="icon">add</Icon>
+            Nuevo pedido
+          </md-filled-button>
+        </Link>
       </div>
 
-      <md-list
-        v-if="orders.data.length"
-        class="bg-light-surface-container-lowest py-0 dark:bg-dark-surface-container"
+      <Table
+        class="flex h-full flex-col overflow-hidden"
+        :headers="[
+          'Cliente',
+          'Total',
+          'Tipo de pago',
+          'Tipo de entrega',
+          'Fecha de entrega',
+          'Estado',
+        ]"
+        :pagination="orders"
+        :url="route('orders')"
       >
-        <div
-          class="text-on-background grid h-14 grid-cols-6 items-center gap-4 px-4 font-medium"
-        >
-          <span class="truncate">Cliente</span>
-          <span class="truncate">Total</span>
-          <span class="truncate">Tipo de pago</span>
-          <span class="truncate">Tipo de entrega</span>
-          <span class="truncate">Fecha de entrega</span>
-          <span class="truncate">Estado</span>
-        </div>
-        <md-divider inset />
-
-        <template v-for="order in orders.data">
+        <template v-for="(order, i) in orders.data">
           <Link
             :href="route('orders')"
             tabindex="-1"
@@ -85,37 +86,13 @@ console.log(props.orders.data)
                 </span>
               </div>
             </md-list-item>
+            <md-divider
+              v-if="i !== orders.data.length - 1"
+              inset
+            />
           </Link>
-          <md-divider inset />
         </template>
-      </md-list>
-
-      <template v-else>
-        <md-divider inset />
-        <div class="p-4 text-center">
-          <Icon
-            class="text-on-background"
-            size="3rem"
-          >
-            search_off
-          </Icon>
-          <span
-            class="block text-xl font-medium text-light-on-background dark:text-dark-on-background"
-          >
-            {{
-              `No se han encontrado coincidencias para "${$page.props.filters.search}".`
-            }}
-          </span>
-        </div>
-        <md-divider inset />
-      </template>
-
-      <Paginator
-        class="justify-end px-4 py-2"
-        :pagination="orders"
-        :selected-results="$page.props.filters.results"
-        :base-url="route('orders')"
-      />
+      </Table>
     </div>
   </div>
 </template>

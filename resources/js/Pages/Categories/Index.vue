@@ -19,6 +19,7 @@ import CategoryItem from './Partials/CategoryItem.vue'
 import CreateCategoryForm from './Partials/CreateCategoryForm.vue'
 import DeleteCategory from './Partials/DeleteCategory.vue'
 import EditCategoryForm from './Partials/EditCategoryForm.vue'
+import Table from '@/Components/Table.vue'
 
 defineOptions({ layout: MainLayout })
 defineProps<{ categories: Pagination<CategoryListItem> }>()
@@ -36,9 +37,9 @@ const onAction =
 </script>
 
 <template>
-  <div class="grid h-full grid-cols-1 overflow-y-auto p-4">
+  <div class="h-full p-4">
     <div
-      class="md-elevation-1 relative mx-auto h-fit w-full max-w-6xl rounded-lg bg-light-surface-container-lowest dark:bg-dark-surface-container"
+      class="md-elevation-1 relative mx-auto flex h-full w-full max-w-6xl flex-col rounded-lg bg-light-surface-container-lowest dark:bg-dark-surface-container"
     >
       <md-elevation />
       <div class="flex items-center gap-4 p-4 pb-2">
@@ -49,7 +50,7 @@ const onAction =
         </h1>
 
         <SearchBar
-          class="ms-auto"
+          class="ms-auto w-full max-w-96"
           placeholder="Buscar por nombre..."
           :base-url="route('categories')"
         />
@@ -62,7 +63,28 @@ const onAction =
         </md-filled-button>
       </div>
 
-      <div
+      <Table
+        class="flex h-full flex-col overflow-hidden"
+        :headers="['Nombre', 'Productos']"
+        :grid-cols="'grid-template-columns: repeat(2, minmax(0,1fr)) 2.5rem'"
+        :pagination="categories"
+        :url="route('categories')"
+      >
+        <template v-for="(category, i) in categories.data">
+          <CategoryItem
+            :category
+            :onEdit="onAction(category, editCategoryForm?.editCategoryModal)"
+            :onDelete="onAction(category, deleteCategory?.modal)"
+          />
+          <md-divider
+            v-if="i !== categories.data.length - 1"
+            class="min-h-[1px]"
+            inset
+          />
+        </template>
+      </Table>
+
+      <!-- <div
         class="text-on-background grid h-14 grid-cols-[1fr,1fr,3.5rem] px-4 font-medium"
       >
         <span class="flex items-center">Nombre</span>
@@ -107,7 +129,7 @@ const onAction =
         :pagination="categories"
         :selected-results="$page.props.filters.results"
         :base-url="route('categories')"
-      />
+      /> -->
     </div>
   </div>
 

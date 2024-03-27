@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
-import Paginator from '@/Components/Paginator.vue'
 import SearchBar from '@/Components/SearchBar.vue'
+import Table from '@/Components/Table.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { Pagination } from '@/types'
 import { IdProduct, ProductListItem } from '@/types/products'
 import '@material/web/button/filled-button'
+import { MdDialog } from '@material/web/dialog/dialog'
 import '@material/web/divider/divider'
 import '@material/web/elevation/elevation'
 import '@material/web/list/list'
@@ -14,10 +15,9 @@ import '@material/web/menu/menu'
 import '@material/web/menu/menu-item'
 import { ref } from 'vue'
 import CreateProductForm from './Partials/CreateProductForm.vue'
-import ProductItem from './Partials/ProductItem.vue'
 import DeleteProduct from './Partials/DeleteProduct.vue'
-import { MdDialog } from '@material/web/dialog/dialog'
 import EditProductForm from './Partials/EditProductForm.vue'
+import ProductItem from './Partials/ProductItem.vue'
 
 defineOptions({ layout: MainLayout })
 defineProps<{ products: Pagination<ProductListItem> }>()
@@ -34,9 +34,9 @@ const onAction = (product: IdProduct, modal?: MdDialog | null) => () => {
 </script>
 
 <template>
-  <div class="grid h-full grid-cols-1 overflow-y-auto p-4">
+  <div class="h-full p-4">
     <div
-      class="md-elevation-1 relative mx-auto h-fit w-full max-w-6xl rounded-lg bg-light-surface-container-lowest dark:bg-dark-surface-container"
+      class="md-elevation-1 relative mx-auto flex h-full w-full max-w-6xl flex-col rounded-lg bg-light-surface-container-lowest dark:bg-dark-surface-container"
     >
       <md-elevation />
       <div class="flex items-center gap-4 p-4 pb-2">
@@ -45,7 +45,7 @@ const onAction = (product: IdProduct, modal?: MdDialog | null) => () => {
         </h1>
 
         <SearchBar
-          class="ms-auto"
+          class="ms-auto w-full max-w-96"
           placeholder="Buscar..."
           lder="Buscar por nombre..."
           :base-url="route('products')"
@@ -57,55 +57,26 @@ const onAction = (product: IdProduct, modal?: MdDialog | null) => () => {
         </md-filled-button>
       </div>
 
-      <md-list
-        v-if="products.data.length"
-        class="bg-light-surface-container-lowest py-0 dark:bg-dark-surface-container"
+      <Table
+        class="flex h-full flex-col overflow-hidden"
+        :headers="['Nombre', 'Categoría', 'Precio', 'Stock']"
+        :grid-cols="'grid-template-columns: repeat(4, minmax(0,1fr)) 2.5rem'"
+        :pagination="products"
+        :url="route('products')"
       >
-        <div
-          class="text-on-background grid h-14 grid-cols-[repeat(4,minmax(0,1fr)),2.5rem] items-center gap-4 px-4 font-medium"
-        >
-          <span class="truncate">Nombre</span>
-          <span class="truncate">Categoría</span>
-          <span class="truncate">Precio</span>
-          <span class="truncate">Stock</span>
-        </div>
-        <md-divider inset />
-        <template v-for="product in products.data">
+        <template v-for="(product, i) in products.data">
           <ProductItem
             :product
             :onEdit="onAction(product, editProductForm?.editModal!.modal)"
             :onDelete="onAction(product, deleteProduct?.deleteModal!.modal)"
           />
-          <md-divider inset />
+          <md-divider
+            v-if="i !== products.data.length - 1"
+            class="min-h-[1px]"
+            inset
+          />
         </template>
-      </md-list>
-
-      <template v-else>
-        <md-divider inset />
-        <div class="p-4 text-center">
-          <Icon
-            class="text-on-background"
-            size="3rem"
-          >
-            search_off
-          </Icon>
-          <span
-            class="block text-xl font-medium text-light-on-background dark:text-dark-on-background"
-          >
-            {{
-              `No se han encontrado coincidencias para "${$page.props.filters.search}".`
-            }}
-          </span>
-        </div>
-        <md-divider inset />
-      </template>
-
-      <Paginator
-        class="justify-end px-4 py-2"
-        :pagination="products"
-        :selected-results="$page.props.filters.results"
-        :base-url="route('products')"
-      />
+      </Table>
     </div>
   </div>
 
