@@ -26,9 +26,9 @@ useEventListener(menuButton, 'click', openMenu)
 
 <template>
   <md-list-item>
-    <div class="grid grid-cols-2">
-      <span>{{ category.name }}</span>
-      <span>{{ category.stock ?? 0 }}</span>
+    <div class="grid grid-cols-2 gap-4">
+      <span class="truncate">{{ category.name }}</span>
+      <span class="truncate">{{ category.stock ?? 0 }}</span>
     </div>
     <div slot="end">
       <md-icon-button
