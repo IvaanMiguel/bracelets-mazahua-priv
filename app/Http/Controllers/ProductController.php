@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $results = $request->input('results', 10);
-        $search = $request->input('search');
+        $search = $request->input('search', '');
 
         return Inertia::render('Products/Index', [
             'products' => Product::with('category')

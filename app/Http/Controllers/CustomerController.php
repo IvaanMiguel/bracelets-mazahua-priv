@@ -22,7 +22,7 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $results = $request->input('results', 10);
-        $search = $request->input('search');
+        $search = $request->input('search', '');
 
         return Inertia::render('Customers/Index', [
             'customers' => fn () => Customer::where(DB::raw('CONCAT(name, " ", last_name)'), 'like', "{$search}%")

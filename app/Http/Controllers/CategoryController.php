@@ -20,7 +20,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $results = $request->input('results', 15);
-        $search = $request->input('search');
+        $search = $request->input('search', '');
 
         return Inertia::render('Categories/Index', [
             'categories' => DB::table('view_categories_stock')
