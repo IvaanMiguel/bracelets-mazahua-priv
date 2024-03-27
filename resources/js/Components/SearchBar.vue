@@ -27,7 +27,6 @@ watch(search, (value) => {
 
 <template>
   <md-outlined-text-field
-    class="w-96"
     type="search"
     v-model="search"
   >
