@@ -31,7 +31,11 @@
   }
 }
 
-::-webkit-scrollbar {
+html.dark {
+  color-scheme: dark;
+}
+
+/* ::-webkit-scrollbar {
   width: .5rem;
   height: .5rem;
 }
@@ -44,4 +48,4 @@
 html.dark ::-webkit-scrollbar-thumb {
   border-radius: .5rem;
   background-color: var(--md-sys-color-surface-variant);
-}
+} */
