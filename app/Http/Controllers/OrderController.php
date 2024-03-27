@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -52,12 +53,22 @@ class OrderController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $results = $request->input('results', 10);
+        $search = $request->input('search', '');
+
+        return Inertia::render('Orders/Create', [
+            'customers' => Customer::where('name', 'like', "{$search}%")
+                ->orderBy('name')
+                ->paginate($results, ['id', 'name', 'last_name'], 'customers')
+                ->withQueryString(),
+            'products' => Product::paginate(10, ['*'], 'products'),
+            'filters' => [
+                'search' => $search,
+                'results' => $results
+            ]
+        ]);
     }
 
     /**

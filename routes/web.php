@@ -42,6 +42,7 @@ Route::controller(CategoryController::class)->prefix('categories')->group(functi
 
 Route::controller(OrderController::class)->prefix('orders')->group(function () {
     Route::get('/', 'index')->name('orders');
+    Route::get('/create', 'create')->name('orders.create');
 });
 
 require __DIR__.'/auth.php';
