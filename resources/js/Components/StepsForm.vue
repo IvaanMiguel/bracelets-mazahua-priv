@@ -78,9 +78,6 @@ defineExpose({ next, back, activeIndex })
       >
         <md-circular-progress indeterminate />
       </div>
-      <div class="text-on-background mx-4 pt-1 text-end text-xs">
-        {{ `${activeIndex + 1}/${steps}` }}
-      </div>
       <div
         id="steps-container"
         ref="stepsContainer"

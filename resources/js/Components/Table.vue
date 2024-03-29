@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { Pagination } from '@/types'
+import { usePage } from '@inertiajs/vue3'
 import '@material/web/divider/divider'
 import '@material/web/list/list'
 import '@material/web/list/list-item'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Icon from './Icon.vue'
 import Paginator from './Paginator.vue'
 
@@ -14,29 +15,48 @@ const props = withDefaults(
     pagination: Pagination<any>
     gridCols?: string
     url?: string
+    name?: string
   }>(),
   {
     noHeaders: false,
+    name: '',
   }
 )
 
+const page = usePage()
+
+const search = ref('')
+const selectedResults = computed(() => {
+  const value = page.props.filters.results
+  return typeof value === 'number' ? value : value[props.name]
+})
 const gridTemplateCols = computed(() => {
   return (
     props.gridCols ??
     `grid-template-columns: repeat(${props.headers?.length}, minmax(0, 1fr))`
   )
 })
+
+watch(
+  () => page.props.filters.search,
+  (value) => {
+    if (!value) {
+      search.value = ''
+      return
+    }
+
+    search.value = typeof value === 'string' ? value : value[props.name]
+  }
+)
 </script>
 
 <template>
   <div>
-    <md-list
-      class="h-full overflow-y-auto bg-light-surface-container-lowest py-0 dark:bg-dark-surface-container"
-    >
+    <md-list class="h-full overflow-y-auto bg-inherit p-0">
       <div
         v-if="!noHeaders"
         :style="gridTemplateCols"
-        class="text-on-background sticky top-0 z-[1] grid min-h-14 items-center gap-4 border-b border-light-outline-variant bg-light-surface-container-lowest px-4 py-0 font-medium dark:border-dark-outline-variant dark:bg-dark-surface-container"
+        class="sticky top-0 z-[1] grid min-h-14 items-center gap-4 border-b border-light-outline-variant px-4 py-0 font-medium dark:border-dark-outline-variant bg-light-surface-container-highest dark:bg-dark-surface-container-highest"
       >
         <span
           v-for="header in headers"
@@ -61,9 +81,7 @@ const gridTemplateCols = computed(() => {
             <span
               class="block text-xl font-medium text-light-on-background dark:text-dark-on-background"
             >
-              {{
-                `No se han encontrado coincidencias para "${$page.props.filters.search}".`
-              }}
+              {{ `No se han encontrado coincidencias para "${search}".` }}
             </span>
           </div>
         </div>
@@ -74,8 +92,9 @@ const gridTemplateCols = computed(() => {
       <Paginator
         class="justify-end px-4 py-2"
         :pagination
-        :selected-results="$page.props.filters.results"
+        :selected-results="selectedResults"
         :base-url="url"
+        :name="name ? name : undefined"
       />
     </div>
   </div>

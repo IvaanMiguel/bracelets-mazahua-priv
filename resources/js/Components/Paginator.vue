@@ -14,10 +14,12 @@ const props = withDefaults(
     pagination: Pagination<any>
     rowsPerPage?: number[]
     baseUrl?: string
+    name?: string
   }>(),
   {
     rowsPerPage: () => [10, 25, 50],
     baseUrl: route().current(),
+    name: 'results',
   }
 )
 
@@ -35,11 +37,15 @@ const selectOption = (i: number) => {
 }
 
 watch(results, (value) => {
+  const resultsKey =
+    props.name === 'results' ? props.name : `results-${props.name}`
+
   router.get(
     props.baseUrl,
+    // @ts-expect-error immediately
     {
       ...route().params,
-      results: value,
+      [resultsKey]: value,
     },
     {
       preserveState: true,
@@ -59,7 +65,7 @@ watch(results, (value) => {
       </span>
       <md-outlined-select
         class="min-w-fit"
-        menu-positioning="absolute"
+        menu-positioning="popover"
         v-model="results"
       >
         <md-select-option
