@@ -27,6 +27,7 @@ defineExpose({ selectedCustomer })
       class="my-3 w-full"
       placeholder="Buscar cliente por nombre..."
       :base-url="route('orders.create')"
+      name="customer"
     />
 
     <Table
@@ -34,6 +35,7 @@ defineExpose({ selectedCustomer })
       no-headers
       :pagination="customers"
       :url="route('orders.create')"
+      name="customer"
     >
       <template v-for="(customer, i) in customers.data">
         <SelectCustomerItem
