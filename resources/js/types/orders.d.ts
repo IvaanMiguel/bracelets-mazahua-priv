@@ -29,3 +29,15 @@ export interface OrderListItem {
   payment_type: PaymentType
   total: number
 }
+
+export interface AvailableProduct {
+  id: number
+  name: string
+  price: number
+  stock: number
+}
+
+export type SelectedProduct = AvailableProduct & {
+  amount: number
+  subtotal: number
+}

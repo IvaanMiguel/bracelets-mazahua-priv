@@ -1,26 +1,33 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
-import SearchBar from '@/Components/SearchBar.vue'
 import StepsForm from '@/Components/StepsForm.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
+import '@material/web/button/filled-tonal-button'
+import '@material/web/checkbox/checkbox'
 import '@material/web/elevation/elevation'
+import '@material/web/iconbutton/icon-button'
 import '@material/web/list/list'
 import '@material/web/list/list-item'
 import '@material/web/progress/linear-progress'
 import '@material/web/radio/radio'
+import '@material/web/textfield/outlined-text-field'
 import { computed, ref } from 'vue'
-import SelectCustomer from './Partials/CreateForm/SelectCustomer.vue'
+import SelectCustomer from './Partials/CreateForm/Customer/SelectCustomer.vue'
+import SelectedProducts from './Partials/CreateForm/Products/SelectedProducts.vue'
 
 defineOptions({ layout: MainLayout })
 
 const stepsForm = ref<InstanceType<typeof StepsForm>>()
-const selectCustomer = ref<InstanceType<typeof SelectCustomer> | null>(null)
+const selectCustomer = ref<InstanceType<typeof SelectCustomer>>()
+const selectedProducts = ref<InstanceType<typeof SelectedProducts>>()
 const selectedCustomer = computed(() => {
   const customer = selectCustomer.value?.selectedCustomer
-
   return customer ? `${customer?.name} ${customer?.last_name}` : null
 })
-const validations = computed(() => [selectedCustomer.value === null])
+const validations = computed(() => [
+  selectedCustomer.value === null,
+  (selectedProducts.value?.list.length || 0) <= 0,
+])
 </script>
 
 <template>
@@ -39,7 +46,7 @@ const validations = computed(() => [selectedCustomer.value === null])
             <Icon>arrow_back</Icon>
           </md-icon-button>
         </Link>
-        <h1 class="text-xl">
+        <h1 class="text-xl font-medium">
           {{
             selectCustomer?.selectedCustomer
               ? `Pedido para: ${selectedCustomer}`
@@ -59,7 +66,10 @@ const validations = computed(() => [selectedCustomer.value === null])
             ref="selectCustomer"
             class="flex flex-col overflow-hidden"
           />
-          <div>Segundo paso</div>
+          <SelectedProducts
+            ref="selectedProducts"
+            class="flex flex-col overflow-hidden"
+          />
           <div>Tercer paso</div>
           <div>Cuarto paso</div>
         </template>

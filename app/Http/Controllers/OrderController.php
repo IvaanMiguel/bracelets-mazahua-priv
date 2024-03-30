@@ -19,8 +19,9 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $results = $request->input('results', 10);
-        $search = $request->input('search');
+        $search = $request->input('search', '');
 
+        // This is horrible.
         return Inertia::render('Orders/Index', [
             'orders' => Order::select([
                 'completed',
@@ -55,15 +56,25 @@ class OrderController extends Controller
 
     public function create(Request $request)
     {
-        $results = $request->input('results', 10);
-        $search = $request->input('search', '');
+        $search = [
+            'customer' => $request->input('search-customer', ''),
+            'product' => $request->input('search-product', '')
+        ];
+        $results = [
+            'customer' => intval($request->input('results-customer', 10)),
+            'product' => intval($request->input('results-product', 10)),
+        ];
 
         return Inertia::render('Orders/Create', [
-            'customers' => Customer::where('name', 'like', "{$search}%")
+            'customers' => Customer::where('name', 'like', "{$search['customer']}%")
                 ->orderBy('name')
-                ->paginate($results, ['id', 'name', 'last_name'], 'customers')
+                ->paginate($results['customer'], ['id', 'name', 'last_name'], 'customers')
                 ->withQueryString(),
-            'products' => Product::paginate(10, ['*'], 'products'),
+            'products' => Product::where('name', 'like', "{$search['product']}%")
+                ->where('stock', '>', 0)
+                ->orderBy('name')
+                ->paginate($results['product'], ['id', 'name', 'price', 'stock'], 'products')
+                ->withQueryString(),
             'filters' => [
                 'search' => $search,
                 'results' => $results
