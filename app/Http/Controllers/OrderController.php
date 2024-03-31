@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\DeliveryType;
 use App\Models\Order;
+use App\Models\PaymentType;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +32,7 @@ class OrderController extends Controller
                 'delivery_id',
                 'payment_type_id',
             ])->with([
-                'customer:id,name,last_name',
+                'customer' => fn ($q) => $q->select(['id', 'name', 'last_name'])->withTrashed(),
                 'delivery:id,date,delivery_type_id',
                 'delivery.deliveryType',
                 'paymentType'
@@ -75,6 +77,8 @@ class OrderController extends Controller
                 ->orderBy('name')
                 ->paginate($results['product'], ['id', 'name', 'price', 'stock'], 'products')
                 ->withQueryString(),
+            'deliveryTypes' => fn () => DeliveryType::orderBy('name')->get(),
+            'paymentTypes' => fn () => PaymentType::orderBy('name')->get(),
             'filters' => [
                 'search' => $search,
                 'results' => $results
