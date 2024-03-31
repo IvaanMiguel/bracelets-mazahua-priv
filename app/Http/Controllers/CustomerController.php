@@ -118,4 +118,11 @@ class CustomerController extends Controller
 
         return to_route('customers')->with('destroyed', true);
     }
+
+    public function addresses(string $id)
+    {
+        $addresses = Address::where('customer_id', $id)->get();
+
+        return $addresses;
+    }
 }

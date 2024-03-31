@@ -18,6 +18,7 @@ Route::controller(CustomerController::class)->prefix('customers')->group(functio
     Route::post('/', 'store')->name('customers.store');
     Route::put('/{id}', 'update')->name('customers.update');
     Route::delete('/{id}', 'destroy')->name('customers.destroy');
+    Route::get('/{id}/addresses', 'addresses')->name('customers.addresses');
 });
 
 Route::controller(AddressController::class)->prefix('addresses')->group(function () {
