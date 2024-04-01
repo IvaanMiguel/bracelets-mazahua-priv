@@ -11,7 +11,17 @@ import { computed, ref } from 'vue'
 import Icon from './Icon.vue'
 import TextField from './TextField.vue'
 
-defineProps<{ error?: string }>()
+withDefaults(
+  defineProps<{
+    error?: string
+    floatingIcon?: boolean
+    icon?: string
+    label?: string
+  }>(),
+  {
+    floatingIcon: false
+  }
+)
 const model = defineModel<ModelValue>()
 
 const textfield = ref<InstanceType<typeof TextField>>()
@@ -40,7 +50,6 @@ const formatPreview = (value: string) => {
     calendar-cell-class-name="dp__calendar-cell"
     locale="es"
     model-type="yyyy/MM/dd"
-    start-date="2001/01/01"
     :enable-time-picker="false"
     v-model="model"
   >
@@ -49,13 +58,13 @@ const formatPreview = (value: string) => {
         ref="textfield"
         readonly
         type="text"
-        label="Fecha de nacimiento"
+        :label
         no-error-icon
         :error
         :value="formatValue"
       >
-        <template #floating-icon>
-          <Icon>cake</Icon>
+        <template v-if="floatingIcon" #floating-icon>
+          <Icon>{{ icon }}</Icon>
         </template>
       </TextField>
     </template>
@@ -119,7 +128,7 @@ const formatPreview = (value: string) => {
   padding: 0;
 }
 .dp__clear_icon {
-  top: .5rem;
+  top: 0.5rem;
   transform: unset;
 }
 </style>

@@ -74,10 +74,14 @@ defineExpose({ form })
       </template>
     </TextField>
     <DatePicker
-      v-model="form.birth_date"
       :error="form.errors.birth_date"
-      v-bind="datePickerConfig"
       :max-date="new Date()"
+      v-bind="datePickerConfig"
+      v-model="form.birth_date"
+      start-date="2001/01/01"
+      label="Fecha de nacimiento"
+      floating-icon
+      icon="cake"
     />
   </Form>
 </template>
