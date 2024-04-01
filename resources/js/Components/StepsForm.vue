@@ -12,11 +12,12 @@ const props = withDefaults(
     processing?: boolean
     submit: () => void
     nextValidations?: boolean[]
+    nextActions?: { [x: number]: CallableFunction }
   }>(),
   {
     processing: false,
     disableNext: false,
-    nextValidations: () => [false]
+    nextValidations: () => [false],
   }
 )
 
@@ -90,7 +91,7 @@ defineExpose({ next, back, activeIndex })
       <div class="text-end">
         <md-text-button
           class="me-4"
-          :disabled="activeIndex === 0"
+          :disabled="activeIndex === 0 || processing"
           @click="back"
         >
           <Icon slot="icon">arrow_back</Icon>
@@ -98,8 +99,8 @@ defineExpose({ next, back, activeIndex })
         </md-text-button>
         <md-filled-button
           trailing-icon
-          :disabled="nextValidations[activeIndex]"
-          @click="next"
+          :disabled="nextValidations[activeIndex] || processing"
+          @click="nextActions![activeIndex] ? nextActions![activeIndex]() : next()"
         >
           Siguiente
           <Icon slot="icon">arrow_forward</Icon>
