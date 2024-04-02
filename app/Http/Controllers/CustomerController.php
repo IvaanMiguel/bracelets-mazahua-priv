@@ -121,7 +121,9 @@ class CustomerController extends Controller
 
     public function addresses(string $id)
     {
-        $addresses = Address::where('customer_id', $id)->get();
+        $addresses = Address::where('customer_id', $id)
+            ->orderBy('neighborhood')
+            ->get();
 
         return $addresses;
     }

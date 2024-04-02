@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\DeliveryApp;
 use App\Models\DeliveryType;
 use App\Models\Order;
 use App\Models\PaymentType;
@@ -78,6 +79,7 @@ class OrderController extends Controller
                 ->paginate($results['product'], ['id', 'name', 'price', 'stock'], 'products')
                 ->withQueryString(),
             'deliveryTypes' => fn () => DeliveryType::orderBy('name')->get(),
+            'deliveryApps' => fn () => DeliveryApp::orderBy('name')->get(),
             'paymentTypes' => fn () => PaymentType::orderBy('name')->get(),
             'filters' => [
                 'search' => $search,
