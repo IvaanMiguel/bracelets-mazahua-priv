@@ -110,17 +110,17 @@ watch(
         <template #step>
           <SelectCustomer
             ref="selectCustomer"
-            class="flex flex-col overflow-hidden"
+            class="flex flex-col overflow-hidden p-4"
           />
           <SelectedProducts
             ref="selectedProducts"
-            class="flex flex-col overflow-hidden"
+            class="flex flex-col overflow-hidden p-4"
           />
           <div class="flex flex-col overflow-hidden">
-            <h2 class="text-on-background mb-4 text-lg font-medium">Entrega</h2>
+            <h2 class="text-on-background p-4 pb-0 text-lg font-medium">Entrega</h2>
             <DeliveryForm
               ref="deliveryForm"
-              class="flex h-full flex-col overflow-y-auto"
+              class="flex h-full flex-col overflow-y-auto p-4"
               :delivery-types="deliveryTypes"
               :delivery-apps="deliveryApps"
               :addresses

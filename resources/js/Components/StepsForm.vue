@@ -118,6 +118,6 @@ defineExpose({ next, back, activeIndex })
 :slotted(div) {
   transform: translateX(v-bind(stepTranslation));
   transition: transform 0.2s ease-in-out 0s;
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 </style>

@@ -74,7 +74,7 @@ defineExpose({ form })
       minutes: getMinutes(Date.now()),
     }"
   >
-    <div class="mb-6 mt-2 grid gap-6 md:grid-cols-2">
+    <div class="mb-6 grid gap-6 md:grid-cols-2">
       <div class="flex">
         <span class="text-on-background me-4">
           <Icon>quick_reorder</Icon>
