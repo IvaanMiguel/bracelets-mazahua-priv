@@ -17,7 +17,7 @@ const onSelectedCustomer = (customer: Customer) => {
   selectedCustomer.value = customer
 }
 
-defineExpose({ selectedCustomer })
+defineExpose({ customer: selectedCustomer })
 </script>
 
 <template>
