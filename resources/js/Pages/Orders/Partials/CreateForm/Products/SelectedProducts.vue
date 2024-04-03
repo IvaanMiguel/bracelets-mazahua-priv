@@ -16,6 +16,7 @@ const total = computed(() => {
   }, 0)
 })
 const advance = computed(() => total.value / 2)
+const disableNext = computed(() => selectedProducts.length <= 0)
 
 const onSaveChecked = (checkedProducts: AvailableProduct[]) => {
   for (const checkedProduct of checkedProducts) {
@@ -42,7 +43,7 @@ const onRemoveProduct = () => {
   productToRemove.value = null
 }
 
-defineExpose({ list: selectedProducts })
+defineExpose({ disableNext })
 </script>
 
 <template>

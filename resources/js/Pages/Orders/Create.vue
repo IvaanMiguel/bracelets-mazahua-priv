@@ -43,8 +43,8 @@ const selectedCustomer = computed(() => {
   return customer ? `${customer?.name} ${customer?.last_name}` : null
 })
 const disableNext = computed(() => ({
-  0: () => selectedCustomer.value === null,
-  1: () => (selectedProducts.value?.list.length || 0) <= 0,
+  0: () => selectCustomer.value?.disableNext || false,
+  1: () => selectedProducts.value?.disableNext || false,
   3: () => {
     switch (paymentForm.value?.form.payment_type_id) {
       case 1:

@@ -9,6 +9,7 @@ import SelectCustomerItem from './SelectCustomerItem.vue'
 
 const page = usePage()
 const selectedCustomer = ref<Customer | null>(null)
+const disableNext = computed(() => selectedCustomer.value === null)
 const customers = computed(() => {
   return page.props.customers as Pagination<Customer>
 })
@@ -17,7 +18,10 @@ const onSelectedCustomer = (customer: Customer) => {
   selectedCustomer.value = customer
 }
 
-defineExpose({ customer: selectedCustomer })
+defineExpose({
+  customer: selectedCustomer,
+  disableNext,
+})
 </script>
 
 <template>
