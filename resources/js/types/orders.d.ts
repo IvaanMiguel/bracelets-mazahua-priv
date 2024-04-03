@@ -47,3 +47,10 @@ export interface Delivery {
   date: string
   time: string
 }
+
+export interface Payment {
+  payment_type_id: number
+  name: string
+  cardNumber: string
+  clabe: string
+}

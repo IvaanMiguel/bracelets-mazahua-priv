@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DeliveryForm from '@/Components/Forms/Delivery/DeliveryForm.vue'
+import PaymentForm from '@/Components/Forms/PaymentForm.vue'
 import Icon from '@/Components/Icon.vue'
 import StepsForm from '@/Components/StepsForm.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
@@ -13,6 +14,7 @@ import '@material/web/list/list-item'
 import '@material/web/progress/linear-progress'
 import '@material/web/radio/radio'
 import '@material/web/textfield/outlined-text-field'
+import useVuelidate, { Validation } from '@vuelidate/core'
 import axios from 'axios'
 import { computed, reactive, ref, watch } from 'vue'
 import SelectCustomer from './Partials/CreateForm/Customer/SelectCustomer.vue'
@@ -22,12 +24,16 @@ defineOptions({ layout: MainLayout })
 defineProps<{
   deliveryTypes: { id: number; name: string }[]
   deliveryApps: { id: number; name: string }[]
+  paymentTypes: { id: number; name: string }[]
 }>()
+
+const v = useVuelidate()
 
 const stepsForm = ref<InstanceType<typeof StepsForm>>()
 const selectCustomer = ref<InstanceType<typeof SelectCustomer>>()
 const selectedProducts = ref<InstanceType<typeof SelectedProducts>>()
 const deliveryForm = ref<InstanceType<typeof DeliveryForm>>()
+const paymentForm = ref<InstanceType<typeof PaymentForm>>()
 const processing = ref(false)
 const addresses = ref<IdAddress[]>([])
 // Used to know when to refetch customer addresses.
@@ -36,10 +42,25 @@ const selectedCustomer = computed(() => {
   const customer = selectCustomer.value?.customer
   return customer ? `${customer?.name} ${customer?.last_name}` : null
 })
-const nextValidations = computed(() => [
-  selectedCustomer.value === null,
-  (selectedProducts.value?.list.length || 0) <= 0,
-])
+const disableNext = computed(() => ({
+  0: () => selectedCustomer.value === null,
+  1: () => (selectedProducts.value?.list.length || 0) <= 0,
+  3: () => {
+    switch (paymentForm.value?.form.payment_type_id) {
+      case 1:
+        return false
+      case 2:
+        return paymentForm.value.form.clabe === ''
+      case 3:
+        return (
+          paymentForm.value.form.name === '' ||
+          paymentForm.value.form.cardNumber === ''
+        )
+    }
+
+    return true
+  },
+}))
 
 const fetchAddresses = () => {
   processing.value = true
@@ -64,7 +85,31 @@ const nextActions = reactive({
   0: () => {
     changedCustomer.value ? fetchAddresses() : stepsForm.value?.next()
   },
+  3: () => {
+    const paymentValidations = v.value.payment as Validation
+
+    switch (paymentForm.value?.form.payment_type_id) {
+      case 2:
+        paymentValidations.clabe.$touch()
+        break
+      case 3:
+        paymentValidations.name.$touch()
+        paymentValidations.cardNumber.$touch()
+        break
+    }
+
+    if (paymentValidations.$errors.length) return
+
+    stepsForm.value?.next()
+  },
 })
+
+watch(
+  () => paymentForm.value?.form.payment_type_id,
+  () => {
+    v.value.$reset()
+  }
+)
 
 watch(
   () => selectCustomer.value?.customer,
@@ -101,9 +146,9 @@ watch(
       <StepsForm
         ref="stepsForm"
         class="flex h-full flex-col overflow-hidden"
-        :steps="4"
+        :steps="5"
         :submit="() => console.log('Submitting...')"
-        :nextValidations
+        :disableNext
         :nextActions
         :processing
       >
@@ -117,7 +162,9 @@ watch(
             class="flex flex-col overflow-hidden p-4"
           />
           <div class="flex flex-col overflow-hidden">
-            <h2 class="text-on-background p-4 pb-0 text-lg font-medium">Entrega</h2>
+            <h2 class="text-on-background p-4 pb-0 text-lg font-medium">
+              Entrega
+            </h2>
             <DeliveryForm
               ref="deliveryForm"
               class="flex h-full flex-col overflow-y-auto p-4"
@@ -126,7 +173,18 @@ watch(
               :addresses
             />
           </div>
-          <div>Cuarto paso</div>
+          <div class="flex flex-col overflow-hidden">
+            <h2 class="text-on-background p-4 pb-0 text-lg font-medium">
+              Pago
+            </h2>
+            <PaymentForm
+              ref="paymentForm"
+              class="grid gap-6 overflow-y-auto p-4 md:grid-cols-2"
+              :paymentTypes
+              :customer-name="selectCustomer?.customer"
+              :config="{ $registerAs: 'payment' }"
+            />
+          </div>
         </template>
       </StepsForm>
     </div>
