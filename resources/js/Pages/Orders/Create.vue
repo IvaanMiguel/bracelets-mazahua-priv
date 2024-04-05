@@ -5,6 +5,7 @@ import Icon from '@/Components/Icon.vue'
 import StepsForm from '@/Components/StepsForm.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { IdAddress } from '@/types/customers'
+import { Catalog } from '@/types/orders'
 import '@material/web/button/filled-tonal-button'
 import '@material/web/checkbox/checkbox'
 import '@material/web/elevation/elevation'
@@ -17,14 +18,15 @@ import '@material/web/textfield/outlined-text-field'
 import useVuelidate, { Validation } from '@vuelidate/core'
 import axios from 'axios'
 import { computed, reactive, ref, watch } from 'vue'
+import Checkout from './Partials/Checkout.vue'
 import SelectCustomer from './Partials/CreateForm/Customer/SelectCustomer.vue'
 import SelectedProducts from './Partials/CreateForm/Products/SelectedProducts.vue'
 
 defineOptions({ layout: MainLayout })
 defineProps<{
-  deliveryTypes: { id: number; name: string }[]
-  deliveryApps: { id: number; name: string }[]
-  paymentTypes: { id: number; name: string }[]
+  deliveryTypes: Catalog[]
+  deliveryApps: Catalog[]
+  paymentTypes: Catalog[]
 }>()
 
 const v = useVuelidate()
@@ -162,7 +164,7 @@ watch(
             class="flex flex-col overflow-hidden p-4"
           />
           <div class="flex flex-col overflow-hidden">
-            <h2 class="text-on-background p-4 pb-0 text-lg font-medium">
+            <h2 class="text-on-background p-4 pb-1 text-lg font-medium">
               Entrega
             </h2>
             <DeliveryForm
@@ -174,7 +176,7 @@ watch(
             />
           </div>
           <div class="flex flex-col overflow-hidden">
-            <h2 class="text-on-background p-4 pb-0 text-lg font-medium">
+            <h2 class="text-on-background p-4 pb-1 text-lg font-medium">
               Pago
             </h2>
             <PaymentForm
@@ -185,6 +187,20 @@ watch(
               :config="{ $registerAs: 'payment' }"
             />
           </div>
+          <Checkout
+            class="flex flex-col overflow-auto p-4"
+            :customer="selectCustomer?.customer"
+            :products="selectedProducts?.list"
+            :advance="selectedProducts?.advance"
+            :total="selectedProducts?.total"
+            :delivery="deliveryForm?.form.data()"
+            :delivery-address="
+              addresses.find(
+                (address) => address.id === deliveryForm?.form.address_id
+              )
+            "
+            :payment="paymentForm?.form.data()"
+          />
         </template>
       </StepsForm>
     </div>

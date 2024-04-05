@@ -3,12 +3,13 @@ import Icon from '@/Components/Icon.vue'
 import { SelectedProduct } from '@/types/orders'
 import { MdOutlinedTextField } from '@material/web/textfield/outlined-text-field'
 import { useEventListener } from '@vueuse/core'
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 defineEmits<{ removingProduct: [product: SelectedProduct] }>()
 const props = defineProps<{ product: SelectedProduct }>()
 
 const textfield = ref<MdOutlinedTextField>()
+const subtotal = computed(() => props.product.price * props.product.amount)
 
 useEventListener(textfield, 'blur', () => {
   const value = +textfield.value!.value
@@ -19,6 +20,13 @@ useEventListener(textfield, 'blur', () => {
     props.product.amount = props.product.stock
   }
 })
+
+watch(
+  () => props.product.amount,
+  () => {
+    props.product.subtotal = subtotal.value
+  }
+)
 </script>
 
 <template>
@@ -31,12 +39,12 @@ useEventListener(textfield, 'blur', () => {
         class="max-h-[3.25rem] w-full md:w-2/3"
         type="number"
         min="1"
-        maxlength='4'
+        maxlength="4"
         :max="product.stock"
         v-model="product.amount"
       />
       <span class="truncate">
-        {{ `$${(props.product.price * props.product.amount).toFixed(2)} MXN` }}
+        {{ `$${subtotal.toFixed(2)} MXN` }}
       </span>
     </div>
     <div slot="end">

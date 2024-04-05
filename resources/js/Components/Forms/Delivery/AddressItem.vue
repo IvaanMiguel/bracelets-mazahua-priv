@@ -3,13 +3,13 @@ import { useAddressDetails } from '@/composables/useAddressDetails'
 import { IdAddress } from '@/types/customers'
 import '@material/web/radio/radio'
 import { MdRadio } from '@material/web/radio/radio'
-import { ref, useAttrs } from 'vue'
+import { ref, toRef, useAttrs } from 'vue'
 
 const emit = defineEmits<{ selectedAddress: [id: number] }>()
 const props = defineProps<{ address: IdAddress }>()
 
 const attrs = useAttrs()
-const addressDetails = useAddressDetails(props.address)
+const addressDetails = useAddressDetails(toRef(() => props.address))
 
 const radio = ref<MdRadio>()
 

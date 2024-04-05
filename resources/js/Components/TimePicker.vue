@@ -28,7 +28,7 @@ const formatValue = computed(() => {
 
   const time = (model.value as string).split(':')
 
-  return format(new Date(0, 0, 0, +time[0], +time[1]), "'a las' HH:mm B", {
+  return format(new Date(0, 0, 0, +time[0], +time[1]), "'a las' HH:mm", {
     locale: es,
   })
 })

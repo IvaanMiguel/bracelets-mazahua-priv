@@ -33,7 +33,7 @@ const form = useForm<Delivery>({
   address_id:
     props.defaults?.address_id ||
     (props.addresses.length ? props.addresses[0].id : -1),
-  date: props.defaults?.date || format(Date.now(), 'dd/MMMM/y'),
+  date: props.defaults?.date || format(Date.now(), 'yyyy/MM/dd'),
   time: props.defaults?.time || format(Date.now(), 'HH:mm'),
 })
 

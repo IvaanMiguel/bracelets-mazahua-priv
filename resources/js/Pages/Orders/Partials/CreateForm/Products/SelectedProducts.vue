@@ -23,7 +23,7 @@ const onSaveChecked = (checkedProducts: AvailableProduct[]) => {
     selectedProducts.push({
       ...checkedProduct,
       amount: 1,
-      subtotal: checkedProduct.price,
+      subtotal: +checkedProduct.price,
     })
   }
 }
@@ -43,7 +43,7 @@ const onRemoveProduct = () => {
   productToRemove.value = null
 }
 
-defineExpose({ disableNext })
+defineExpose({ list: selectedProducts, disableNext, advance, total })
 </script>
 
 <template>
@@ -103,7 +103,7 @@ defineExpose({ disableNext })
           </div>
         </template>
         <div
-          class="table-cols table-cols sticky bottom-0 z-[2] mt-auto grid gap-4 border-t border-light-outline-variant bg-light-surface-container-lowest px-4 py-3 dark:border-dark-outline-variant dark:bg-dark-surface-container"
+          class="table-cols sticky bottom-0 z-[2] mt-auto grid gap-4 border-t border-light-outline-variant bg-light-surface-container-lowest px-4 py-3 dark:border-dark-outline-variant dark:bg-dark-surface-container"
         >
           <div class="truncate font-medium">Anticipo</div>
           <div class="truncate">{{ `$${advance.toFixed(2)} MXN` }}</div>
