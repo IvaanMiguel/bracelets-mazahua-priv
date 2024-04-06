@@ -15,6 +15,11 @@ const total = computed(() => {
     return product.amount * product.price + acc
   }, 0)
 })
+const reducedList = computed(() => {
+  return selectedProducts.map((product) => {
+    return { id: product.id, amount: product.amount }
+  })
+})
 const advance = computed(() => total.value / 2)
 const disableNext = computed(() => selectedProducts.length <= 0)
 
@@ -43,7 +48,19 @@ const onRemoveProduct = () => {
   productToRemove.value = null
 }
 
-defineExpose({ list: selectedProducts, disableNext, advance, total })
+const reset = () => {
+  searchProductModal.value?.reset()
+  selectedProducts.splice(0, selectedProducts.length)
+}
+
+defineExpose({
+  list: selectedProducts,
+  reducedList,
+  disableNext,
+  advance,
+  total,
+  reset,
+})
 </script>
 
 <template>

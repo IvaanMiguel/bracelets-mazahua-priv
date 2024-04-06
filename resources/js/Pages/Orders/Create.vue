@@ -2,10 +2,12 @@
 import DeliveryForm from '@/Components/Forms/Delivery/DeliveryForm.vue'
 import PaymentForm from '@/Components/Forms/PaymentForm.vue'
 import Icon from '@/Components/Icon.vue'
+import Snackbar from '@/Components/Snackbar.vue'
 import StepsForm from '@/Components/StepsForm.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { IdAddress } from '@/types/customers'
 import { Catalog } from '@/types/orders'
+import { router } from '@inertiajs/vue3'
 import '@material/web/button/filled-tonal-button'
 import '@material/web/checkbox/checkbox'
 import '@material/web/elevation/elevation'
@@ -31,12 +33,15 @@ defineProps<{
 
 const v = useVuelidate()
 
+const storedOrderSnackbar = ref<InstanceType<typeof Snackbar>>()
 const stepsForm = ref<InstanceType<typeof StepsForm>>()
 const selectCustomer = ref<InstanceType<typeof SelectCustomer>>()
 const selectedProducts = ref<InstanceType<typeof SelectedProducts>>()
 const deliveryForm = ref<InstanceType<typeof DeliveryForm>>()
 const paymentForm = ref<InstanceType<typeof PaymentForm>>()
-const processing = ref(false)
+
+const postProcessing = ref(false)
+const stepsFormProcessing = ref(false)
 const addresses = ref<IdAddress[]>([])
 // Used to know when to refetch customer addresses.
 const changedCustomer = ref(false)
@@ -62,10 +67,11 @@ const disableNext = computed(() => ({
 
     return true
   },
+  4: () => postProcessing.value,
 }))
 
 const fetchAddresses = () => {
-  processing.value = true
+  stepsFormProcessing.value = true
 
   axios
     .get(route('customers.addresses', { id: selectCustomer.value?.customer }))
@@ -79,7 +85,7 @@ const fetchAddresses = () => {
       console.log('Error padre.')
     })
     .finally(() => {
-      processing.value = false
+      stepsFormProcessing.value = false
     })
 }
 
@@ -105,6 +111,35 @@ const nextActions = reactive({
     stepsForm.value?.next()
   },
 })
+
+const submit = () => {
+  router.post(
+    route('orders.store'),
+    {
+      customer_id: selectCustomer.value?.customer?.id,
+      payment_type_id: paymentForm.value?.form.payment_type_id,
+      details: paymentForm.value?.form.details,
+      products: selectedProducts.value?.reducedList,
+      ...deliveryForm.value?.form.data(),
+    },
+    {
+      onStart: () => (postProcessing.value = true),
+      onSuccess: () => {
+        stepsForm.value!.activeIndex = 0
+        selectCustomer.value!.customer = null
+        addresses.value.splice(0, addresses.value.length)
+
+        paymentForm.value?.form.reset()
+        deliveryForm.value?.form.reset()
+        selectedProducts.value?.reset()
+        v.value.$reset()
+
+        storedOrderSnackbar.value?.show(true)
+      },
+      onFinish: () => (postProcessing.value = false),
+    }
+  )
+}
 
 watch(
   () => paymentForm.value?.form.payment_type_id,
@@ -149,10 +184,10 @@ watch(
         ref="stepsForm"
         class="flex h-full flex-col overflow-hidden"
         :steps="5"
-        :submit="() => console.log('Submitting...')"
+        :submit
         :disableNext
         :nextActions
-        :processing
+        :processing="stepsFormProcessing"
       >
         <template #step>
           <SelectCustomer
@@ -205,4 +240,10 @@ watch(
       </StepsForm>
     </div>
   </div>
+
+  <Snackbar
+    ref="storedOrderSnackbar"
+    text="El pedido ha sido realizado con éxito."
+    close-button
+  />
 </template>

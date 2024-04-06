@@ -14,8 +14,8 @@ Route::get('/', HomeController::class)
 
 Route::controller(CustomerController::class)->prefix('customers')->group(function () {
     Route::get('/', 'index')->name('customers');
-    Route::get('/{id}', 'show')->name('customers.show');
     Route::post('/', 'store')->name('customers.store');
+    Route::get('/{id}', 'show')->name('customers.show');
     Route::put('/{id}', 'update')->name('customers.update');
     Route::delete('/{id}', 'destroy')->name('customers.destroy');
     Route::get('/{id}/addresses', 'addresses')->name('customers.addresses');
@@ -44,6 +44,7 @@ Route::controller(CategoryController::class)->prefix('categories')->group(functi
 Route::controller(OrderController::class)->prefix('orders')->group(function () {
     Route::get('/', 'index')->name('orders');
     Route::get('/create', 'create')->name('orders.create');
+    Route::post('/', 'store')->name('orders.store');
 });
 
 require __DIR__.'/auth.php';

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Delivery;
 use App\Models\DeliveryApp;
 use App\Models\DeliveryType;
 use App\Models\Order;
@@ -88,12 +89,66 @@ class OrderController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $productIds = array_map(fn ($product) => $product['id'], $request->products);
+        $products = Product::select(['id', 'price'])->whereIn('id', $productIds)->get();
+
+        $mergedProducts = [];
+
+        foreach ($request->products as $product) {
+            $mergedProducts[$product['id']]['amount'] = $product['amount'];
+        }
+
+        foreach ($products as $product) {
+            $mergedProducts[$product['id']]['price'] = $product['price'];
+        }
+
+        $productsTotal = 0;
+        $total = 0;
+
+        foreach ($mergedProducts as $product) {
+            $productsTotal += $product['amount'];
+            $total += ($product['price'] * $product['amount']);
+        }
+
+        DB::transaction(function () use ($request, $total, $productsTotal, $mergedProducts) {
+            foreach ($request->products as $product) {
+                DB::table('products')
+                    ->where('id', $product['id'])
+                    ->decrement('stock', $product['amount']);
+            }
+
+            $delivery = Delivery::create([
+                'delivery_type_id' => $request->delivery_type_id,
+                'delivery_app_id' => $request->delivery_type_id === 3 ? $request->delivery_app_id : null,
+                'date' => $request->date,
+                'time' => $request->time,
+                'address_id' => $request->delivery_type_id !== 1 ? $request->address_id : null
+            ]);
+
+            $order = Order::create([
+                'customer_id' => $request->customer_id,
+                'payment_type_id' => $request->payment_type_id,
+                'details' => $request->details,
+                'total' => $total,
+                'advance' => $total / 2,
+                'products_total' => $productsTotal,
+                'delivery_id' => $delivery->id,
+                'completed' => false
+            ]);
+
+            foreach ($mergedProducts as $id => $product) {
+                $order->products()->attach($id, [
+                    'amount' => $product['amount'],
+                    'subtotal' => $product['amount'] * $product['price'],
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+        });
+
+        return to_route('orders.create');
     }
 
     /**

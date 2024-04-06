@@ -53,6 +53,7 @@ export interface Payment {
   name: string
   cardNumber: string
   clabe: string
+  details: string | null
 }
 
 export interface Catalog {

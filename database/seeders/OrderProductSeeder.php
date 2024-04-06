@@ -26,7 +26,7 @@ class OrderProductSeeder extends Seeder
                 $subtotal = $product->price * $amount;
                 $total += $subtotal;
                 
-                DB::table('orders_products')->insert([
+                DB::table('order_product')->insert([
                     'id' => 0,
                     'order_id' => $order->id,
                     'product_id' => $product->id,

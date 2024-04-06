@@ -5,6 +5,7 @@ import { useForm } from '@inertiajs/vue3'
 import '@material/web/iconbutton/icon-button'
 import '@material/web/select/outlined-select'
 import '@material/web/select/select-option'
+import { watchEffect } from 'vue'
 import Form from '../Form.vue'
 import Icon from '../Icon.vue'
 import TextField from '../TextField.vue'
@@ -18,12 +19,33 @@ const form = useForm<Payment>({
   payment_type_id: props.paymentTypes[0].id,
   name: '',
   cardNumber: '',
-  clabe: ''
+  clabe: '',
+  details: null,
 })
 
 const onClick = () => {
   form.name = `${props.customerName?.name} ${props.customerName?.last_name}`
 }
+
+watchEffect(() => {
+  let _details: string | null
+
+  switch (form.payment_type_id) {
+    case 1:
+      _details = null
+      break
+    case 2:
+      _details = `Cuenta que termina en ${form.clabe.slice(-4)}`
+      break
+    case 3:
+      _details = `Tarjeta que termina en ${form.cardNumber.slice(-4)}`
+      break
+    default:
+      _details = null
+  }
+
+  form.details = _details
+})
 
 defineExpose({ form })
 </script>

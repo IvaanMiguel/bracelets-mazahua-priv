@@ -24,7 +24,6 @@ const cancellingModal = ref<MdDialog | null>()
 const products = computed(() => {
   return page.props.products as Pagination<AvailableProduct>
 })
-const processing = ref(false)
 const checkedProducts = reactive<AvailableProduct[]>([])
 // Used to manage which products where checked.
 const checkedIds = reactive<number[]>([])
@@ -78,6 +77,12 @@ const removeCheckedId = (id: number) => {
   checkedIds.splice(index, 1)
 }
 
+const reset = () => {
+  checkedProducts.splice(0, checkedProducts.length)
+  checkedIds.splice(0, checkedIds.length)
+  isDirty.value = false
+}
+
 useEventListener(modal, 'open', () => {
   const div = modal.value?.shadowRoot?.querySelector(
     '.content'
@@ -95,7 +100,7 @@ onMounted(() => {
   cancellingModal.value = cancelSearchModal.value?.modal
 })
 
-defineExpose({ modal, removeCheckedId })
+defineExpose({ modal, removeCheckedId, reset })
 </script>
 
 <template>
@@ -109,46 +114,38 @@ defineExpose({ modal, removeCheckedId })
       slot="content"
       class="flex min-h-full min-w-full flex-col overflow-hidden"
     >
-      <div
-        v-if="processing"
-        class="grid h-full w-full place-items-center"
+      <SearchBar
+        class="mb-3 w-full"
+        placeholder="Buscar producto por nombre..."
+        :base-url="route('orders.create')"
+        name="product"
+      />
+      <Table
+        class="flex h-full flex-col overflow-hidden rounded-md border border-light-outline-variant dark:border-dark-outline-variant"
+        :headers="['', 'Producto', 'Precio', 'Stock']"
+        grid-cols="grid-template-columns: 18px 3fr 2fr 1fr;"
+        :pagination="products"
+        :url="route('orders.create')"
+        name="product"
       >
-        <md-circular-progress indeterminate />
-      </div>
-      <template v-else>
-        <SearchBar
-          class="mb-3 w-full"
-          placeholder="Buscar producto por nombre..."
-          :base-url="route('orders.create')"
-          name="product"
-        />
-        <Table
-          class="flex h-full flex-col overflow-hidden rounded-md border border-light-outline-variant dark:border-dark-outline-variant"
-          :headers="['', 'Producto', 'Precio', 'Stock']"
-          grid-cols="grid-template-columns: 18px 3fr 2fr 1fr;"
-          :pagination="products"
-          :url="route('orders.create')"
-          name="product"
-        >
-          <template v-for="(product, i) in products?.data">
-            <SearchProductItem
-              :product
-              :checked="
-                Boolean(
-                  checkedProducts.find((_product) => _product.id === product.id)
-                )
-              "
-              :disabled="Boolean(checkedIds.find((id) => id === product.id))"
-              @checked-product="onCheckedProduct"
-            />
-            <md-divider
-              v-if="i !== products!.data.length - 1"
-              class="min-h-[1px]"
-              inset
-            />
-          </template>
-        </Table>
-      </template>
+        <template v-for="(product, i) in products?.data">
+          <SearchProductItem
+            :product
+            :checked="
+              Boolean(
+                checkedProducts.find((_product) => _product.id === product.id)
+              )
+            "
+            :disabled="Boolean(checkedIds.find((id) => id === product.id))"
+            @checked-product="onCheckedProduct"
+          />
+          <md-divider
+            v-if="i !== products!.data.length - 1"
+            class="min-h-[1px]"
+            inset
+          />
+        </template>
+      </Table>
     </div>
     <div slot="actions">
       <md-text-button @click="onCancelling">Cancelar</md-text-button>
