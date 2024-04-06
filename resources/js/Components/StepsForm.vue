@@ -15,7 +15,7 @@ const props = withDefaults(
     nextActions?: { [x: number]: CallableFunction }
   }>(),
   {
-    processing: false
+    processing: false,
   }
 )
 
@@ -27,6 +27,7 @@ const progressValue = computed(() => {
 const stepTranslation = computed(() => {
   return `${-activeIndex.value * 100}%`
 })
+const isLastStep = computed(() => props.steps === activeIndex.value + 1)
 
 const next = () => {
   if (activeIndex.value + 1 === props.steps) {
@@ -98,16 +99,20 @@ defineExpose({ next, back, activeIndex })
         <md-filled-button
           trailing-icon
           :disabled="
-            (disableNext![activeIndex]
-              ? disableNext![activeIndex]()
-              : false) || processing
+            (disableNext![activeIndex] ? disableNext![activeIndex]() : false) ||
+            processing
           "
           @click="
             nextActions![activeIndex] ? nextActions![activeIndex]() : next()
           "
         >
-          Siguiente
-          <Icon slot="icon">arrow_forward</Icon>
+          {{ isLastStep ? 'Hacer pedido' : 'Siguiente' }}
+          <Icon
+            slot="icon"
+            filled
+          >
+            {{ isLastStep ? 'check' : 'arrow_forward' }}
+          </Icon>
         </md-filled-button>
       </div>
     </div>

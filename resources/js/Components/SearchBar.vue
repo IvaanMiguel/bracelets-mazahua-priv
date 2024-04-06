@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { router, usePage } from '@inertiajs/vue3'
 import '@material/web/textfield/outlined-text-field'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, watchEffect } from 'vue'
 import Icon from './Icon.vue'
 
 const props = withDefaults(
@@ -17,7 +17,7 @@ const props = withDefaults(
 
 const page = usePage()
 
-const search = ref<string>('')
+const search = ref('')
 
 watch(search, (value) => {
   const searchKey =
@@ -37,7 +37,7 @@ watch(search, (value) => {
   )
 })
 
-onMounted(() => {
+const onChange = () => {
   if (!page.props.filters.search) {
     search.value = ''
     return
@@ -46,7 +46,15 @@ onMounted(() => {
   search.value =
     typeof page.props.filters.search === 'string'
       ? page.props.filters.search
-      : page.props.filters.search[props.name]
+      : page.props.filters.search![props.name]
+}
+
+watchEffect(() => {
+  onChange()
+})
+
+onMounted(() => {
+  onChange()
 })
 </script>
 

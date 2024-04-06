@@ -4,7 +4,7 @@ import { usePage } from '@inertiajs/vue3'
 import '@material/web/divider/divider'
 import '@material/web/list/list'
 import '@material/web/list/list-item'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import Icon from './Icon.vue'
 import Paginator from './Paginator.vue'
 
@@ -37,17 +37,17 @@ const gridTemplateCols = computed(() => {
   )
 })
 
-watch(
-  () => page.props.filters.search,
-  (value) => {
-    if (!value) {
-      search.value = ''
-      return
-    }
-
-    search.value = typeof value === 'string' ? value : value[props.name]
+watchEffect(() => {
+  if (!page.props.filters.search) {
+    search.value = ''
+    return
   }
-)
+
+  search.value =
+    typeof page.props.filters.search === 'string'
+      ? page.props.filters.search
+      : page.props.filters.search[props.name]
+})
 </script>
 
 <template>
@@ -56,7 +56,7 @@ watch(
       <div
         v-if="!noHeaders"
         :style="gridTemplateCols"
-        class="sticky top-0 z-[1] grid min-h-14 items-center gap-4 border-b border-light-outline-variant px-4 py-0 font-medium dark:border-dark-outline-variant bg-light-surface-container-highest dark:bg-dark-surface-container-highest"
+        class="sticky top-0 z-[1] grid min-h-14 items-center gap-4 border-b border-light-outline-variant bg-light-surface-container-highest px-4 py-0 font-medium dark:border-dark-outline-variant dark:bg-dark-surface-container-highest"
       >
         <span
           v-for="header in headers"
