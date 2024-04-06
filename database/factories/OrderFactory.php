@@ -18,7 +18,7 @@ class OrderFactory extends Factory
             'payment_type_id' => $paymentType->id,
             'details' => $this->getDetails($paymentType),
 
-            // These are filled when orders_products is populated.
+            // These are filled when order_product is populated.
             'total' => 0,
             'advance' => 0,
             'products_total' => 0,
