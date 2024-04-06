@@ -15,8 +15,8 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->decimal('price', 6);
-            $table->integer('stock')->nullable();
+            $table->unsignedDecimal('price', 6);
+            $table->unsignedInteger('stock')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

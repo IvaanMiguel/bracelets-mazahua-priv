@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('orders_products', function (Blueprint $table) {
+        Schema::create('order_product', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')
                 ->constrained()
@@ -18,8 +18,8 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
-            $table->integer('amount')->default(0);
-            $table->decimal('subtotal')->default(0);
+            $table->unsignedInteger('amount')->default(0);
+            $table->unsignedDecimal('subtotal')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders_products');
+        Schema::dropIfExists('order_product');
     }
 };
