@@ -65,7 +65,7 @@ const formatDate = (date: string) => {
       >
         <template v-for="(order, i) in orders.data">
           <Link
-            :href="route('orders')"
+            :href="route('orders.show', { id: order.id })"
             tabindex="-1"
           >
             <md-list-item type="button">

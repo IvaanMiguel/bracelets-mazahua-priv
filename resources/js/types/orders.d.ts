@@ -1,3 +1,5 @@
+import { IdAddress } from './customers'
+
 interface Customer {
   id: number
   name: string
@@ -10,6 +12,7 @@ interface PaymentType {
 }
 
 export interface OrderListItem {
+  id: number
   customer_id: number
   customer: Customer
   delivery_id: number
@@ -42,8 +45,8 @@ export type SelectedProduct = AvailableProduct & {
 
 export interface Delivery {
   delivery_type_id: number
-  delivery_app_id: number
-  address_id: number
+  delivery_app_id: number | null
+  address_id: number | null
   date: string
   time: string
 }
@@ -59,4 +62,36 @@ export interface Payment {
 export interface Catalog {
   id: number
   name: string
+}
+
+export interface IdOrder {
+  id: number
+  advance: number
+  completed: boolean
+  customer: Customer & {
+    email: string | null
+    phone_number: string
+  }
+  customer_id: number
+  delivery: Delivery & {
+    delivery_app: Catalog | null
+    delivery_type: Catalog
+    address: IdAddress
+  }
+  delivery_id: number
+  details: string | null
+  payment_type: Catalog
+  payment_type_id: number
+  products: {
+    name: string
+    pivot: {
+      order_id: number
+      product_id: number
+      amount: number
+      subtotal: number
+    }
+    price: number
+  }[]
+  products_total: number
+  total: number
 }

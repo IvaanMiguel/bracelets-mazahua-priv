@@ -9,6 +9,7 @@ use App\Models\DeliveryType;
 use App\Models\Order;
 use App\Models\PaymentType;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -28,6 +29,7 @@ class OrderController extends Controller
         // This is horrible.
         return Inertia::render('Orders/Index', [
             'orders' => Order::select([
+                'orders.id',
                 'completed',
                 'total',
                 'customer_id',
@@ -151,12 +153,27 @@ class OrderController extends Controller
         return to_route('orders.create');
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
-        //
+        try {
+            $order  = Order::with([
+                'customer' => fn ($q) => $q->select(['id', 'name', 'last_name', 'phone_number', 'email'])->withTrashed(),
+                'paymentType',
+                'delivery.deliveryType',
+                'delivery.deliveryApp',
+                'delivery.address',
+                'products' => fn ($q) => $q->select(['name', 'price'])->withTrashed()
+            ])->findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return back()->withErrors([
+                'internal_error' => $e->getMessage()
+            ]);
+        }
+
+        return Inertia::render('Orders/Show', [
+            'order' => $order
+        ]);
     }
 
     /**
