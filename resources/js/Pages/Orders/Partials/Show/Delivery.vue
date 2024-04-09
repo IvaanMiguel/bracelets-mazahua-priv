@@ -16,6 +16,7 @@ const props = defineProps<{
     address: IdAddress
   }
   completed: boolean
+  processing?: boolean
 }>()
 
 const addressDetails = useAddressDetails(toRef(() => props.delivery.address))
@@ -41,7 +42,7 @@ const formatTime = () => {
       <h1 class="text-on-background text-xl font-medium">
         Información de entrega
       </h1>
-      <md-filled-tonal-button v-if="!completed">
+      <md-filled-tonal-button v-if="!completed" :disabled="processing">
         Editar entrega
         <Icon slot="icon">edit</Icon>
       </md-filled-tonal-button>

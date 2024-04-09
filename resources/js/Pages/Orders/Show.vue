@@ -12,11 +12,13 @@ import CustomerInfo from './Partials/Show/CustomerInfo.vue'
 import Delivery from './Partials/Show/Delivery.vue'
 import Payment from './Partials/Show/Payment.vue'
 import Products from './Partials/Show/Products.vue'
+import CompleteOrderModal from './Partials/Show/CompleteOrderModal.vue'
+import { ref } from 'vue'
 
 defineOptions({ layout: MainLayout })
-const props = defineProps<{ order: IdOrder }>()
+defineProps<{ order: IdOrder }>()
 
-console.log(props.order)
+const completeOrderModal = ref<InstanceType<typeof CompleteOrderModal>>()
 </script>
 
 <template>
@@ -35,11 +37,16 @@ console.log(props.order)
             <Icon>arrow_back</Icon>
           </md-icon-button>
         </Link>
-        <md-filled-button>
+        <md-filled-button
+          v-if="!order.completed"
+          @click="completeOrderModal?.modal?.show"
+          :disabled="completeOrderModal?.processing"
+        >
           Completar pedido
           <Icon slot="icon">fact_check</Icon>
         </md-filled-button>
       </div>
+
       <CustomerInfo
         class="rounded-lg border border-light-outline-variant p-4 dark:border-dark-outline-variant"
         :customer-info="order.customer"
@@ -52,12 +59,14 @@ console.log(props.order)
         :total="+order.total"
         :productsTotal="+order.products_total"
         :completed="!!order.completed"
+        :processing="completeOrderModal?.processing"
       />
 
       <Delivery
         class="mt-6 rounded-lg border border-light-outline-variant p-4 dark:border-dark-outline-variant"
         :delivery="{ id: +order.delivery, ...order.delivery }"
         :completed="!!order.completed"
+        :processing="completeOrderModal?.processing"
       />
 
       <Payment
@@ -66,13 +75,18 @@ console.log(props.order)
       />
 
       <div class="mt-6 text-end">
-        <md-outlined-button>
+        <md-outlined-button
+          v-if="!order.completed"
+          :disabled="completeOrderModal?.processing"
+        >
           Eliminar pedido
           <Icon slot="icon">delete_forever</Icon>
         </md-outlined-button>
       </div>
     </div>
   </div>
+
+  <CompleteOrderModal ref="completeOrderModal" />
 </template>
 
 <style scoped>

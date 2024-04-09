@@ -17,6 +17,7 @@ defineProps<{
   total: number
   productsTotal: number
   completed: boolean
+  processing?: boolean
 }>()
 </script>
 
@@ -24,7 +25,7 @@ defineProps<{
   <div>
     <div class="mb-4 flex items-center justify-between gap-4">
       <h1 class="text-on-background text-xl font-medium">Productos pedidos</h1>
-      <md-filled-tonal-button v-if="!completed">
+      <md-filled-tonal-button v-if="!completed" :disabled="processing">
         Editar productos
         <Icon slot="icon">edit</Icon>
       </md-filled-tonal-button>
