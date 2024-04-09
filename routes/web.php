@@ -48,6 +48,7 @@ Route::prefix('orders')->group(function () {
     Route::post('/', [StoreOrderController::class, 'store'])->name('orders.store');
     Route::post('/complete/{order}', [IndexOrderController::class, 'complete'])->name('orders.complete');
     Route::get('/{id}', [IndexOrderController::class, 'show'])->name('orders.show');
+    Route::delete('/{order}', [IndexOrderController::class, 'destroy'])->name('orders.destroy');
 });
 
 require __DIR__.'/auth.php';

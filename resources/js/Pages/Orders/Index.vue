@@ -1,23 +1,39 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
 import SearchBar from '@/Components/SearchBar.vue'
+import Snackbar from '@/Components/Snackbar.vue'
 import Table from '@/Components/Table.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { Pagination } from '@/types'
 import { OrderListItem } from '@/types/orders'
+import { router } from '@inertiajs/vue3'
 import '@material/web/button/filled-button'
 import '@material/web/elevation/elevation'
 import '@material/web/list/list'
 import '@material/web/list/list-item'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { onMounted, ref } from 'vue'
 
 defineOptions({ layout: MainLayout })
-defineProps<{ orders: Pagination<OrderListItem> }>()
+const props = defineProps<{
+  orders: Pagination<OrderListItem>
+  destroyed?: boolean
+}>()
+
+const destroyedOrderSnackbar = ref<InstanceType<typeof Snackbar>>()
 
 const formatDate = (date: string) => {
   return format(date, 'dd/MMM/y', { locale: es })
 }
+
+onMounted(() => {
+  router.reload({ only: ['orders', 'destroyed'] })
+
+  if (!props.destroyed) return
+
+  destroyedOrderSnackbar.value?.show(true)
+})
 </script>
 
 <template>
@@ -95,4 +111,10 @@ const formatDate = (date: string) => {
       </Table>
     </div>
   </div>
+
+  <Snackbar
+    ref="destroyedOrderSnackbar"
+    text="Pedido eliminado con éxito."
+    close-button
+  />
 </template>

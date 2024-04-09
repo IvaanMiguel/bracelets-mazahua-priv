@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class IndexOrderController extends Controller
@@ -52,6 +53,7 @@ class IndexOrderController extends Controller
                 'results' => intval($results),
                 'search' => $search
             ],
+            'destroyed' => Session::get('destroyed')
         ]);
     }
 
@@ -75,6 +77,12 @@ class IndexOrderController extends Controller
         return Inertia::render('Orders/Show', [
             'order' => $order
         ]);
+    }
+
+    public function destroy(Order $order) {
+        $order->delete();
+
+        return to_route('orders')->with('destroyed', true);
     }
 
     public function complete(Order $order)

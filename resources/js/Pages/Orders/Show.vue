@@ -8,17 +8,19 @@ import '@material/web/button/outlined-button'
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
 import '@material/web/list/list-item'
+import { ref } from 'vue'
+import CompleteOrderModal from './Partials/Show/CompleteOrderModal.vue'
 import CustomerInfo from './Partials/Show/CustomerInfo.vue'
+import DeleteOrderModal from './Partials/Show/DeleteOrderModal.vue'
 import Delivery from './Partials/Show/Delivery.vue'
 import Payment from './Partials/Show/Payment.vue'
 import Products from './Partials/Show/Products.vue'
-import CompleteOrderModal from './Partials/Show/CompleteOrderModal.vue'
-import { ref } from 'vue'
 
 defineOptions({ layout: MainLayout })
 defineProps<{ order: IdOrder }>()
 
 const completeOrderModal = ref<InstanceType<typeof CompleteOrderModal>>()
+const deleteOrderModal = ref<InstanceType<typeof DeleteOrderModal>>()
 </script>
 
 <template>
@@ -40,7 +42,9 @@ const completeOrderModal = ref<InstanceType<typeof CompleteOrderModal>>()
         <md-filled-button
           v-if="!order.completed"
           @click="completeOrderModal?.modal?.show"
-          :disabled="completeOrderModal?.processing"
+          :disabled="
+            completeOrderModal?.processing || deleteOrderModal?.processing
+          "
         >
           Completar pedido
           <Icon slot="icon">fact_check</Icon>
@@ -59,14 +63,18 @@ const completeOrderModal = ref<InstanceType<typeof CompleteOrderModal>>()
         :total="+order.total"
         :productsTotal="+order.products_total"
         :completed="!!order.completed"
-        :processing="completeOrderModal?.processing"
+        :processing="
+          completeOrderModal?.processing || deleteOrderModal?.processing
+        "
       />
 
       <Delivery
         class="mt-6 rounded-lg border border-light-outline-variant p-4 dark:border-dark-outline-variant"
         :delivery="{ id: +order.delivery, ...order.delivery }"
         :completed="!!order.completed"
-        :processing="completeOrderModal?.processing"
+        :processing="
+          completeOrderModal?.processing || deleteOrderModal?.processing
+        "
       />
 
       <Payment
@@ -77,7 +85,10 @@ const completeOrderModal = ref<InstanceType<typeof CompleteOrderModal>>()
       <div class="mt-6 text-end">
         <md-outlined-button
           v-if="!order.completed"
-          :disabled="completeOrderModal?.processing"
+          :disabled="
+            completeOrderModal?.processing || deleteOrderModal?.processing
+          "
+          @click="deleteOrderModal?.modal?.show"
         >
           Eliminar pedido
           <Icon slot="icon">delete_forever</Icon>
@@ -87,6 +98,8 @@ const completeOrderModal = ref<InstanceType<typeof CompleteOrderModal>>()
   </div>
 
   <CompleteOrderModal ref="completeOrderModal" />
+
+  <DeleteOrderModal ref="deleteOrderModal" />
 </template>
 
 <style scoped>
