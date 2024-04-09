@@ -4,7 +4,8 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Order\IndexOrderController;
+use App\Http\Controllers\Order\StoreOrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,11 +42,12 @@ Route::controller(CategoryController::class)->prefix('categories')->group(functi
     Route::delete('/{id}', 'destroy')->name('categories.destroy');
 });
 
-Route::controller(OrderController::class)->prefix('orders')->group(function () {
-    Route::get('/', 'index')->name('orders');
-    Route::get('/create', 'create')->name('orders.create');
-    Route::post('/', 'store')->name('orders.store');
-    Route::get('/{id}', 'show')->name('orders.show');
+Route::prefix('orders')->group(function () {
+    Route::get('/', [IndexOrderController::class, 'index'])->name('orders');
+    Route::get('/create', [StoreOrderController::class, 'create'])->name('orders.create');
+    Route::post('/', [StoreOrderController::class, 'store'])->name('orders.store');
+    Route::post('/complete/{order}', [IndexOrderController::class, 'complete'])->name('orders.complete');
+    Route::get('/{id}', [IndexOrderController::class, 'show'])->name('orders.show');
 });
 
 require __DIR__.'/auth.php';
