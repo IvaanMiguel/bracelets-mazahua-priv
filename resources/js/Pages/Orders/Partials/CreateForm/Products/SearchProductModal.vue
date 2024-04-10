@@ -107,7 +107,7 @@ defineExpose({ modal, removeCheckedId, reset })
   <Modal
     :not-cancellable="isDirty"
     ref="searchProductModal"
-    class="h-full w-full"
+    class="h-full w-full max-w-[90%]"
   >
     <div slot="headline">Seleccionando productos</div>
     <div

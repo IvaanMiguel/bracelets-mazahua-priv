@@ -204,7 +204,7 @@ watch(
             </h2>
             <DeliveryForm
               ref="deliveryForm"
-              class="flex h-full flex-col overflow-y-auto p-4"
+              class="h-full overflow-y-auto p-4"
               :delivery-types="deliveryTypes"
               :delivery-apps="deliveryApps"
               :addresses

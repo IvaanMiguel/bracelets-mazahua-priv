@@ -169,6 +169,8 @@ return [
         'date_of_birth'            => 'fecha de nacimiento',
         'day'                      => 'día',
         'deleted_at'               => 'eliminado el',
+        'delivery_app_id'          => 'aplicación de entrega',
+        'delivery_type_id'         => 'tipo de entrega',
         'description'              => 'descripción',
         'district'                 => 'distrito',
         'duration'                 => 'duración',

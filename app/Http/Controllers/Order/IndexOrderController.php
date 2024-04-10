@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Order;
 
 use App\Http\Controllers\Controller;
+use App\Models\DeliveryApp;
+use App\Models\DeliveryType;
 use App\Models\Order;
+use App\Models\PaymentType;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,7 +64,9 @@ class IndexOrderController extends Controller
     {
         try {
             $order  = Order::with([
-                'customer' => fn ($q) => $q->select(['id', 'name', 'last_name', 'phone_number', 'email'])->withTrashed(),
+                'customer' => fn ($q) => $q->select(['id', 'name', 'last_name', 'phone_number', 'email'])
+                    ->with('addresses')
+                    ->withTrashed(),
                 'paymentType',
                 'delivery.deliveryType',
                 'delivery.deliveryApp',
@@ -70,16 +75,19 @@ class IndexOrderController extends Controller
             ])->findOrFail($id);
         } catch (ModelNotFoundException $e) {
             return back()->withErrors([
-                'internal_error' => 'No se ha podido encontrar el pedido solicitado.'
+                'internal_error' => $e->getMessage()
             ]);
         }
 
         return Inertia::render('Orders/Show', [
-            'order' => $order
+            'order' => $order,
+            'deliveryTypes' => fn () => DeliveryType::orderBy('name')->get(),
+            'deliveryApps' => fn () => DeliveryApp::orderBy('name')->get()
         ]);
     }
 
-    public function destroy(Order $order) {
+    public function destroy(Order $order)
+    {
         $order->delete();
 
         return to_route('orders')->with('destroyed', true);

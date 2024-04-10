@@ -6,7 +6,8 @@ import { IdAddress } from '@/types/customers'
 import { Catalog, Delivery } from '@/types/orders'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { toRef } from 'vue'
+import { ref, toRef } from 'vue'
+import EditDeliveryForm from './EditDeliveryForm.vue'
 
 const props = defineProps<{
   delivery: Delivery & {
@@ -20,6 +21,8 @@ const props = defineProps<{
 }>()
 
 const addressDetails = useAddressDetails(toRef(() => props.delivery.address))
+
+const editDeliveryForm = ref<InstanceType<typeof EditDeliveryForm>>()
 
 const formatDate = () => {
   return format(props.delivery.date, "iiii, dd 'de' MMMM 'de' y", {
@@ -37,12 +40,16 @@ const formatTime = () => {
 </script>
 
 <template>
-  <div>
+  <div v-bind="$attrs">
     <div class="mb-4 flex items-center justify-between gap-4">
       <h1 class="text-on-background text-xl font-medium">
         Información de entrega
       </h1>
-      <md-filled-tonal-button v-if="!completed" :disabled="processing">
+      <md-filled-tonal-button
+        v-if="!completed"
+        :disabled="processing"
+        @click="editDeliveryForm?.modal?.show"
+      >
         Editar entrega
         <Icon slot="icon">edit</Icon>
       </md-filled-tonal-button>
@@ -103,4 +110,6 @@ const formatTime = () => {
       </div>
     </div>
   </div>
+
+  <EditDeliveryForm ref="editDeliveryForm" />
 </template>

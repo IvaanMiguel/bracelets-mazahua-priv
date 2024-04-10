@@ -33,23 +33,31 @@ const form = useForm<Delivery>({
   address_id:
     props.defaults?.address_id ||
     (props.addresses.length ? props.addresses[0].id : -1),
-  date: props.defaults?.date || format(Date.now(), 'yyyy/MM/dd'),
-  time: props.defaults?.time || format(Date.now(), 'HH:mm'),
+  date: format(props.defaults?.date || Date.now(), 'yyyy/MM/dd'),
+  time: props.defaults?.time.substring(0, 5) || format(Date.now(), 'HH:mm'),
 })
 
 const minTime = computed(() => {
+  const date = props.defaults?.date || Date.now()
+
   if (
-    isSameDay(form.date, Date.now()) &&
-    isSameMonth(form.date, Date.now()) &&
-    isSameYear(form.date, Date.now())
+    !(
+      isSameDay(form.date, date) &&
+      isSameMonth(form.date, date) &&
+      isSameYear(form.date, date)
+    )
   ) {
-    return {
-      hours: +getHours(Date.now()),
-      minutes: +getMinutes(Date.now()),
-    }
+    return
   }
 
-  return null
+  const time = props.defaults?.time.split(':')
+
+  return props.defaults?.date
+    ? { hours: time![0], minutes: time![1] }
+    : {
+        hours: +getHours(date),
+        minutes: +getMinutes(date),
+      }
 })
 
 const onSelectedAddress = (id: number) => {
@@ -68,11 +76,9 @@ defineExpose({ form })
 
 <template>
   <Form
+    class="flex flex-col"
     :inertia-form="form"
-    :rules="{
-      hours: getHours(Date.now()),
-      minutes: getMinutes(Date.now()),
-    }"
+    :rules="{}"
   >
     <div class="mb-6 grid gap-6 md:grid-cols-2">
       <div class="flex">
@@ -83,6 +89,8 @@ defineExpose({ form })
           class="w-full"
           required
           label="Tipo de entrega"
+          :error="!!form.errors.delivery_type_id"
+          :error-text="form.errors.delivery_type_id"
           v-model="form.delivery_type_id"
         >
           <md-select-option
@@ -101,6 +109,8 @@ defineExpose({ form })
           class="w-full"
           required
           label="Aplicación de entrega"
+          :error="!!form.errors.delivery_app_id"
+          :error-text="form.errors.delivery_app_id"
           :disabled="form.delivery_type_id !== 3"
           v-model="form.delivery_app_id"
         >
@@ -113,17 +123,19 @@ defineExpose({ form })
         </md-outlined-select>
       </div>
       <DatePicker
-        teleport="body"
+        :auto-position="false"
         label="Fecha de entrega"
-        :min-date="new Date()"
+        :error="form.errors.date"
+        :min-date="props.defaults?.date || new Date()"
         :clearable="false"
         floating-icon
         icon="event"
         v-model="form.date"
       />
       <TimePicker
-        teleport="body"
+        :auto-position="false"
         label="Hora de entrega"
+        :error="form.errors.time"
         :min-time="minTime"
         :clearable="false"
         floating-icon
@@ -132,16 +144,14 @@ defineExpose({ form })
       />
     </div>
     <div
-      class="text-on-background col-span-full flex h-full min-h-[204px] flex-col overflow-hidden rounded-lg border border-light-outline-variant dark:border-dark-outline-variant"
+      class="text-on-background col-span-full flex min-h-[204px] flex-1 flex-col overflow-hidden rounded-lg border border-light-outline-variant bg-light-surface-container-lowest dark:border-dark-outline-variant dark:bg-dark-surface-container"
     >
       <h3
         class="text-on-background text-md border-b border-light-outline-variant p-4 font-medium dark:border-dark-outline-variant"
       >
         Dirección de entrega
       </h3>
-      <md-list
-        class="h-full overflow-y-auto rounded-b-lg bg-light-surface-container-lowest p-0 dark:bg-dark-surface-container"
-      >
+      <md-list class="h-full overflow-y-auto rounded-b-lg bg-transparent p-0">
         <template v-for="(address, i) in addresses">
           <md-divider
             v-if="i !== 0"
@@ -151,7 +161,10 @@ defineExpose({ form })
           <AddressItem
             :address
             :disabled="form.delivery_type_id === 1"
-            :checked="address.id === form.address_id"
+            :checked="
+              address.id === form.address_id ||
+              address.id === defaults?.address_id
+            "
             @selected-address="onSelectedAddress"
           />
         </template>
