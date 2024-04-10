@@ -71,6 +71,7 @@ export interface IdOrder {
   customer: Customer & {
     email: string | null
     phone_number: string
+    addresses: IdAddress[]
   }
   customer_id: number
   delivery: Delivery & {
