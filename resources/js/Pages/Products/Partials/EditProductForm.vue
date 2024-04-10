@@ -28,7 +28,7 @@ const update = async () => {
       onSuccess: () => {
         productForm.value?.form.clearErrors()
         v.value.$reset()
-        editModal.value?.modal?.close()
+        editModal.value?.dialog?.close()
         snackbar.value?.show(true)
       },
     }
@@ -36,15 +36,15 @@ const update = async () => {
 }
 
 const cancelUpdate = () => {
-  editModal.value?.modal?.close()
-  cancelEditModal.value?.modal?.close()
+  editModal.value?.dialog?.close()
+  cancelEditModal.value?.dialog?.close()
 
   productForm.value?.form.reset()
   v.value.$reset()
 }
 
 onMounted(() => {
-  useEventListener(editModal.value?.modal, 'open', () => {
+  useEventListener(editModal.value?.dialog, 'open', () => {
     if (!productForm.value?.form) return
 
     productForm.value.form.defaults({ ...props.selectedProduct })
@@ -71,7 +71,7 @@ defineExpose({ editModal })
     />
 
     <div slot="actions">
-      <md-text-button @click="cancelEditModal?.modal?.show">
+      <md-text-button @click="cancelEditModal?.dialog?.show">
         Cancelar
       </md-text-button>
       <md-text-button
@@ -94,7 +94,7 @@ defineExpose({ editModal })
       continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="cancelEditModal?.modal?.close">
+      <md-text-button @click="cancelEditModal?.dialog?.close">
         Cancelar
       </md-text-button>
       <md-text-button @click="cancelUpdate">Aceptar</md-text-button>

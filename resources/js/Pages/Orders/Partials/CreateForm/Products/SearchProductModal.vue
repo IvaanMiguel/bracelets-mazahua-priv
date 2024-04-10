@@ -96,8 +96,8 @@ useEventListener(modal, 'open', () => {
 useEventListener(modal, 'close', () => (isDirty.value = false))
 
 onMounted(() => {
-  modal.value = searchProductModal.value?.modal
-  cancellingModal.value = cancelSearchModal.value?.modal
+  modal.value = searchProductModal.value?.dialog
+  cancellingModal.value = cancelSearchModal.value?.dialog
 })
 
 defineExpose({ modal, removeCheckedId, reset })

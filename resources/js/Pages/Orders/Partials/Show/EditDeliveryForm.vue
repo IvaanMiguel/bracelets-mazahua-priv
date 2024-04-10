@@ -66,8 +66,8 @@ useEventListener(modal, 'open', () => {
 })
 
 onMounted(() => {
-  modal.value = _modal.value?.modal
-  cancellingModal.value = cancelModal.value?.modal
+  modal.value = _modal.value?.dialog
+  cancellingModal.value = cancelModal.value?.dialog
 })
 
 defineExpose({ modal })

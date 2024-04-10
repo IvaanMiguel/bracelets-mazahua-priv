@@ -16,7 +16,7 @@ const destroy = () => {
     onSuccess: () => {
       snackbar.value?.show(true)
     },
-    onFinish: () => deleteModal.value?.modal?.close()
+    onFinish: () => deleteModal.value?.dialog?.close()
   })
 }
 
@@ -35,7 +35,7 @@ defineExpose({ deleteModal })
       ¿deseas continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="deleteModal?.modal?.close">Cancelar</md-text-button>
+      <md-text-button @click="deleteModal?.dialog?.close">Cancelar</md-text-button>
       <md-text-button @click="destroy">Aceptar</md-text-button>
     </div>
   </Modal>

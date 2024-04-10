@@ -21,7 +21,7 @@ const destroy = () => {
 }
 
 onMounted(() => {
-  modal.value = _modal.value?.modal
+  modal.value = _modal.value?.dialog
 })
 
 defineExpose({ modal, processing })

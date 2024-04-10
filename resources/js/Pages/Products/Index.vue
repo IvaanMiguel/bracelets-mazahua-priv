@@ -67,8 +67,8 @@ const onAction = (product: IdProduct, modal?: MdDialog | null) => () => {
         <template v-for="(product, i) in products.data">
           <ProductItem
             :product
-            :onEdit="onAction(product, editProductForm?.editModal!.modal)"
-            :onDelete="onAction(product, deleteProduct?.deleteModal!.modal)"
+            :onEdit="onAction(product, editProductForm?.editModal!.dialog)"
+            :onDelete="onAction(product, deleteProduct?.deleteModal!.dialog)"
           />
           <md-divider
             v-if="i !== products.data.length - 1"

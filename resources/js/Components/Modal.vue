@@ -8,13 +8,13 @@ const props = withDefaults(defineProps<{ notCancellable?: boolean }>(), {
   notCancellable: false,
 })
 
-const modal = ref<MdDialog | null>(null)
+const dialog = ref<MdDialog | null>(null)
 
-useEventListener(modal, 'cancel', (e) => {
+useEventListener(dialog, 'cancel', (e) => {
   if (props.notCancellable) e.preventDefault()
 })
 
-defineExpose({ modal })
+defineExpose({ dialog })
 </script>
 
 <template>
@@ -22,7 +22,7 @@ defineExpose({ modal })
     <md-dialog
       class="max-h-[90%]"
       v-bind="$attrs"
-      ref="modal"
+      ref="dialog"
     >
       <slot />
     </md-dialog>
