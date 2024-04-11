@@ -31,18 +31,18 @@ const searchCategory = ref('')
 const categoryOnClick = (e: KeyboardEvent) => {
   if (e.key === ' ') {
     e.preventDefault()
-    categoriesModal.value?.modal?.show()
+    categoriesModal.value?.dialog?.show()
   }
 }
 
 const categoryDoubleClick = () => {
-  categoriesModal.value?.modal?.show()
+  categoriesModal.value?.dialog?.show()
 }
 
 const setCategory = (category: IdCategory) => {
   form.category_id = category.id
 
-  categoriesModal.value?.modal?.close()
+  categoriesModal.value?.dialog?.close()
   searchCategory.value = ''
 }
 
@@ -182,7 +182,7 @@ defineExpose({ form })
     </div>
 
     <div slot="actions">
-      <md-text-button @click="categoriesModal?.modal?.close">
+      <md-text-button @click="categoriesModal?.dialog?.close">
         Cancelar
       </md-text-button>
     </div>
