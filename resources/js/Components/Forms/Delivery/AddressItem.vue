@@ -31,6 +31,7 @@ const onClick = () => {
       ref="radio"
       slot="start"
       name="address"
+      :value="address.id"
       :checked="$attrs.checked"
     />
     <span slot="headline">

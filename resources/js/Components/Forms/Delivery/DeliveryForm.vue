@@ -162,8 +162,7 @@ defineExpose({ form })
             :address
             :disabled="form.delivery_type_id === 1"
             :checked="
-              address.id === form.address_id ||
-              address.id === defaults?.address_id
+              address.id === form.address_id
             "
             @selected-address="onSelectedAddress"
           />
