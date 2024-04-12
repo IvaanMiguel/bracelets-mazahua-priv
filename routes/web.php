@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Order\IndexOrderController;
 use App\Http\Controllers\Order\StoreOrderController;
 use App\Http\Controllers\Order\UpdateOrderDeliveryController;
+use App\Http\Controllers\Order\UpdateOrderProductsController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +50,7 @@ Route::prefix('orders')->group(function () {
     Route::post('/', [StoreOrderController::class, 'store'])->name('orders.store');
     Route::post('/complete/{order}', [IndexOrderController::class, 'complete'])->name('orders.complete');
     Route::get('/{id}', [IndexOrderController::class, 'show'])->name('orders.show');
+    Route::get('/{order}/edit-products', [UpdateOrderProductsController::class, 'edit'])->name('orders.edit_products');
     Route::put('/{order}/update/delivery', [UpdateOrderDeliveryController::class, 'update'])->name('orders.update_delivery');
     Route::delete('/{order}', [IndexOrderController::class, 'destroy'])->name('orders.destroy');
 });
