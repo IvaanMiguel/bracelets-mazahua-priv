@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import DisplayField from '@/Components/DisplayField.vue';
-import Icon from '@/Components/Icon.vue';
+import DisplayField from '@/Components/DisplayField.vue'
+import Icon from '@/Components/Icon.vue'
+import { IdOrder } from '@/types/orders'
+import { usePage } from '@inertiajs/vue3'
+import { ref } from 'vue'
 
 defineProps<{
   products: {
@@ -19,16 +22,27 @@ defineProps<{
   completed: boolean
   processing?: boolean
 }>()
+
+const page = usePage()
+const order = ref(page.props.order as IdOrder)
 </script>
 
 <template>
   <div>
     <div class="mb-4 flex items-center justify-between gap-4">
       <h1 class="text-on-background text-xl font-medium">Productos pedidos</h1>
-      <md-filled-tonal-button v-if="!completed" :disabled="processing">
-        Editar productos
-        <Icon slot="icon">edit</Icon>
-      </md-filled-tonal-button>
+      <Link
+        :href="route('orders.edit_products', { order })"
+        tabindex="-1"
+      >
+        <md-filled-tonal-button
+          v-if="!completed"
+          :disabled="processing"
+        >
+          Editar productos
+          <Icon slot="icon">edit</Icon>
+        </md-filled-tonal-button>
+      </Link>
     </div>
     <md-list
       class="max-h-[344px] overflow-auto rounded-md border border-light-outline-variant bg-light-surface-container-lowest py-0 dark:border-dark-outline-variant dark:bg-dark-surface-container"
