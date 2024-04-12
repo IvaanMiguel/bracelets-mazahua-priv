@@ -64,6 +64,19 @@ export interface Catalog {
   name: string
 }
 
+interface productPivot {
+  order_id: number
+  product_id: number
+  amount: number
+  subtotal: number
+}
+
+export interface OrderProducts {
+  name: string
+  pivot: productPivot
+  price: number
+}
+
 export interface IdOrder {
   id: number
   advance: number
@@ -83,16 +96,20 @@ export interface IdOrder {
   details: string | null
   payment_type: Catalog
   payment_type_id: number
-  products: {
-    name: string
-    pivot: {
-      order_id: number
-      product_id: number
-      amount: number
-      subtotal: number
-    }
-    price: number
-  }[]
+  products: OrderProducts[]
+  products_total: number
+  total: number
+}
+
+export interface IdOrderEdit {
+  id: number
+  advance: number
+  completed: boolean
+  customer_id: number
+  delivery_id: number
+  details: string | null
+  payment_type_id: number
+  products: (AvailableProduct & {pivot: productPivot})[]
   products_total: number
   total: number
 }
