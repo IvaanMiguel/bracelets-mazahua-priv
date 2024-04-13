@@ -49,7 +49,7 @@ const getProducts = () => {
       class="md-elevation-1 relative mx-auto flex h-full w-full max-w-6xl flex-col rounded-lg bg-light-surface-container-lowest dark:bg-dark-surface-container"
     >
       <md-elevation />
-      <div class="flex h-full flex-col gap-4 overflow-auto">
+      <div class="flex h-full flex-col overflow-auto">
         <div class="flex items-center gap-4 p-4 pb-0">
           <Link
             :href="route('orders.show', { id: order.id })"
@@ -64,11 +64,14 @@ const getProducts = () => {
           </h1>
         </div>
         <SelectProductsForm
-          class="h-full overflow-auto px-4"
+          class="h-full overflow-auto px-4 pt-4"
           :defaults="getProducts()"
         />
-        <div class="p-4 pt-0 text-end">
-          <md-filled-button> Guardar cambios </md-filled-button>
+        <div class="p-4 text-end">
+          <md-filled-button>
+            <Icon slot="icon">save</Icon>
+            Guardar cambios
+          </md-filled-button>
         </div>
       </div>
     </div>
