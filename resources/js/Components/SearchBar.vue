@@ -10,7 +10,7 @@ const props = withDefaults(
     name?: string
   }>(),
   {
-    baseUrl: route().current(),
+    baseUrl: location.href,
     name: 'search',
   }
 )

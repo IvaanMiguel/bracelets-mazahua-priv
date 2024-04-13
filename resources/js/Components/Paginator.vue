@@ -18,7 +18,7 @@ const props = withDefaults(
   }>(),
   {
     rowsPerPage: () => [10, 25, 50],
-    baseUrl: route().current(),
+    baseUrl: location.href,
     name: 'results',
   }
 )
