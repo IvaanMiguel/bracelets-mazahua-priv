@@ -12,14 +12,16 @@ const props = withDefaults(
   defineProps<{
     noHeaders?: boolean
     headers?: string[]
-    pagination: Pagination<any>
+    pagination?: Pagination<any>
     gridCols?: string
     url?: string
     name?: string
+    noPaginator?: boolean
   }>(),
   {
     noHeaders: false,
     name: '',
+    noPaginator: false
   }
 )
 
@@ -66,7 +68,7 @@ watchEffect(() => {
           {{ header }}
         </span>
       </div>
-      <template v-if="pagination.data.length">
+      <template v-if="noPaginator || pagination?.data.length">
         <slot />
       </template>
       <template v-else>
@@ -87,7 +89,10 @@ watchEffect(() => {
         </div>
       </template>
     </md-list>
-    <div class="mt-auto">
+    <div
+      v-if="!noPaginator && pagination"
+      class="mt-auto"
+    >
       <md-divider />
       <Paginator
         class="justify-end px-4 py-2"
