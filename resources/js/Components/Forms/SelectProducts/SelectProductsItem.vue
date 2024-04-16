@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
-import { SelectedProduct } from '@/types/orders'
+import { SelectedChangedProduct, SelectedProduct } from '@/types/orders'
 import { MdOutlinedTextField } from '@material/web/textfield/outlined-text-field'
 import { useEventListener } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 
 defineEmits<{ removingProduct: [product: SelectedProduct] }>()
-const props = defineProps<{ product: SelectedProduct }>()
+const props = defineProps<{
+  product: SelectedProduct | SelectedChangedProduct
+}>()
 
 const textfield = ref<MdOutlinedTextField>()
 const subtotal = computed(() => props.product.price * props.product.amount)
+const formattedPrice = computed(() => {
+  return typeof props.product.price === 'number'
+    ? props.product.price.toFixed(2)
+    : props.product.price
+})
 
 useEventListener(textfield, 'blur', () => {
   const value = +textfield.value!.value
@@ -33,7 +40,7 @@ watch(
   <md-list-item>
     <div class="grid grid-cols-4 items-center gap-4">
       <span class="truncate">{{ product.name }}</span>
-      <span class="truncate">{{ `$${product.price} MXN` }}</span>
+      <span class="truncate">{{ `$${formattedPrice} MXN` }}</span>
       <md-outlined-text-field
         ref="textfield"
         class="max-h-[3.25rem] w-full md:w-2/3"

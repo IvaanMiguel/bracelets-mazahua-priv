@@ -1,40 +1,126 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
-import { SelectedProduct } from '@/types/orders'
+import {
+  AvailableChangedProduct,
+  AvailableProduct,
+  SelectedChangedProduct,
+  SelectedProduct,
+} from '@/types/orders'
 import { useForm } from '@inertiajs/vue3'
-import '@material/web/button/filled-button'
+import '@material/web/button/filled-tonal-button'
 import '@material/web/divider/divider'
 import '@material/web/list/list'
 import '@material/web/list/list-item'
-import SelectProductItem from './SelectProductItem.vue'
-import { computed } from 'vue'
+import { computed, provide, ref } from 'vue'
+import ModalSearch from './ModalSearch.vue'
+import SelectProductsItem from './SelectProductsItem.vue'
+import SelectProductsRemove from './SelectProductsRemove.vue'
 
-const props = defineProps<{
-  defaults?: SelectedProduct[]
-}>()
+const props = defineProps<{ defaults?: SelectedChangedProduct[] }>()
 
-const form = useForm({
+const defaultProducts = computed(() => {
+  const _defaultProducts: {
+    notChanged: AvailableChangedProduct[]
+    changed: AvailableChangedProduct[]
+  } = { notChanged: [], changed: [] }
+
+  for (const product of props.defaults || []) {
+    const _product = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      stock: product.stock,
+      amount: product.amount,
+      priceHasChanged: product.priceHasChanged,
+    }
+
+    if (product.priceHasChanged === false) {
+      _defaultProducts.notChanged.push(_product)
+    } else {
+      _defaultProducts.changed.push(_product)
+    }
+  }
+
+  return _defaultProducts
+})
+
+provide('defaultProducts', {
+  changed: defaultProducts.value.changed,
+  notChanged: defaultProducts.value.notChanged,
+})
+
+const form = useForm<{
+  products: SelectedChangedProduct[]
+}>({
   products: props.defaults || [],
 })
 
+const modalSearch = ref<InstanceType<typeof ModalSearch>>()
+const selectProductsRemove = ref<InstanceType<typeof SelectProductsRemove>>()
+const productToRemove = ref<
+  (SelectedProduct & { priceHasChanged?: boolean }) | null
+>(null)
 const total = computed(() => {
   return form.products.reduce((acc, product) => {
-    return (product.amount * product.price) + acc
+    return product.amount * product.price + acc
   }, 0)
 })
+
+const onSaveChecked = (
+  checkedProducts: (AvailableProduct & { priceHasChanged?: boolean })[]
+) => {
+  for (const checkedProduct of checkedProducts) {
+    form.products.push({
+      ...checkedProduct,
+      amount: 1,
+      subtotal: +checkedProduct.price,
+      priceHasChanged: checkedProduct.priceHasChanged || false,
+    })
+  }
+}
+
+const onRemovingProduct = (
+  product: SelectedProduct & { priceHasChanged?: boolean }
+) => {
+  productToRemove.value = product
+  selectProductsRemove.value?.modal?.show()
+}
+
+const onRemoveProduct = () => {
+  if (productToRemove.value?.priceHasChanged) {
+    modalSearch.value?.changedProductsList?.removeCheckedId(
+      productToRemove.value!.id
+    )
+  } else {
+    modalSearch.value?.productsList?.removeCheckedId(productToRemove.value!.id)
+  }
+
+  const index = form.products.findIndex(
+    (product) =>
+      product.id === productToRemove.value?.id &&
+      product.priceHasChanged === productToRemove.value.priceHasChanged
+  )
+  form.products.splice(index, 1)
+  productToRemove.value = null
+}
+
+defineExpose({ form })
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <div
+    v-bind="$attrs"
+    class="flex flex-col gap-4"
+  >
     <div class="flex items-center justify-end gap-4">
-      <md-filled-button @click="">
+      <md-filled-tonal-button @click="modalSearch?.modal?.show">
         <Icon slot="icon">search</Icon>
         Buscar producto
-      </md-filled-button>
+      </md-filled-tonal-button>
     </div>
 
     <div
-      class="flex-1 overflow-hidden rounded-md border border-light-outline-variant dark:border-dark-outline-variant min-h-[337px]"
+      class="min-h-[337px] flex-1 overflow-hidden rounded-md border border-light-outline-variant dark:border-dark-outline-variant"
     >
       <md-list
         class="h-full overflow-y-auto bg-light-surface-container-lowest py-0 dark:bg-dark-surface-container"
@@ -56,9 +142,9 @@ const total = computed(() => {
             class="min-h-[1px]"
             inset
           />
-          <SelectProductItem
+          <SelectProductsItem
             :product="product"
-            @removing-product=""
+            @removing-product="onRemovingProduct"
           />
         </template>
         <template v-else>
@@ -89,6 +175,17 @@ const total = computed(() => {
       </md-list>
     </div>
   </div>
+
+  <ModalSearch
+    ref="modalSearch"
+    @save-checked="onSaveChecked"
+  />
+
+  <SelectProductsRemove
+    ref="selectProductsRemove"
+    :productToRemove
+    @remove-product="onRemoveProduct"
+  />
 </template>
 
 <style scoped>
