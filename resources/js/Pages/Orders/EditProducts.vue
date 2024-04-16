@@ -2,16 +2,19 @@
 import SelectProductsForm from '@/Components/Forms/SelectProducts/SelectProductsForm.vue'
 import Icon from '@/Components/Icon.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
-import { IdOrderEdit } from '@/types/orders'
+import { IdOrderEdit, SelectedChangedProduct } from '@/types/orders'
 import '@material/web/button/filled-button'
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
+import { ref } from 'vue'
 
 defineOptions({ layout: MainLayout })
 const props = defineProps<{
   order: IdOrderEdit
   customer: { name: string; last_name: string }
 }>()
+
+const selectProductsForm = ref<InstanceType<typeof SelectProductsForm>>()
 
 const getProducts = () => {
   const products = []
@@ -36,10 +39,24 @@ const getProducts = () => {
       stock: priceHasChanged
         ? product.pivot.amount
         : product.pivot.amount + product.stock,
+      priceHasChanged,
     })
   }
 
   return products
+}
+
+const update = () => {
+  selectProductsForm.value?.form
+    .transform(data => ({
+      products: data.products.map(product => ({
+        id: product.id,
+        amount: product.amount,
+        price: product.price,
+        price_has_changed: product.priceHasChanged
+      }))
+    }))
+    .put(route('orders.update_products', { order: props.order }))
 }
 </script>
 
@@ -64,11 +81,15 @@ const getProducts = () => {
           </h1>
         </div>
         <SelectProductsForm
+          ref="selectProductsForm"
           class="h-full overflow-auto px-4 pt-4"
           :defaults="getProducts()"
         />
         <div class="p-4 text-end">
-          <md-filled-button>
+          <md-filled-button
+            :disabled="!selectProductsForm?.form.products.length"
+            @click="update"
+          >
             <Icon slot="icon">save</Icon>
             Guardar cambios
           </md-filled-button>
