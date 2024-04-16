@@ -113,3 +113,11 @@ export interface IdOrderEdit {
   products_total: number
   total: number
 }
+
+export type SelectedChangedProduct = SelectedProduct & {
+  priceHasChanged: boolean
+}
+
+export type AvailableChangedProduct = AvailableProduct & {
+  priceHasChanged?: boolean
+}
