@@ -52,6 +52,7 @@ class UpdateOrderProductsController extends Controller
     {
         $attach = [];
         $requestProductsAmount = [];
+        $orderProductsAmount = [];
         $total = 0;
         $productsTotal = 0;
 
@@ -74,29 +75,24 @@ class UpdateOrderProductsController extends Controller
             }
 
             $requestProductsAmount[$product['id']] += $product['amount'];
+
+            if (!isset($orderProductsAmount[$product['id']])) {
+                $orderProductsAmount[$product['id']] = 0;
+            }
         }
-
-        $orderProductsAmount = [];
-
+        
         foreach ($order->products as $product) {
             if (!isset($orderProductsAmount[$product->id])) {
                 $orderProductsAmount[$product->id] = 0;
+                $requestProductsAmount[$product->id] = 0;
             }
 
-            $orderProductsAmount[$product->id] += ($requestProductsAmount[$product->id] ?? 0) - $product->pivot->amount;
-        }
-
-        dd($orderProductsAmount);
-
-        foreach ($request->products as $product) {
-            if (!isset($orderProductsAmount[$product['id']])) {
-                $orderProductsAmount[$product['id']] = $product['amount'];
-            }
+            $orderProductsAmount[$product->id] += $product->pivot->amount;
         }
 
         DB::transaction(function () use ($requestProductsAmount, $orderProductsAmount, $order, $total, $productsTotal, $attach) {
             foreach ($requestProductsAmount as $id => $_) {
-                $decrement = ($orderProductsAmount[$id] ?? 0) - $requestProductsAmount[$id];
+                $decrement = $requestProductsAmount[$id] - $orderProductsAmount[$id];
 
                 DB::table('products')
                     ->where('id', $id)

@@ -6,7 +6,7 @@ import { IdOrderEdit, SelectedChangedProduct } from '@/types/orders'
 import '@material/web/button/filled-button'
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 defineOptions({ layout: MainLayout })
 const props = defineProps<{
@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const selectProductsForm = ref<InstanceType<typeof SelectProductsForm>>()
 
-const getProducts = () => {
+const productsDefault = computed(() => {
   const products = []
 
   for (const product of props.order.products) {
@@ -44,7 +44,7 @@ const getProducts = () => {
   }
 
   return products
-}
+})
 
 const update = () => {
   selectProductsForm.value?.form
@@ -56,7 +56,13 @@ const update = () => {
         price_has_changed: product.priceHasChanged
       }))
     }))
-    .put(route('orders.update_products', { order: props.order }))
+    .put(route('orders.update_products', { order: props.order }), {
+      onSuccess: () => {
+        console.log('Success.')
+        selectProductsForm.value?.form.defaults()
+        selectProductsForm.value?.form.reset()
+      }
+    })
 }
 </script>
 
@@ -83,11 +89,11 @@ const update = () => {
         <SelectProductsForm
           ref="selectProductsForm"
           class="h-full overflow-auto px-4 pt-4"
-          :defaults="getProducts()"
+          :defaults="productsDefault"
         />
         <div class="p-4 text-end">
           <md-filled-button
-            :disabled="!selectProductsForm?.form.products.length"
+            :disabled="!selectProductsForm?.form.products.length || selectProductsForm.form.processing"
             @click="update"
           >
             <Icon slot="icon">save</Icon>
