@@ -51,6 +51,7 @@ Route::prefix('orders')->group(function () {
     Route::post('/complete/{order}', [IndexOrderController::class, 'complete'])->name('orders.complete');
     Route::get('/{id}', [IndexOrderController::class, 'show'])->name('orders.show');
     Route::get('/{order}/edit-products', [UpdateOrderProductsController::class, 'edit'])->name('orders.edit_products');
+    Route::put('/{order}/update/products', [UpdateOrderProductsController::class, 'update'])->name('orders.update_products');
     Route::put('/{order}/update/delivery', [UpdateOrderDeliveryController::class, 'update'])->name('orders.update_delivery');
     Route::delete('/{order}', [IndexOrderController::class, 'destroy'])->name('orders.destroy');
 });
