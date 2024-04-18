@@ -47,21 +47,24 @@ const productsDefault = computed(() => {
 })
 
 const update = () => {
+  if (!selectProductsForm.value?.form.isDirty) return
+
   selectProductsForm.value?.form
-    .transform(data => ({
-      products: data.products.map(product => ({
+    .transform((data) => ({
+      products: data.products.map((product) => ({
         id: product.id,
         amount: product.amount,
         price: product.price,
-        price_has_changed: product.priceHasChanged
-      }))
+        price_has_changed: product.priceHasChanged,
+      })),
     }))
     .put(route('orders.update_products', { order: props.order }), {
+      preserveState: false,
       onSuccess: () => {
         console.log('Success.')
         selectProductsForm.value?.form.defaults()
         selectProductsForm.value?.form.reset()
-      }
+      },
     })
 }
 </script>
@@ -93,7 +96,11 @@ const update = () => {
         />
         <div class="p-4 text-end">
           <md-filled-button
-            :disabled="!selectProductsForm?.form.products.length || selectProductsForm.form.processing"
+            :disabled="
+              !selectProductsForm?.form.products.length ||
+              !selectProductsForm.form.isDirty ||
+              selectProductsForm.form.processing
+            "
             @click="update"
           >
             <Icon slot="icon">save</Icon>
