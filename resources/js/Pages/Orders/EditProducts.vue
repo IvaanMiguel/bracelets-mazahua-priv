@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import SelectProductsForm from '@/Components/Forms/SelectProducts/SelectProductsForm.vue'
 import Icon from '@/Components/Icon.vue'
+import Snackbar from '@/Components/Snackbar.vue'
 import MainLayout from '@/Layouts/MainLayout.vue'
-import { IdOrderEdit, SelectedChangedProduct } from '@/types/orders'
+import { IdOrderEdit } from '@/types/orders'
 import '@material/web/button/filled-button'
 import '@material/web/elevation/elevation'
 import '@material/web/iconbutton/icon-button'
@@ -15,6 +16,7 @@ const props = defineProps<{
 }>()
 
 const selectProductsForm = ref<InstanceType<typeof SelectProductsForm>>()
+const updatedSnackbar = ref<InstanceType<typeof Snackbar>>()
 
 const productsDefault = computed(() => {
   const products = []
@@ -59,11 +61,11 @@ const update = () => {
       })),
     }))
     .put(route('orders.update_products', { order: props.order }), {
-      preserveState: false,
       onSuccess: () => {
-        console.log('Success.')
         selectProductsForm.value?.form.defaults()
         selectProductsForm.value?.form.reset()
+
+        updatedSnackbar.value?.show(true)
       },
     })
 }
@@ -110,4 +112,10 @@ const update = () => {
       </div>
     </div>
   </div>
+
+  <Snackbar
+    ref="updatedSnackbar"
+    text="Productos del pedido actualizados con éxito."
+    close-button
+  />
 </template>
