@@ -88,11 +88,12 @@ const onRemovingProduct = (
 
 const onRemoveProduct = () => {
   if (productToRemove.value?.priceHasChanged) {
-    modalSearch.value?.changedProductsList?.removeCheckedId(
-      productToRemove.value!.id
+    modalSearch.value?.changedProductsList?.removeSavedId(
+      productToRemove.value.id,
+      productToRemove.value.price
     )
   } else {
-    modalSearch.value?.productsList?.removeCheckedId(productToRemove.value!.id)
+    modalSearch.value?.productsList?.removeSavedId(productToRemove.value!.id)
   }
 
   const index = form.products.findIndex(

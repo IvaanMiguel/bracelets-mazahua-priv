@@ -14,7 +14,7 @@ const { notChanged: notChangedProducts } = inject('defaultProducts') as {
 const page = usePage()
 
 const isDirty = ref(false)
-const checkedIds = reactive<number[]>([])
+const savedIds = reactive<number[]>([])
 const checkedProducts = reactive<AvailableProduct[]>([])
 const products = computed(() => {
   return page.props.products as Pagination<AvailableProduct>
@@ -39,23 +39,23 @@ const clearCheckedProducts = () => {
   checkedProducts.splice(0, checkedProducts.length)
 }
 
-const clearCheckedIds = () => {
-  checkedIds.splice(0, checkedIds.length)
+// const clearSavedIds = () => {
+//   savedIds.splice(0, savedIds.length)
+// }
+
+const removeSavedId = (id: number) => {
+  const index = savedIds.findIndex((_id) => _id === id)
+  savedIds.splice(index, 1)
 }
 
-const removeCheckedId = (id: number) => {
-  const index = checkedIds.findIndex((_id) => _id === id)
-  checkedIds.splice(index, 1)
-}
+// const removeCheckedProduct = (id: number) => {
+//   const index = checkedProducts.findIndex((product) => product.id === id)
+//   checkedProducts.splice(index, 1)
+// }
 
-const removeCheckedProduct = (id: number) => {
-  const index = checkedProducts.findIndex((product) => product.id === id)
-  checkedProducts.splice(index, 1)
-}
-
-const saveCheckedIds = () => {
+const saveIds = () => {
   for (const checkedProduct of checkedProducts) {
-    checkedIds.push(checkedProduct.id)
+    savedIds.push(checkedProduct.id)
   }
 
   clearCheckedProducts()
@@ -63,19 +63,19 @@ const saveCheckedIds = () => {
 
 onMounted(() => {
   for (const product of notChangedProducts) {
-    checkedIds.push(product.id)
+    savedIds.push(product.id)
   }
 })
 
 defineExpose({
   isDirty,
-  checkedIds,
+  // savedIds,
   checkedProducts,
-  saveCheckedIds,
+  saveIds,
   clearCheckedProducts,
-  clearCheckedIds,
-  removeCheckedId,
-  removeCheckedProduct,
+  // clearSavedIds,
+  removeSavedId,
+  // removeCheckedProduct,
 })
 </script>
 
@@ -99,7 +99,7 @@ defineExpose({
               checkedProducts.find((_product) => _product.id === product.id)
             )
           "
-          :disabled="Boolean(checkedIds.find((id) => id === product.id))"
+          :disabled="Boolean(savedIds.find((id) => id === product.id))"
           @checked-product="onCheckedProduct"
         />
         <md-divider

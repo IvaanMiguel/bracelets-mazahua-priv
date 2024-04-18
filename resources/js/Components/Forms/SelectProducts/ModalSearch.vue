@@ -41,8 +41,8 @@ const onAccept = () => {
   emit('saveChecked', checkedProducts)
   modal.value?.close()
 
-  productsList.value?.saveCheckedIds()
-  changedProductsList.value?.saveCheckedIds()
+  productsList.value?.saveIds()
+  changedProductsList.value?.saveIds()
 }
 
 const onCancel = () => {
@@ -53,14 +53,14 @@ const onCancel = () => {
   changedProductsList.value?.clearCheckedProducts()
 }
 
-const removeCheckedId = (id: number) => {
-  productsList.value?.removeCheckedId(id)
-}
+// const removeSavedId = (id: number) => {
+//   productsList.value?.removeSavedId(id)
+// }
 
-const reset = () => {
-  productsList.value?.clearCheckedProducts()
-  productsList.value?.clearCheckedIds()
-}
+// const reset = () => {
+//   productsList.value?.clearCheckedProducts()
+//   productsList.value?.clearSavedIds()
+// }
 
 useEventListener(modal, 'open', () => {
   const div = modal.value?.shadowRoot?.querySelector(
@@ -79,8 +79,8 @@ onMounted(() => {
 
 defineExpose({
   modal,
-  removeCheckedId,
-  reset,
+  // removeSavedId,
+  // reset,
   productsList,
   changedProductsList,
 })

@@ -9,7 +9,7 @@ const { changed: changedProducts } = inject('defaultProducts') as {
 }
 
 const isDirty = ref(false)
-const checkedIds = reactive<number[]>([])
+const savedIds = reactive<{ id: number; price: number }[]>([])
 const checkedProducts = reactive<AvailableChangedProduct[]>([])
 
 const onCheckedProduct = (
@@ -34,23 +34,25 @@ const clearCheckedProducts = () => {
   checkedProducts.splice(0, checkedProducts.length)
 }
 
-const clearCheckedIds = () => {
-  checkedIds.splice(0, checkedIds.length)
+// const clearSavedIds = () => {
+//   savedIds.splice(0, savedIds.length)
+// }
+
+const removeSavedId = (id: number, price: number) => {
+  const index = savedIds.findIndex(
+    (product) => product.id === id && product.price === price
+  )
+  savedIds.splice(index, 1)
 }
 
-const removeCheckedId = (id: number) => {
-  const index = checkedIds.findIndex((_id) => _id === id)
-  checkedIds.splice(index, 1)
-}
+// const removeCheckedProduct = (id: number) => {
+//   const index = checkedProducts.findIndex((product) => product.id === id)
+//   checkedProducts.splice(index, 1)
+// }
 
-const removeCheckedProduct = (id: number) => {
-  const index = checkedProducts.findIndex((product) => product.id === id)
-  checkedProducts.splice(index, 1)
-}
-
-const saveCheckedIds = () => {
+const saveIds = () => {
   for (const checkedProduct of checkedProducts) {
-    checkedIds.push(checkedProduct.id)
+    savedIds.push({ id: checkedProduct.id, price: checkedProduct.price })
   }
 
   clearCheckedProducts()
@@ -58,19 +60,19 @@ const saveCheckedIds = () => {
 
 onMounted(() => {
   for (const product of changedProducts) {
-    checkedIds.push(product.id)
+    savedIds.push({ id: product.id, price: product.price })
   }
 })
 
 defineExpose({
   isDirty,
-  checkedIds,
+  // savedIds,
   checkedProducts,
-  saveCheckedIds,
+  saveIds,
   clearCheckedProducts,
-  clearCheckedIds,
-  removeCheckedId,
-  removeCheckedProduct,
+  // clearSavedIds,
+  removeSavedId,
+  // removeCheckedProduct,
 })
 </script>
 
@@ -92,7 +94,14 @@ defineExpose({
             )
           )
         "
-        :disabled="Boolean(checkedIds.find((id) => id === product.id))"
+        :disabled="
+          Boolean(
+            savedIds.find(
+              (_product) =>
+                _product.id === product.id && _product.price === product.price
+            )
+          )
+        "
         @checked-product="onCheckedProduct"
       />
       <md-divider
