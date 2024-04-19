@@ -3,9 +3,11 @@ import { productRules } from '@/rules/product'
 import { IdCategory } from '@/types/categories'
 import { Product } from '@/types/products'
 import { useForm, usePage } from '@inertiajs/vue3'
+import { MdDialog } from '@material/web/dialog/dialog'
 import '@material/web/iconbutton/filled-icon-button'
 import '@material/web/list/list'
 import '@material/web/list/list-item'
+import { useEventListener } from '@vueuse/core'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import Form from '../Form.vue'
 import Icon from '../Icon.vue'
@@ -23,6 +25,7 @@ const form = useForm<Product>({
 })
 
 const categoriesModal = ref<InstanceType<typeof Modal>>()
+const modal = ref<MdDialog | null>()
 const categoryTextField = ref<InstanceType<typeof TextField>>()
 const filter = ref(page.props.categories as IdCategory[])
 const categoryName = ref<string>()
@@ -46,6 +49,15 @@ const setCategory = (category: IdCategory) => {
   searchCategory.value = ''
 }
 
+useEventListener(modal, 'open', () => {
+  const div = modal.value?.shadowRoot?.querySelector(
+    '.content'
+  ) as HTMLDivElement
+
+  div.style.overflowY = 'auto'
+  div.style.display = 'flex'
+})
+
 watch(
   () => form.category_id,
   (value) => {
@@ -66,6 +78,8 @@ watch(searchCategory, (value) => {
 })
 
 onMounted(() => {
+  modal.value = categoriesModal.value?.dialog
+
   categoryTextField.value?.input?.addEventListener('keydown', categoryOnClick)
   categoryTextField.value?.input?.addEventListener(
     'dblclick',
@@ -156,27 +170,28 @@ defineExpose({ form })
     <div slot="headline">Selecciona una categoría</div>
     <div
       slot="content"
-      class="px-0"
+      class="flex min-h-full min-w-full flex-col overflow-hidden px-0"
     >
       <md-outlined-text-field
-        class="w-full px-4"
+        class="mb-3 w-full px-4"
         placeholder="Buscar..."
         v-model="searchCategory"
       >
         <Icon slot="leading-icon">search</Icon>
       </md-outlined-text-field>
-      <md-list class="bg-transparent">
+      <md-list class="overflow-y-auto bg-transparent p-0">
         <template v-for="(category, i) in filter">
+          <md-divider
+            v-if="i !== 0"
+            class="min-h-[1px]"
+            inset
+          />
           <md-list-item
             type="button"
             @click="setCategory(category)"
           >
             {{ category.name }}
           </md-list-item>
-          <md-divider
-            v-if="i !== filter.length - 1"
-            inset
-          />
         </template>
       </md-list>
     </div>
