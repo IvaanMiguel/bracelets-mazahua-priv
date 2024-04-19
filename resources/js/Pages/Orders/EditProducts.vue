@@ -57,7 +57,6 @@ const update = () => {
         id: product.id,
         amount: product.amount,
         price: product.price,
-        price_has_changed: product.priceHasChanged,
       })),
     }))
     .put(route('orders.update_products', { order: props.order }), {

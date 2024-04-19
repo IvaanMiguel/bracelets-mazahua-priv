@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
+import { store } from '@/store/orderProducts'
 import {
-  AvailableChangedProduct,
   AvailableProduct,
   SelectedChangedProduct,
   SelectedProduct,
@@ -11,43 +11,12 @@ import '@material/web/button/filled-tonal-button'
 import '@material/web/divider/divider'
 import '@material/web/list/list'
 import '@material/web/list/list-item'
-import { computed, provide, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import ModalSearch from './ModalSearch.vue'
 import SelectProductsItem from './SelectProductsItem.vue'
 import SelectProductsRemove from './SelectProductsRemove.vue'
 
 const props = defineProps<{ defaults?: SelectedChangedProduct[] }>()
-
-const defaultProducts = computed(() => {
-  const _defaultProducts: {
-    notChanged: AvailableChangedProduct[]
-    changed: AvailableChangedProduct[]
-  } = { notChanged: [], changed: [] }
-
-  for (const product of props.defaults || []) {
-    const _product = {
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      stock: product.stock,
-      amount: product.amount,
-      priceHasChanged: product.priceHasChanged,
-    }
-
-    if (product.priceHasChanged === false) {
-      _defaultProducts.notChanged.push(_product)
-    } else {
-      _defaultProducts.changed.push(_product)
-    }
-  }
-
-  return _defaultProducts
-})
-
-provide('defaultProducts', {
-  changed: defaultProducts.value.changed,
-  notChanged: defaultProducts.value.notChanged,
-})
 
 const form = useForm<{
   products: SelectedChangedProduct[]
@@ -104,6 +73,18 @@ const onRemoveProduct = () => {
   form.products.splice(index, 1)
   productToRemove.value = null
 }
+
+watch(
+  () => props.defaults,
+  (value) => {
+    store.updateOrderProducts(value)
+    form.products = value!
+  }
+)
+
+onMounted(() => {
+  store.updateOrderProducts(props.defaults)
+})
 
 defineExpose({ form })
 </script>

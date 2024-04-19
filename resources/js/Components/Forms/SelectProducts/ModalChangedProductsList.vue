@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import Table from '@/Components/Table.vue'
+import { store } from '@/store/orderProducts'
 import { AvailableChangedProduct } from '@/types/orders'
-import { inject, onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import ModalProductItem from './ModalProductItem.vue'
-
-const { changed: changedProducts } = inject('defaultProducts') as {
-  changed: AvailableChangedProduct[]
-}
 
 const isDirty = ref(false)
 const savedIds = reactive<{ id: number; price: number }[]>([])
@@ -59,7 +56,7 @@ const saveIds = () => {
 }
 
 onMounted(() => {
-  for (const product of changedProducts) {
+  for (const product of store.products.changed) {
     savedIds.push({ id: product.id, price: product.price })
   }
 })
@@ -83,7 +80,7 @@ defineExpose({
     grid-cols="grid-template-columns: 18px 3fr 2fr 1fr;"
     no-paginator
   >
-    <template v-for="(product, i) in changedProducts">
+    <template v-for="(product, i) in store.products.changed">
       <ModalProductItem
         :product
         :checked="
@@ -105,7 +102,7 @@ defineExpose({
         @checked-product="onCheckedProduct"
       />
       <md-divider
-        v-if="i !== changedProducts!.length - 1"
+        v-if="i !== store.products.changed!.length - 1"
         class="min-h-[1px]"
         inset
       />

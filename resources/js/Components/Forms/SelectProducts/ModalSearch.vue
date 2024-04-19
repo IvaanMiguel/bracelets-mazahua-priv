@@ -2,16 +2,13 @@
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Tabs from '@/Components/Tabs.vue'
+import { store } from '@/store/orderProducts'
 import { AvailableChangedProduct } from '@/types/orders'
 import { MdDialog } from '@material/web/dialog/dialog'
 import { useEventListener } from '@vueuse/core'
-import { computed, inject, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import ModalChangedProductsList from './ModalChangedProductsList.vue'
 import ModalProductsList from './ModalProductsList.vue'
-
-const { changed: changedProducts } = inject('defaultProducts') as {
-  changed: AvailableChangedProduct[]
-}
 
 const emit = defineEmits<{
   saveChecked: [checkedProducts: AvailableChangedProduct[]]
@@ -97,7 +94,7 @@ defineExpose({
       slot="content"
       class="flex min-h-full min-w-full flex-col overflow-hidden px-0"
     >
-      <Tabs v-if="changedProducts?.length">
+      <Tabs v-if="store.products.changed?.length">
         <template #tab>
           <md-primary-tab
             id="products-tab"
@@ -171,4 +168,3 @@ defineExpose({
   grid-template-columns: 18px 3fr 2fr 1fr;
 }
 </style>
-./ModalProductItem.vue

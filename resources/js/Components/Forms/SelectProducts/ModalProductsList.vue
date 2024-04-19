@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import SearchBar from '@/Components/SearchBar.vue'
 import Table from '@/Components/Table.vue'
+import { store } from '@/store/orderProducts'
 import { Pagination } from '@/types'
-import { AvailableChangedProduct, AvailableProduct } from '@/types/orders'
+import { AvailableProduct } from '@/types/orders'
 import { usePage } from '@inertiajs/vue3'
-import { computed, inject, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import ModalProductItem from './ModalProductItem.vue'
-
-const { notChanged: notChangedProducts } = inject('defaultProducts') as {
-  notChanged: AvailableChangedProduct[]
-}
 
 const page = usePage()
 
@@ -62,7 +59,7 @@ const saveIds = () => {
 }
 
 onMounted(() => {
-  for (const product of notChangedProducts) {
+  for (const product of store.products.notChanged) {
     savedIds.push(product.id)
   }
 })
