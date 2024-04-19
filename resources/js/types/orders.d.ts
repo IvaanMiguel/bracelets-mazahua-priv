@@ -25,7 +25,7 @@ export interface OrderListItem {
       name: string
     }
   }
-  completed: number
+  completed: string
   payment_type_id: number
   payment_type: PaymentType
   total: number

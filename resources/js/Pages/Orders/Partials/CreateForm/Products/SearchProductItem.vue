@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import HighlightSearch from '@/Components/HighlightSearch.vue';
 import { AvailableProduct } from '@/types/orders'
 import { MdCheckbox } from '@material/web/checkbox/checkbox'
 import { MdListItem } from '@material/web/list/list-item'
@@ -37,7 +38,11 @@ const onClick = () => {
       :checked="checked || disabled"
     />
     <div class="search-product-row grid gap-4">
-      <span class="truncate">{{ product.name }}</span>
+      <HighlightSearch
+        class="truncate"
+        :text="`${product.name}`"
+        :search="`${$page.props.filters.search?.product}`"
+      />
       <span class="truncate">{{ `$${product.price} MXN` }}</span>
       <span class="truncate">{{ product.stock }}</span>
     </div>

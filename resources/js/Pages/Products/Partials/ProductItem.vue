@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import HighlightSearch from '@/Components/HighlightSearch.vue'
 import Icon from '@/Components/Icon.vue'
 import { ProductListItem } from '@/types/products'
 import { MdIconButton } from '@material/web/iconbutton/icon-button'
@@ -25,8 +26,16 @@ useEventListener(menuButton, 'click', () => {
 <template>
   <md-list-item>
     <div class="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-4">
-      <span class="truncate">{{ product.name }}</span>
-      <span class="truncate">{{ product.category.name }}</span>
+      <HighlightSearch
+        class="truncate"
+        :text="`${product.name}`"
+        :search="`${$page.props.filters.search}`"
+      />
+      <HighlightSearch
+        class="truncate"
+        :text="`${product.category.name}`"
+        :search="`${$page.props.filters.search}`"
+      />
       <span class="truncate">{{ `$${product.price}` }}</span>
       <span class="truncate">{{ product.stock || 0 }}</span>
     </div>

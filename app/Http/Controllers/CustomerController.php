@@ -25,10 +25,10 @@ class CustomerController extends Controller
         $search = $request->input('search', '');
 
         return Inertia::render('Customers/Index', [
-            'customers' => fn () => Customer::where(DB::raw('CONCAT(name, " ", last_name)'), 'like', "{$search}%")
-                ->orWhere('name', 'like', "{$search}%")
-                ->orWhere('last_name', 'like', "{$search}%")
-                ->orWhere('phone_number', 'like', "{$search}%")
+            'customers' => fn () => Customer::where(DB::raw('CONCAT(name, " ", last_name)'), 'like', "%{$search}%")
+                ->orWhere('name', 'like', "%{$search}%")
+                ->orWhere('last_name', 'like', "%{$search}%")
+                ->orWhere('phone_number', 'like', "%{$search}%")
                 ->orderBy('name', 'asc')
                 ->orderBy('last_name', 'asc')
                 ->paginate($results, ['id', 'name', 'last_name', 'phone_number'])

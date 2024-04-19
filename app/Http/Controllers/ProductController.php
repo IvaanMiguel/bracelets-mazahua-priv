@@ -24,7 +24,8 @@ class ProductController extends Controller
 
         return Inertia::render('Products/Index', [
             'products' => Product::with('category')
-                ->where('name', 'like', "{$search}%")
+                ->where('name', 'like', "%{$search}%")
+                ->orWhereRelation('category', 'name', 'like', "%{$search}%")
                 ->orderBy('name', 'asc')
                 ->paginate($results)
                 ->withQueryString(),

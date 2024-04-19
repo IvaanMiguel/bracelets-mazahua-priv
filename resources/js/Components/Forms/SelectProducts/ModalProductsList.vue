@@ -3,7 +3,7 @@ import SearchBar from '@/Components/SearchBar.vue'
 import Table from '@/Components/Table.vue'
 import { store } from '@/store/orderProducts'
 import { Pagination } from '@/types'
-import { AvailableProduct } from '@/types/orders'
+import { AvailableProduct, IdOrder } from '@/types/orders'
 import { usePage } from '@inertiajs/vue3'
 import { computed, onMounted, reactive, ref } from 'vue'
 import ModalProductItem from './ModalProductItem.vue'
@@ -11,6 +11,7 @@ import ModalProductItem from './ModalProductItem.vue'
 const page = usePage()
 
 const isDirty = ref(false)
+const order = ref(page.props.order as IdOrder)
 const savedIds = reactive<number[]>([])
 const checkedProducts = reactive<AvailableProduct[]>([])
 const products = computed(() => {
@@ -81,6 +82,7 @@ defineExpose({
     <SearchBar
       class="mb-3 w-full"
       placeholder="Buscar producto por nombre..."
+      :base-url="route(`${route().current()}`, { order })"
     />
     <Table
       class="flex h-full flex-col overflow-hidden rounded-md border border-light-outline-variant dark:border-dark-outline-variant"

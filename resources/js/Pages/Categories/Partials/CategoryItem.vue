@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import HighlightSearch from '@/Components/HighlightSearch.vue'
 import Icon from '@/Components/Icon.vue'
 import { CategoryListItem } from '@/types/categories'
 import { MdIconButton } from '@material/web/iconbutton/icon-button'
@@ -27,7 +28,11 @@ useEventListener(menuButton, 'click', openMenu)
 <template>
   <md-list-item>
     <div class="grid grid-cols-2 gap-4">
-      <span class="truncate">{{ category.name }}</span>
+      <HighlightSearch
+        class="truncate"
+        :text="`${category.name}`"
+        :search="`${$page.props.filters.search}`"
+      />
       <span class="truncate">{{ category.stock ?? 0 }}</span>
     </div>
     <div slot="end">

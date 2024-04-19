@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import HighlightSearch from '@/Components/HighlightSearch.vue'
 import SearchBar from '@/Components/SearchBar.vue'
 import Table from '@/Components/Table.vue'
 import { Pagination } from '@/types'
@@ -43,9 +44,21 @@ onMounted(() => {
         >
           <md-list-item type="button">
             <div class="grid grid-cols-3 gap-4">
-              <span>{{ customer.name }}</span>
-              <span>{{ customer.last_name }}</span>
-              <span>{{ customer.phone_number }}</span>
+              <HighlightSearch
+                class="truncate"
+                :text="`${customer.name}`"
+                :search="`${$page.props.filters.search}`"
+              />
+              <HighlightSearch
+                class="truncate"
+                :text="`${customer.last_name}`"
+                :search="`${$page.props.filters.search}`"
+              />
+              <HighlightSearch
+                class="truncate"
+                :text="`${customer.phone_number}`"
+                :search="`${$page.props.filters.search}`"
+              />
             </div>
           </md-list-item>
           <md-divider

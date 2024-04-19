@@ -24,7 +24,7 @@ class CategoryController extends Controller
 
         return Inertia::render('Categories/Index', [
             'categories' => DB::table('view_categories_stock')
-                ->where('name', 'like', "{$search}%")
+                ->where('name', 'like', "%{$search}%")
                 ->orderBy('name', 'asc')
                 ->paginate($results)
                 ->appends(['search' => $search, 'results' => $results]),

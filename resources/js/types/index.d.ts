@@ -5,8 +5,8 @@ export interface User {
 }
 
 export interface Filters {
-  results: number | { [x: string]: number }
-  search: string | { [x: string]: string } | null
+  results: number | { [key: string]: number }
+  search: string | { [key: string]: string } | null
 }
 
 export type PageProps<

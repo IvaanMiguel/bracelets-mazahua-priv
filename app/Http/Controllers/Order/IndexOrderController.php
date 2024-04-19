@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\DeliveryApp;
 use App\Models\DeliveryType;
 use App\Models\Order;
-use App\Models\PaymentType;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +28,7 @@ class IndexOrderController extends Controller
         return Inertia::render('Orders/Index', [
             'orders' => Order::select([
                 'orders.id',
-                'completed',
+                DB::raw('CASE WHEN completed = 1 THEN "Completado" ELSE "Pendiente" END AS completed'),
                 'total',
                 'customer_id',
                 'delivery_id',
@@ -40,15 +39,16 @@ class IndexOrderController extends Controller
                 'delivery.deliveryType',
                 'paymentType'
             ])->join('deliveries', 'orders.delivery_id', '=', 'deliveries.id')
-                ->orWhereRelation('customer', DB::raw('CONCAT(name, " ", last_name)'), 'like', "{$search}%")
-                ->orWhereRelation('delivery.deliveryType', 'name', 'like', "{$search}%")
-                ->orWhereRelation('paymentType', 'name', 'like', "{$search}%")
-                ->orWhereRelation('delivery', DB::raw('DATE_FORMAT(date, "%d/%b/%Y")'), 'like', "{$search}%")
-                ->orWhereRelation('delivery', DB::raw('DATE_FORMAT(date, "%e/%b/%Y")'), 'like', "{$search}%")
-                ->orWhereRelation('delivery', DB::raw('DAY(date)'), 'like', "{$search}%")
-                ->orWhereRelation('delivery', DB::raw('MONTHNAME(date)'), 'like', "{$search}%")
-                ->orWhereRelation('delivery', DB::raw('YEAR(date)'), 'like', "{$search}%")
-                ->orderBy('completed', 'asc')
+                ->orWhere(DB::raw('CASE WHEN completed = 1 THEN "Completado" ELSE "Pendiente" END'), 'like', "%{$search}%")
+                ->orWhereRelation('customer', DB::raw('CONCAT(name, " ", last_name)'), 'like', "%{$search}%")
+                ->orWhereRelation('delivery.deliveryType', 'name', 'like', "%{$search}%")
+                ->orWhereRelation('paymentType', 'name', 'like', "%{$search}%")
+                ->orWhereRelation('delivery', DB::raw('DATE_FORMAT(date, "%d/%b/%Y")'), 'like', "%{$search}%")
+                ->orWhereRelation('delivery', DB::raw('DATE_FORMAT(date, "%e/%b/%Y")'), 'like', "%{$search}%")
+                ->orWhereRelation('delivery', DB::raw('DAY(date)'), 'like', "%{$search}%")
+                ->orWhereRelation('delivery', DB::raw('MONTHNAME(date)'), 'like', "%{$search}%")
+                ->orWhereRelation('delivery', DB::raw('YEAR(date)'), 'like', "%{$search}%")
+                ->orderBy('completed', 'desc')
                 ->orderBy('deliveries.date', 'desc')
                 ->paginate($results)
                 ->withQueryString(),

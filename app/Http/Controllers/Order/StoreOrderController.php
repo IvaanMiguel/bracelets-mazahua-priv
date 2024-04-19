@@ -33,11 +33,11 @@ class StoreOrderController extends Controller
         ];
 
         return Inertia::render('Orders/Create', [
-            'customers' => Customer::where('name', 'like', "{$search['customer']}%")
+            'customers' => Customer::where(DB::raw('CONCAT(name, " ", last_name)'), 'like', "%{$search['customer']}%")
                 ->orderBy('name')
                 ->paginate($results['customer'], ['id', 'name', 'last_name'], 'customers')
                 ->withQueryString(),
-            'products' => Product::where('name', 'like', "{$search['product']}%")
+            'products' => Product::where('name', 'like', "%{$search['product']}%")
                 ->where('stock', '>', 0)
                 ->orderBy('name')
                 ->paginate($results['product'], ['id', 'name', 'price', 'stock'], 'products')

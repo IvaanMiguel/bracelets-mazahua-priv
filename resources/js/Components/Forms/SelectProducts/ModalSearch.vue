@@ -14,6 +14,8 @@ const emit = defineEmits<{
   saveChecked: [checkedProducts: AvailableChangedProduct[]]
 }>()
 
+// TODO: Error en pedidos sin productos originales.
+
 const cancelSearchModal = ref<InstanceType<typeof Modal>>()
 const searchProductModal = ref<InstanceType<typeof Modal>>()
 const modal = ref<MdDialog | null>()

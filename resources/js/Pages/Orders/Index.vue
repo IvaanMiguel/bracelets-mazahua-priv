@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import HighlightSearch from '@/Components/HighlightSearch.vue'
 import Icon from '@/Components/Icon.vue'
 import SearchBar from '@/Components/SearchBar.vue'
 import Snackbar from '@/Components/Snackbar.vue'
@@ -86,20 +87,32 @@ onMounted(() => {
           >
             <md-list-item type="button">
               <div class="grid grid-cols-6 gap-4">
-                <span class="truncate">
-                  {{ `${order.customer.name} ${order.customer.last_name}` }}
-                </span>
+                <HighlightSearch
+                  class="truncate"
+                  :text="`${order.customer.name} ${order.customer.last_name}`"
+                  :search="`${$page.props.filters.search}`"
+                />
                 <span class="truncate">{{ `$${order.total}` }}</span>
-                <span class="truncate">{{ order.payment_type.name }}</span>
-                <span class="truncate">
-                  {{ order.delivery.delivery_type.name }}
-                </span>
-                <span class="truncate">{{
-                  formatDate(order.delivery.date)
-                }}</span>
-                <span class="truncate">
-                  {{ order.completed ? 'Completado' : 'Pendiente' }}
-                </span>
+                <HighlightSearch
+                  class="truncate"
+                  :text="`${order.payment_type.name}`"
+                  :search="`${$page.props.filters.search}`"
+                />
+                <HighlightSearch
+                  class="truncate"
+                  :text="`${order.delivery.delivery_type.name}`"
+                  :search="`${$page.props.filters.search}`"
+                />
+                <HighlightSearch
+                  class="truncate"
+                  :text="formatDate(order.delivery.date)"
+                  :search="`${$page.props.filters.search}`"
+                />
+                <HighlightSearch
+                  class="truncate"
+                  :text="`${order.completed}`"
+                  :search="`${$page.props.filters.search}`"
+                />
               </div>
             </md-list-item>
             <md-divider
