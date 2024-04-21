@@ -27,6 +27,7 @@
         "@vuelidate/validators": "^2.0.4",
         "@vuepic/vue-datepicker": "^8.2.0",
         "@vueuse/core": "^10.7.2",
+        "chart.js": "^4.4.2",
         "date-fns": "^3.3.1"
     }
 }
