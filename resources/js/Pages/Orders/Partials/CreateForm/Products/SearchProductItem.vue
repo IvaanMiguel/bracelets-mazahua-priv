@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import HighlightSearch from '@/Components/HighlightSearch.vue';
+import HighlightSearch from '@/Components/HighlightSearch.vue'
 import { AvailableProduct } from '@/types/orders'
+import { usePage } from '@inertiajs/vue3'
 import { MdCheckbox } from '@material/web/checkbox/checkbox'
 import { MdListItem } from '@material/web/list/list-item'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const emit = defineEmits<{
   checkedProduct: [product: AvailableProduct, checked: boolean]
@@ -14,6 +15,9 @@ const props = defineProps<{
   disabled: boolean
 }>()
 
+const page = usePage()
+
+const search = computed(() => page.props.filters.search as { product: string })
 const checkbox = ref<MdCheckbox | null>()
 const listItem = ref<MdListItem | null>()
 
@@ -41,7 +45,7 @@ const onClick = () => {
       <HighlightSearch
         class="truncate"
         :text="`${product.name}`"
-        :search="`${$page.props.filters.search?.product}`"
+        :search="`${search.product}`"
       />
       <span class="truncate">{{ `$${product.price} MXN` }}</span>
       <span class="truncate">{{ product.stock }}</span>
