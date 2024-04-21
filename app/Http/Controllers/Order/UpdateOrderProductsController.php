@@ -36,7 +36,7 @@ class UpdateOrderProductsController extends Controller
                 })
                 ->where('products.name', 'like', "%{$search}%")
                 ->where('products.stock', '>', 0)
-                // ->orWhere('order_product.order_id', '=',  $order->id)
+                ->orWhere('order_product.order_id', '=',  $order->id)
                 ->orderBy('products.name')
                 ->paginate($results, ['products.id', 'products.name', 'products.price', 'products.stock'])
                 ->withQueryString()

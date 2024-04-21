@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import SearchBar from '@/Components/SearchBar.vue'
 import Table from '@/Components/Table.vue'
-import { store } from '@/store/orderProducts'
+// import { store } from '@/store/orderProducts'
 import { Pagination } from '@/types'
-import { AvailableProduct, IdOrder } from '@/types/orders'
+import {
+  AvailableChangedProduct,
+  AvailableProduct,
+  IdOrder,
+} from '@/types/orders'
 import { usePage } from '@inertiajs/vue3'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, inject, onMounted, reactive, ref, watch } from 'vue'
 import ModalProductItem from './ModalProductItem.vue'
+
+const defaultProducts = inject('defaultProducts') as {
+  notChanged: AvailableChangedProduct[]
+  changed: AvailableChangedProduct[]
+}
 
 const page = usePage()
 
@@ -37,9 +46,9 @@ const clearCheckedProducts = () => {
   checkedProducts.splice(0, checkedProducts.length)
 }
 
-// const clearSavedIds = () => {
-//   savedIds.splice(0, savedIds.length)
-// }
+const clearSavedIds = () => {
+  savedIds.splice(0, savedIds.length)
+}
 
 const removeSavedId = (id: number) => {
   const index = savedIds.findIndex((_id) => _id === id)
@@ -59,8 +68,21 @@ const saveIds = () => {
   clearCheckedProducts()
 }
 
+watch(
+  () => defaultProducts.notChanged,
+  () => {
+    clearSavedIds()
+
+    for (const product of defaultProducts.notChanged) {
+      savedIds.push(product.id)
+    }
+  }
+)
+
 onMounted(() => {
-  for (const product of store.products.notChanged) {
+  clearSavedIds()
+
+  for (const product of defaultProducts.notChanged) {
     savedIds.push(product.id)
   }
 })

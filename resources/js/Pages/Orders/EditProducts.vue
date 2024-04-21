@@ -61,7 +61,12 @@ const update = () => {
     }))
     .put(route('orders.update_products', { order: props.order }), {
       onSuccess: () => {
-        selectProductsForm.value?.form.defaults()
+        selectProductsForm.value?.form.defaults({
+          products: selectProductsForm.value.form.products.map((product) => ({
+            ...product,
+            stock: product.priceHasChanged ? product.amount : product.stock
+          }))
+        })
         selectProductsForm.value?.form.reset()
 
         updatedSnackbar.value?.show(true)

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
-import { store } from '@/store/orderProducts'
+// import { store } from '@/store/orderProducts'
 import {
+  AvailableChangedProduct,
   AvailableProduct,
   SelectedChangedProduct,
   SelectedProduct,
@@ -11,12 +12,22 @@ import '@material/web/button/filled-tonal-button'
 import '@material/web/divider/divider'
 import '@material/web/list/list'
 import '@material/web/list/list-item'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, provide, reactive, ref, watch } from 'vue'
 import ModalSearch from './ModalSearch.vue'
 import SelectProductsItem from './SelectProductsItem.vue'
 import SelectProductsRemove from './SelectProductsRemove.vue'
 
 const props = defineProps<{ defaults?: SelectedChangedProduct[] }>()
+
+const defaultProducts = reactive<{
+  notChanged: AvailableChangedProduct[]
+  changed: AvailableChangedProduct[]
+}>({
+  notChanged: [],
+  changed: []
+})
+
+provide('defaultProducts', defaultProducts)
 
 const form = useForm<{
   products: SelectedChangedProduct[]
@@ -74,16 +85,40 @@ const onRemoveProduct = () => {
   productToRemove.value = null
 }
 
+const updateDefaultProducts = () => {
+  const changed = []
+  const notChanged = []
+
+  for (const product of props.defaults || []) {
+    const _product = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      stock: product.stock,
+      amount: product.amount,
+      priceHasChanged: product.priceHasChanged,
+    }
+
+    if (product.priceHasChanged === false) {
+      notChanged.push(_product)
+    } else {
+      changed.push(_product)
+    }
+  }
+
+  defaultProducts.changed = changed
+  defaultProducts.notChanged = notChanged
+}
+
 watch(
   () => props.defaults,
-  (value) => {
-    store.updateOrderProducts(value)
-    form.products = value!
+  () => {
+    updateDefaultProducts()
   }
 )
 
 onMounted(() => {
-  store.updateOrderProducts(props.defaults)
+  updateDefaultProducts()
 })
 
 defineExpose({ form })
