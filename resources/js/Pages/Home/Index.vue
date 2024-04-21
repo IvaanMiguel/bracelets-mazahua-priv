@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MainLayout from '@/Layouts/MainLayout.vue'
+import TestChart from './Partials/TestChart.vue';
 
 defineOptions({
   layout: MainLayout,
