@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDarkModeChart } from '@/composables/useDarkModeChart.js'
-import { completedOrder } from '@/types/home'
+import { CompletedOrder } from '@/types/home'
 import { usePage } from '@inertiajs/vue3'
 import {
   BarController,
@@ -8,12 +8,10 @@ import {
   CategoryScale,
   Chart,
   LinearScale,
-  Tooltip,
 } from 'chart.js'
 import { computed, onMounted, ref, toRef } from 'vue'
 
 Chart.register({
-  Tooltip,
   BarController,
   BarElement,
   CategoryScale,
@@ -22,10 +20,10 @@ Chart.register({
 
 const page = usePage()
 
-let chart: Chart
+let chart: Chart<'bar'>
 const { textColor, backgroundColors } = useDarkModeChart(toRef(() => chart))
 const canvas = ref<HTMLCanvasElement>()
-const completedOrders = ref(page.props.completedOrders as completedOrder[])
+const completedOrders = ref(page.props.completedOrders as CompletedOrder[])
 const ordersPercentage = computed(() => {
   const total = completedOrders.value[0].total + completedOrders.value[1].total
 
