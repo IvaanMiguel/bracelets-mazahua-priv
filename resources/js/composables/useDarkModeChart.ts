@@ -3,7 +3,7 @@ import { Chart } from 'chart.js';
 import { Ref, computed, watch } from 'vue';
 import colorPalette from '../../../tailwindcolorpalette.js'
 
-export function useDarkModeChart(chart: Ref<Chart>) {
+export function useDarkModeChart(chart: Ref<Chart<'bar' | 'doughnut'>>) {
   const isDark = useDark()
 
   const textColor = computed(() =>
@@ -18,12 +18,18 @@ export function useDarkModeChart(chart: Ref<Chart>) {
   )
 
   watch(isDark, () => {
-    chart.value.options.scales!.y!.grid!.color = textColor.value
-    chart.value.options.scales!.y!.ticks!.color = textColor.value
-    chart.value.options.scales!.x!.grid!.color = textColor.value
-    chart.value.options.scales!.x!.ticks!.color = textColor.value
+    if (chart.value.options.scales?.y?.grid || chart.value.options.scales?.x?.grid) {
+      chart.value.options.scales!.y!.grid!.color = textColor.value
+      chart.value.options.scales!.x!.grid!.color = textColor.value
+    }
+
+    if (chart.value.options.scales?.y?.ticks || chart.value.options.scales?.x?.ticks) {
+      chart.value.options.scales!.y!.ticks!.color = textColor.value
+      chart.value.options.scales!.x!.ticks!.color = textColor.value
+    }
+
     chart.value.data.datasets[0].backgroundColor = backgroundColors.value
-  
+
     chart.value.update()
   })
 
