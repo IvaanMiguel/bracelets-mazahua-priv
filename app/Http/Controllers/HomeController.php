@@ -17,6 +17,15 @@ class HomeController extends Controller
             ])
                 ->orderBy('name')
                 ->groupBy('completed')
+                ->get(),
+            'salesPerCategory' => DB::table('order_product')
+                ->selectRaw('categories.id, categories.name, SUM(order_product.subtotal) AS total_sales')
+                ->leftJoin('orders', 'orders.id', '=', 'order_product.order_id')
+                ->leftJoin('products', 'products.id', '=', 'order_product.product_id')
+                ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
+                ->where('orders.completed', '=', true)
+                ->groupBy('categories.id')
+                ->orderBy('categories.name')
                 ->get()
         ]);
     }
