@@ -33,7 +33,7 @@ class HomeController extends Controller
                 ->leftJoin('orders', 'orders.id', '=', 'order_product.order_id')
                 ->where('orders.completed', '=', true)
                 ->groupBy('order_product.product_id')
-                ->orderBy('total_sales', 'desc')
+                ->orderBy('units', 'desc')
                 ->first()
         ]);
     }
