@@ -38,9 +38,9 @@ onMounted(() => {
       datasets: [
         {
           data: completedOrders.value.map((order) => order.total),
-          barThickness: 50,
           backgroundColor: backgroundColors.value,
           borderRadius: 6,
+          categoryPercentage: 0.5
         },
       ],
     },
@@ -65,6 +65,29 @@ onMounted(() => {
           },
         },
       },
+      plugins: {
+        title: {
+          display: true,
+          text: 'Pedidos',
+          font: {
+            size: 16,
+            family: 'Roboto',
+            weight: 'bold',
+          },
+          color: textColor.value,
+          padding: { top: 8, bottom: 4 },
+        },
+        subtitle: {
+          display: true,
+          text: `El ${ordersPercentage.value}% de los pedidos han sido completados.`,
+          font: {
+            size: 12,
+            family: 'Roboto',
+          },
+          color: textColor.value,
+          padding: { top: 4, bottom: 8 },
+        },
+      },
     },
   })
 })
@@ -72,14 +95,8 @@ onMounted(() => {
 
 <template>
   <div
-    class="flex max-h-full flex-col rounded-md border border-light-outline-variant p-1 dark:border-dark-outline-variant"
+    class="relative h-full w-full rounded-md border border-light-outline-variant p-2 dark:border-dark-outline-variant"
   >
-    <span class="text-on-background text-center font-medium">Pedidos</span>
-    <span class="text-on-background text-center text-xs">
-      {{ `El ${ordersPercentage}% de los pedidos han sido completados.` }}
-    </span>
-    <div class="relative h-full w-full">
-      <canvas ref="canvas"></canvas>
-    </div>
+    <canvas ref="canvas"></canvas>
   </div>
 </template>

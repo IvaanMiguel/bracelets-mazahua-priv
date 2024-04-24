@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import MainLayout from '@/Layouts/MainLayout.vue'
 import '@material/web/elevation/elevation'
-import { Chart, Tooltip } from 'chart.js'
+import { Chart, SubTitle, Title, Tooltip } from 'chart.js'
 import CompletedOrdersChart from './Partials/CompletedOrdersChart.vue'
 import SalesPerCategoryChart from './Partials/SalesPerCategoryChart.vue'
 
 Chart.register({
+  SubTitle,
+  Title,
   Tooltip,
 })
 
