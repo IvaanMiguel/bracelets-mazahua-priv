@@ -19,9 +19,9 @@ defineOptions({
 </script>
 
 <template>
-  <div class="h-full p-4">
+  <div class="p-4">
     <div
-      class="md-elevation-1 relative mx-auto grid h-full w-full grid-cols-1 grid-rows-4 rounded-lg bg-light-surface-container-lowest p-4 dark:bg-dark-surface-container sm:grid-cols-2 md:grid-cols-4"
+      class="md-elevation-1 relative mx-auto grid h-full w-full grid-cols-1 grid-rows-[repeat(7,160px)] rounded-lg bg-light-surface-container-lowest p-4 dark:bg-dark-surface-container sm:grid-cols-2 md:grid-cols-4"
     >
       <md-elevation />
       <CompletedOrdersChart class="row-span-2" />
