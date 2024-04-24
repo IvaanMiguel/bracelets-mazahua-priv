@@ -26,7 +26,15 @@ class HomeController extends Controller
                 ->where('orders.completed', '=', true)
                 ->groupBy('categories.id')
                 ->orderBy('categories.name')
-                ->get()
+                ->get(),
+            'bestSeller' => DB::table('order_product')
+                ->selectRaw('order_product.product_id, products.name, SUM(order_product.subtotal) AS total_sales, SUM(order_product.amount) as units')
+                ->leftJoin('products', 'products.id', '=', 'order_product.product_id')
+                ->leftJoin('orders', 'orders.id', '=', 'order_product.order_id')
+                ->where('orders.completed', '=', true)
+                ->groupBy('order_product.product_id')
+                ->orderBy('total_sales', 'desc')
+                ->first()
         ]);
     }
 }
