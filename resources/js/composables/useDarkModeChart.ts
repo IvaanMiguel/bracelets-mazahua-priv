@@ -28,6 +28,11 @@ export function useDarkModeChart(chart: Ref<Chart<'bar' | 'doughnut'>>) {
       chart.value.options.scales!.x!.ticks!.color = textColor.value
     }
 
+    if (chart.value.options.plugins) {
+      chart.value.options.plugins.title!.color = textColor.value
+      chart.value.options.plugins.subtitle!.color = textColor.value
+    }
+
     chart.value.data.datasets[0].backgroundColor = backgroundColors.value
 
     chart.value.update()
