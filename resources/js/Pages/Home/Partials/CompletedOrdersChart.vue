@@ -87,6 +87,9 @@ onMounted(() => {
           color: textColor.value,
           padding: { top: 4, bottom: 8 },
         },
+        datalabels: {
+          display: false
+        }
       },
     },
   })
