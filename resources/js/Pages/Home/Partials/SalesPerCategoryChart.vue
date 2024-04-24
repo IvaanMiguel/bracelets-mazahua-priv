@@ -13,7 +13,7 @@ Chart.register({
 const page = usePage()
 
 let chart: Chart<'doughnut'>
-const { backgroundColors } = useDarkModeChart(toRef(() => chart))
+const { textColor, backgroundColors } = useDarkModeChart(toRef(() => chart))
 
 const canvas = ref<HTMLCanvasElement>()
 const salesPerCategory = ref(page.props.salesPerCategory as SalesPerCategory[])
@@ -49,6 +49,7 @@ onMounted(() => {
             weight: 'bold',
             family: 'Roboto',
           },
+          color: textColor.value,
         },
         tooltip: {
           displayColors: false,
