@@ -2,10 +2,12 @@
 import MainLayout from '@/Layouts/MainLayout.vue'
 import '@material/web/elevation/elevation'
 import { Chart, SubTitle, Title, Tooltip } from 'chart.js'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 import CompletedOrdersChart from './Partials/CompletedOrdersChart.vue'
 import SalesPerCategoryChart from './Partials/SalesPerCategoryChart.vue'
 
 Chart.register({
+  ChartDataLabels,
   SubTitle,
   Title,
   Tooltip,
