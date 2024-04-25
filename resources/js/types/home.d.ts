@@ -15,3 +15,9 @@ export interface BestSeller {
   total_sales: string | number
   units: string | number
 }
+
+export interface TopCustomer {
+  customer_id: number
+  name: string
+  total: string | number
+}
