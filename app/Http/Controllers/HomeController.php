@@ -45,6 +45,9 @@ class HomeController extends Controller
                 ->leftJoin('payment_types', 'payment_types.id', '=', 'orders.payment_type_id')
                 ->groupBy('payment_types.id')
                 ->orderBy(DB::raw('COUNT(orders.payment_type_id)'), 'desc')
+                ->first(),
+            'totalSales' => Order::selectRaw('SUM(total) as total_sales')
+                ->where('completed', '=', true)
                 ->first()
         ]);
     }

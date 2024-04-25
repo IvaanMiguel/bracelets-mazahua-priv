@@ -5,9 +5,10 @@ import { Chart, SubTitle, Title, Tooltip } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import BestSellerChart from './Partials/BestSellerChart.vue'
 import CompletedOrdersChart from './Partials/CompletedOrdersChart.vue'
+import PopularPaymentTypeChart from './Partials/PopularPaymentTypeChart.vue'
 import SalesPerCategoryChart from './Partials/SalesPerCategoryChart.vue'
 import TopCustomerChart from './Partials/TopCustomerChart.vue'
-import PopularPaymentTypeChart from './Partials/PopularPaymentTypeChart.vue'
+import TotalSalesChart from './Partials/TotalSalesChart.vue'
 
 Chart.register({
   ChartDataLabels,
@@ -32,6 +33,7 @@ defineOptions({
       <SalesPerCategoryChart class="row-span-3 md:col-span-2 md:row-span-4" />
       <BestSellerChart />
       <PopularPaymentTypeChart />
+      <TotalSalesChart />
     </div>
   </div>
 </template>
