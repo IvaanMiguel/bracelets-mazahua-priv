@@ -6,6 +6,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'
 import BestSellerChart from './Partials/BestSellerChart.vue'
 import CompletedOrdersChart from './Partials/CompletedOrdersChart.vue'
 import SalesPerCategoryChart from './Partials/SalesPerCategoryChart.vue'
+import TopCustomerChart from './Partials/TopCustomerChart.vue'
 
 Chart.register({
   ChartDataLabels,
@@ -26,8 +27,9 @@ defineOptions({
     >
       <md-elevation />
       <CompletedOrdersChart class="row-span-2" />
-      <BestSellerChart />
+      <TopCustomerChart />
       <SalesPerCategoryChart class="row-span-3 md:col-span-2 md:row-span-4" />
+      <BestSellerChart />
     </div>
   </div>
 </template>

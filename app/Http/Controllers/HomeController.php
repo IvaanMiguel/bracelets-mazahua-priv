@@ -34,6 +34,12 @@ class HomeController extends Controller
                 ->where('orders.completed', '=', true)
                 ->groupBy('order_product.product_id')
                 ->orderBy('units', 'desc')
+                ->first(),
+            'topCustomer' => Order::selectRaw('orders.customer_id, CONCAT(customers.name, " ", customers.last_name) AS name, SUM(orders.total) AS total')
+                ->leftJoin('customers', 'customers.id', '=', 'orders.customer_id')
+                ->where('orders.completed', '=', true)
+                ->groupBy('customers.id')
+                ->orderBy('total', 'desc')
                 ->first()
         ]);
     }
