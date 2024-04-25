@@ -21,3 +21,8 @@ export interface TopCustomer {
   name: string
   total: string | number
 }
+
+export interface PopularPaymentType {
+  payment_type_id: number
+  name: string
+}

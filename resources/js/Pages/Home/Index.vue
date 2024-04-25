@@ -7,6 +7,7 @@ import BestSellerChart from './Partials/BestSellerChart.vue'
 import CompletedOrdersChart from './Partials/CompletedOrdersChart.vue'
 import SalesPerCategoryChart from './Partials/SalesPerCategoryChart.vue'
 import TopCustomerChart from './Partials/TopCustomerChart.vue'
+import PopularPaymentTypeChart from './Partials/PopularPaymentTypeChart.vue'
 
 Chart.register({
   ChartDataLabels,
@@ -30,6 +31,7 @@ defineOptions({
       <TopCustomerChart />
       <SalesPerCategoryChart class="row-span-3 md:col-span-2 md:row-span-4" />
       <BestSellerChart />
+      <PopularPaymentTypeChart />
     </div>
   </div>
 </template>
