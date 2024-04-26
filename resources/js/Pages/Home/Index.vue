@@ -10,6 +10,7 @@ import SalesPerCategoryChart from './Partials/SalesPerCategoryChart.vue'
 import TopCustomerChart from './Partials/TopCustomerChart.vue'
 import TotalSalesChart from './Partials/TotalSalesChart.vue'
 import CustomersOrdersChart from './Partials/CustomersOrdersChart.vue'
+import SalesPerMonthChart from './Partials/SalesPerMonthChart.vue'
 
 Chart.register({
   ChartDataLabels,
@@ -36,6 +37,7 @@ defineOptions({
       <CustomersOrdersChart class="md:row-span-3 md:col-span-2" />
       <PopularPaymentTypeChart />
       <TotalSalesChart />
+      <SalesPerMonthChart class="col-span-full row-span-2" />
     </div>
   </div>
 </template>

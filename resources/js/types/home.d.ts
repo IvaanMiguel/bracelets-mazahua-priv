@@ -33,3 +33,10 @@ export interface CustomerOrders {
   total_orders: string | number
   completed_orders: string | number
 }
+
+export interface SalesPerMonth {
+  products_amount: string | number
+  sales: string | number
+  month: string
+  year: string | number
+}
