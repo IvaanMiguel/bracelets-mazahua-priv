@@ -10,11 +10,13 @@ const bestSeller = ref(page.props.bestSeller as BestSeller)
 
 <template>
   <div
-    class="flex flex-col items-center justify-center rounded-md border border-light-outline-variant p-2 text-center dark:border-dark-outline-variant text-on-background"
+    class="text-on-background flex flex-col items-center justify-center rounded-md border border-light-outline-variant p-2 text-center dark:border-dark-outline-variant"
   >
     <Icon size="3rem">sell</Icon>
     <span class="text-xs">Producto más vendido</span>
-    <span class="text-lg font-medium">{{ bestSeller.name }}</span>
+    <span class="w-full truncate text-lg font-medium">{{
+      bestSeller.name
+    }}</span>
     <span class="text-xs">
       {{ `${bestSeller.units} unidades vendidas en` }}
     </span>

@@ -14,7 +14,9 @@ const topCustomer = ref(page.props.topCustomer as TopCustomer)
   >
     <Icon size="3rem">star</Icon>
     <span class="text-xs">Cliente estrella</span>
-    <span class="text-lg font-medium">{{ topCustomer.name }}</span>
+    <span class="w-full truncate text-lg font-medium">{{
+      topCustomer.name
+    }}</span>
     <span class="text-xs">Ingresos generados</span>
     <span class="text-lg font-medium">
       {{ `$${topCustomer.total} MXN` }}
