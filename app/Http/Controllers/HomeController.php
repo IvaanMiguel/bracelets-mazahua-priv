@@ -48,7 +48,17 @@ class HomeController extends Controller
                 ->first(),
             'totalSales' => Order::selectRaw('SUM(total) as total_sales')
                 ->where('completed', '=', true)
-                ->first()
+                ->first(),
+            'customersOrders' => Order::selectRaw('orders.customer_id,
+                CONCAT(customers.name, " ", customers.last_name) AS name,
+                COUNT(orders.customer_id) AS total_orders,
+                COALESCE(SUM(CASE WHEN orders.completed = true THEN 1 ELSE 0 END), 0) AS completed_orders')
+                ->leftJoin('customers', 'customers.id', '=', 'orders.customer_id')
+                ->groupBy('customers.id')
+                ->orderBy('total_orders', 'desc')
+                ->orderBy('completed_orders', 'desc')
+                ->limit(5)
+                ->get()
         ]);
     }
 }

@@ -26,3 +26,10 @@ export interface PopularPaymentType {
   payment_type_id: number
   name: string
 }
+
+export interface CustomerOrders {
+  customer_id: number
+  name: string
+  total_orders: string | number
+  completed_orders: string | number
+}
