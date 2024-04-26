@@ -67,7 +67,7 @@ defineExpose({ editPersonalInfoModal })
   <Modal
     id="edit-personal-info-modal"
     class="w-full"
-    not-cancellable
+    :not-cancellable="customerForm?.form.isDirty"
   >
     <div slot="headline">Editar datos personales</div>
 
@@ -81,9 +81,16 @@ defineExpose({ editPersonalInfoModal })
     />
 
     <div slot="actions">
-      <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
       <md-text-button
-        @click="update"
+        @click="cancelEditModal?.show"
+        :disabled="customerForm?.form.processing"
+      >
+        Cancelar
+      </md-text-button>
+      <md-text-button
+        @click="
+          customerForm?.form.isDirty ? update() : editPersonalInfoModal?.close()
+        "
         :disabled="customerForm?.form.processing"
       >
         Guardar cambios
