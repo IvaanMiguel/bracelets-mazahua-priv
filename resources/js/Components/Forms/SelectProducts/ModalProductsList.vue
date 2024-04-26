@@ -111,6 +111,7 @@ defineExpose({
       :headers="['', 'Producto', 'Precio', 'Stock']"
       grid-cols="grid-template-columns: 18px 3fr 2fr 1fr;"
       :pagination="products"
+      :url="route(`${route().current()}`, { order })"
     >
       <template v-for="(product, i) in products?.data">
         <ModalProductItem
