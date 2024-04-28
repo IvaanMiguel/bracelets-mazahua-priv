@@ -70,7 +70,7 @@ useEventListener(editAddressModal, 'open', () => {
 <template>
   <Modal
     id="edit-address-modal"
-    not-cancellable
+    :not-cancellable="addressForm?.form.isDirty"
   >
     <div slot="headline">Editar dirección agregada</div>
 
@@ -82,7 +82,14 @@ useEventListener(editAddressModal, 'open', () => {
     />
 
     <div slot="actions">
-      <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
+      <md-text-button
+        @click="
+          addressForm?.form.isDirty
+            ? cancelEditModal?.show()
+            : editAddressModal?.close()
+        "
+        >Cancelar</md-text-button
+      >
       <md-text-button @click="saveChanges">Guardar cambios</md-text-button>
     </div>
   </Modal>
