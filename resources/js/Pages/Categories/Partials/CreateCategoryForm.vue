@@ -2,16 +2,14 @@
 import CategoryForm from '@/Components/Forms/CategoryForm.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import { useModal } from '@/composables/useModal'
 import useVuelidate from '@vuelidate/core'
-import { ref } from 'vue'
+import { useEventListener } from '@vueuse/core'
+import { onMounted, ref } from 'vue'
 
 const v = useVuelidate()
-const { modal: createCategoryModal } = useModal('#create-category-modal')
-const { modal: cancelCreateCategoryModal } = useModal(
-  '#cancel-create-category-modal'
-)
 
+const createModal = ref<InstanceType<typeof Modal>>()
+const cancelCreateModal = ref<InstanceType<typeof Modal>>()
 const createdCategorySnackbar = ref<InstanceType<typeof Snackbar>>()
 const categoryForm = ref<InstanceType<typeof CategoryForm>>()
 
@@ -25,28 +23,32 @@ const store = async () => {
       categoryForm.value?.form.reset()
       v.value.$reset()
 
-      createCategoryModal.value?.close()
+      createModal.value?.dialog?.close()
       createdCategorySnackbar.value?.show(true)
     },
   })
 }
 
 const cancelStore = () => {
-  createCategoryModal.value?.close()
-  cancelCreateCategoryModal.value?.close()
-
-  categoryForm.value?.form.reset()
-  v.value.$reset()
+  createModal.value?.dialog?.close()
+  cancelCreateModal.value?.dialog?.close()
 }
 
-defineExpose({ createCategoryModal })
+onMounted(() => {
+  useEventListener(createModal.value?.dialog, 'closed', () => {
+    categoryForm.value?.form.reset()
+    v.value.$reset()
+  })
+})
+
+defineExpose({ createModal })
 </script>
 
 <template>
   <Modal
-    id="create-category-modal"
+    ref="createModal"
     class="w-full"
-    not-cancellable
+    :not-cancellable="categoryForm?.form.isDirty"
   >
     <div slot="headline">Crear categoría</div>
 
@@ -57,9 +59,16 @@ defineExpose({ createCategoryModal })
     />
 
     <div slot="actions">
-      <md-text-button @click="cancelCreateCategoryModal?.show"
-        >Cancelar</md-text-button
+      <md-text-button
+        @click="
+          categoryForm?.form.isDirty
+            ? cancelCreateModal?.dialog?.show()
+            : createModal?.dialog?.close()
+        "
+        :disabled="categoryForm?.form.processing"
       >
+        Cancelar
+      </md-text-button>
       <md-text-button
         @click="store"
         :disabled="categoryForm?.form.processing"
@@ -70,7 +79,7 @@ defineExpose({ createCategoryModal })
   </Modal>
 
   <Modal
-    id="cancel-create-category-modal"
+    ref="cancelCreateModal"
     type="alert"
   >
     <div slot="headline">Descartar categoría nueva</div>
@@ -79,7 +88,7 @@ defineExpose({ createCategoryModal })
       ¿deseas continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="cancelCreateCategoryModal?.close"
+      <md-text-button @click="cancelCreateModal?.dialog?.close"
         >Cancelar</md-text-button
       >
       <md-text-button @click="cancelStore">Aceptar</md-text-button>
