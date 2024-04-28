@@ -61,7 +61,7 @@ defineExpose({ editAddressModal })
 <template>
   <Modal
     id="edit-address-modal"
-    not-cancellable
+    :not-cancellable="addressForm?.form.isDirty"
   >
     <div slot="headline">Editar dirección</div>
 
@@ -73,7 +73,16 @@ defineExpose({ editAddressModal })
     />
 
     <div slot="actions">
-      <md-text-button @click="cancelEditModal?.show">Cancelar</md-text-button>
+      <md-text-button
+        @click="
+          addressForm?.form.isDirty
+            ? cancelEditModal?.show()
+            : editAddressModal?.close()
+        "
+        :disabled="addressForm?.form.processing"
+      >
+        Cancelar
+      </md-text-button>
       <md-text-button
         @click="update"
         :disabled="addressForm?.form.processing"

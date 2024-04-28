@@ -51,7 +51,7 @@ defineExpose({ addAddressModal })
   <Modal
     id="add-address-modal"
     class="w-full"
-    not-cancellable
+    :not-cancellable="addressForm?.form.isDirty"
   >
     <div slot="headline">Crear dirección nueva</div>
 
@@ -63,7 +63,16 @@ defineExpose({ addAddressModal })
     />
 
     <div slot="actions">
-      <md-text-button @click="cancelAddModal?.show">Cancelar</md-text-button>
+      <md-text-button
+        @click="
+          addressForm?.form.isDirty
+            ? cancelAddModal?.show()
+            : addAddressModal?.close()
+        "
+        :disabled="addressForm?.form.processing"
+      >
+        Cancelar
+      </md-text-button>
       <md-text-button
         @click="store"
         :disabled="addressForm?.form.processing"

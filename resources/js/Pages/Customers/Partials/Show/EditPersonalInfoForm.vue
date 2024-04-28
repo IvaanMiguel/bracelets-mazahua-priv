@@ -82,7 +82,11 @@ defineExpose({ editPersonalInfoModal })
 
     <div slot="actions">
       <md-text-button
-        @click="cancelEditModal?.show"
+        @click="
+          customerForm?.form.isDirty
+            ? cancelEditModal?.show()
+            : editPersonalInfoModal?.close()
+        "
         :disabled="customerForm?.form.processing"
       >
         Cancelar

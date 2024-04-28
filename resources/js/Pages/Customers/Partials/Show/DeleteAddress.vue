@@ -13,6 +13,7 @@ const page = usePage()
 const { modal } = useModal('#delete-address-modal')
 
 const deletedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
+const processing = ref(false)
 const addresses = computed(() => {
   const customer = page.props.customer as CustomerWithAddresses
   return customer.addresses
@@ -21,13 +22,18 @@ const addresses = computed(() => {
 const destroy = () => {
   if (addresses.value.length <= 1) return
 
+  processing.value = true
+
   router.delete(
     route('addresses.destroy', {
       id: props.selectedAddress?.id,
     }),
     {
       onSuccess: () => deletedAddressSnackbar.value?.show(true),
-      onFinish: () => modal.value?.close(),
+      onFinish: () => {
+        modal.value?.close()
+        processing.value = false
+      },
     }
   )
 }
@@ -39,6 +45,7 @@ defineExpose({ modal })
   <Modal
     id="delete-address-modal"
     type="alert"
+    :not-cancellable="processing"
   >
     <Icon slot="icon">remove_road</Icon>
     <div slot="headline">Eliminar dirección</div>
@@ -47,8 +54,18 @@ defineExpose({ modal })
       puede deshacerse, ¿deseas continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="modal?.close">Cancelar</md-text-button>
-      <md-text-button @click="destroy">Aceptar</md-text-button>
+      <md-text-button
+        @click="modal?.close"
+        :disabled="processing"
+      >
+        Cancelar
+      </md-text-button>
+      <md-text-button
+        @click="destroy"
+        :disabled="processing"
+      >
+        Aceptar
+      </md-text-button>
     </div>
   </Modal>
 
