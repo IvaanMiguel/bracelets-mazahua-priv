@@ -2,7 +2,6 @@
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import { useModal } from '@/composables/useModal'
 import { IdAddress } from '@/types/customers'
 import { ref } from 'vue'
 
@@ -15,8 +14,7 @@ const emit = defineEmits<{
   (e: 'unselectAddress'): void
 }>()
 
-const { modal } = useModal('#remove-address-modal')
-
+const removeModal = ref<InstanceType<typeof Modal>>()
 const removedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 
 const remove = () => {
@@ -27,20 +25,24 @@ const remove = () => {
   emit('unselectAddress')
 
   props.addresses.splice(i, 1)
-  modal.value?.close()
+  removeModal.value?.dialog?.close()
   removedAddressSnackbar.value?.show(true)
 }
+
+defineExpose({ removeModal })
 </script>
 
 <template>
-  <Modal id="remove-address-modal">
+  <Modal ref="removeModal">
     <Icon slot="icon">wrong_location</Icon>
     <div slot="headline">Remover dirección</div>
     <div slot="content">
       La dirección seleccionada será removida, ¿deseas continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="modal?.close">Cancelar</md-text-button>
+      <md-text-button @click="removeModal?.dialog?.close">
+        Cancelar
+      </md-text-button>
       <md-text-button @click="remove">Aceptar</md-text-button>
     </div>
   </Modal>

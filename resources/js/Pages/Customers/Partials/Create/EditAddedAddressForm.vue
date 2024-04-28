@@ -3,11 +3,10 @@ import AddressForm from '@/Components/Forms/AddressForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import { useModal } from '@/composables/useModal'
 import { IdAddress } from '@/types/customers'
 import useVuelidate from '@vuelidate/core'
 import { useEventListener } from '@vueuse/core'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps<{
   addresses: IdAddress[]
@@ -15,8 +14,8 @@ const props = defineProps<{
 }>()
 
 const v = useVuelidate()
-const { modal: editAddressModal } = useModal('#edit-address-modal')
-const { modal: cancelEditModal } = useModal('#cancel-edit-modal')
+const editModal = ref<InstanceType<typeof Modal>>()
+const cancelEditModal = ref<InstanceType<typeof Modal>>()
 
 const addressForm = ref<InstanceType<typeof AddressForm>>()
 const editedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
@@ -43,33 +42,39 @@ const saveChanges = async () => {
 
   updateAddress()
 
+  addressForm.value!.form.defaults()
   addressForm.value!.form.reset()
   addressForm.value!.form.clearErrors()
-  v.value.$reset()
-  editAddressModal.value?.close()
 
+  v.value.$reset()
+
+  editModal.value?.dialog?.close()
   editedAddressSnackbar.value?.show(true)
 }
 
 const discardChanges = () => {
-  cancelEditModal.value?.close()
-  editAddressModal.value?.close()
+  cancelEditModal.value?.dialog?.close()
+  editModal.value?.dialog?.close()
 
   addressForm.value!.form.reset()
   v.value.$reset()
 }
 
-useEventListener(editAddressModal, 'open', () => {
-  if (!addressForm.value?.form) return
+onMounted(() => {
+  useEventListener(editModal.value?.dialog, 'open', () => {
+    if (!addressForm.value?.form) return
 
-  addressForm.value.form.defaults({ ...props.selectedAddress })
-  addressForm.value.form.reset()
+    addressForm.value.form.defaults({ ...props.selectedAddress })
+    addressForm.value.form.reset()
+  })
 })
+
+defineExpose({ editModal })
 </script>
 
 <template>
   <Modal
-    id="edit-address-modal"
+    ref="editModal"
     :not-cancellable="addressForm?.form.isDirty"
   >
     <div slot="headline">Editar dirección agregada</div>
@@ -85,17 +90,24 @@ useEventListener(editAddressModal, 'open', () => {
       <md-text-button
         @click="
           addressForm?.form.isDirty
-            ? cancelEditModal?.show()
-            : editAddressModal?.close()
+            ? cancelEditModal?.dialog?.show()
+            : editModal?.dialog?.close()
         "
-        >Cancelar</md-text-button
       >
-      <md-text-button @click="saveChanges">Guardar cambios</md-text-button>
+        Cancelar
+      </md-text-button>
+      <md-text-button
+        @click="
+          addressForm?.form.isDirty ? saveChanges() : editModal?.dialog?.close()
+        "
+      >
+        Guardar cambios
+      </md-text-button>
     </div>
   </Modal>
 
   <Modal
-    id="cancel-edit-modal"
+    ref="cancelEditModal"
     type="alert"
   >
     <Icon slot="icon">edit_off</Icon>
@@ -105,7 +117,9 @@ useEventListener(editAddressModal, 'open', () => {
       continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="cancelEditModal?.close">Cancelar</md-text-button>
+      <md-text-button @click="cancelEditModal?.dialog?.close"
+        >Cancelar</md-text-button
+      >
       <md-text-button @click="discardChanges">Aceptar</md-text-button>
     </div>
   </Modal>
