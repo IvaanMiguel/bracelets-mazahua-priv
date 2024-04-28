@@ -38,7 +38,7 @@ const back = () => history.back()
       <Addresses class="mt-6" />
 
       <div class="mt-6 text-end">
-        <md-outlined-button @click="deleteCustomer?.modal?.show">
+        <md-outlined-button @click="deleteCustomer?.deleteModal?.dialog?.show">
           <Icon slot="icon">delete_forever</Icon>
           Eliminar cliente
         </md-outlined-button>

@@ -3,7 +3,6 @@ import CustomerForm from '@/Components/Forms/CustomerForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import { useModal } from '@/composables/useModal'
 import { IdCustomer } from '@/types/customers'
 import { usePage } from '@inertiajs/vue3'
 import useVuelidate from '@vuelidate/core'
@@ -13,9 +12,9 @@ import { computed, ref } from 'vue'
 
 const v = useVuelidate()
 const page = usePage()
-const { modal: editPersonalInfoModal } = useModal('#edit-personal-info-modal')
-const { modal: cancelEditModal } = useModal('#cancel-edit-personal-info-modal')
 
+const editModal = ref<InstanceType<typeof Modal>>()
+const cancelEditModal = ref<InstanceType<typeof Modal>>()
 const customerForm = ref<InstanceType<typeof CustomerForm>>()
 const editedCustomerSnackbar = ref<InstanceType<typeof Snackbar>>()
 const customer = computed(() => page.props.customer as IdCustomer)
@@ -44,7 +43,7 @@ const update = async () => {
         customerForm.value?.form.clearErrors()
         v.value.$reset()
 
-        editPersonalInfoModal.value?.close()
+        editModal.value?.dialog?.close()
         editedCustomerSnackbar.value?.show(true)
       },
     }
@@ -52,20 +51,19 @@ const update = async () => {
 }
 
 const cancelUpdate = () => {
-  editPersonalInfoModal.value?.close()
-  cancelEditModal.value?.close()
+  editModal.value?.dialog?.close()
+  cancelEditModal.value?.dialog?.close()
 
   customerForm.value?.form.reset()
   v.value.$reset()
 }
 
-// Just to be able to open it from parent PersonalInfo.
-defineExpose({ editPersonalInfoModal })
+defineExpose({ editModal })
 </script>
 
 <template>
   <Modal
-    id="edit-personal-info-modal"
+    ref="editModal"
     class="w-full"
     :not-cancellable="customerForm?.form.isDirty"
   >
@@ -84,8 +82,8 @@ defineExpose({ editPersonalInfoModal })
       <md-text-button
         @click="
           customerForm?.form.isDirty
-            ? cancelEditModal?.show()
-            : editPersonalInfoModal?.close()
+            ? cancelEditModal?.dialog?.show()
+            : editModal?.dialog?.close()
         "
         :disabled="customerForm?.form.processing"
       >
@@ -93,7 +91,7 @@ defineExpose({ editPersonalInfoModal })
       </md-text-button>
       <md-text-button
         @click="
-          customerForm?.form.isDirty ? update() : editPersonalInfoModal?.close()
+          customerForm?.form.isDirty ? update() : editModal?.dialog?.close()
         "
         :disabled="customerForm?.form.processing"
       >
@@ -103,7 +101,7 @@ defineExpose({ editPersonalInfoModal })
   </Modal>
 
   <Modal
-    id="cancel-edit-personal-info-modal"
+    ref="cancelEditModal"
     type="alert"
   >
     <Icon slot="icon">edit_off</Icon>
@@ -113,7 +111,9 @@ defineExpose({ editPersonalInfoModal })
       continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="cancelEditModal?.close">Cancelar</md-text-button>
+      <md-text-button @click="cancelEditModal?.dialog?.close">
+        Cancelar
+      </md-text-button>
       <md-text-button @click="cancelUpdate">Aceptar</md-text-button>
     </div>
   </Modal>

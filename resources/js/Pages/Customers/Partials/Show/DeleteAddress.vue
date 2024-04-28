@@ -2,7 +2,6 @@
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import { useModal } from '@/composables/useModal'
 import { CustomerWithAddresses, IdAddress } from '@/types/customers'
 import { router, usePage } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
@@ -10,8 +9,8 @@ import { computed, ref } from 'vue'
 const props = defineProps<{ selectedAddress?: IdAddress }>()
 
 const page = usePage()
-const { modal } = useModal('#delete-address-modal')
 
+const deleteModal = ref<InstanceType<typeof Modal>>()
 const deletedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
 const processing = ref(false)
 const addresses = computed(() => {
@@ -31,19 +30,19 @@ const destroy = () => {
     {
       onSuccess: () => deletedAddressSnackbar.value?.show(true),
       onFinish: () => {
-        modal.value?.close()
+        deleteModal.value?.dialog?.close()
         processing.value = false
       },
     }
   )
 }
 
-defineExpose({ modal })
+defineExpose({ deleteModal })
 </script>
 
 <template>
   <Modal
-    id="delete-address-modal"
+    ref="deleteModal"
     type="alert"
     :not-cancellable="processing"
   >
@@ -55,7 +54,7 @@ defineExpose({ modal })
     </div>
     <div slot="actions">
       <md-text-button
-        @click="modal?.close"
+        @click="deleteModal?.dialog?.close"
         :disabled="processing"
       >
         Cancelar

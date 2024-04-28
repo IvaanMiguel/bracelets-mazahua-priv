@@ -3,20 +3,19 @@ import AddressForm from '@/Components/Forms/AddressForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import { useModal } from '@/composables/useModal'
 import { IdAddress } from '@/types/customers'
 import useVuelidate from '@vuelidate/core'
 import { useEventListener } from '@vueuse/core'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps<{ selectedAddress?: IdAddress }>()
 
 const v = useVuelidate()
-const { modal: editAddressModal } = useModal('#edit-address-modal')
-const { modal: cancelEditModal } = useModal('#cancel-edit-address-modal')
 
 const addressForm = ref<InstanceType<typeof AddressForm>>()
 const updatedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
+const editModal = ref<InstanceType<typeof Modal>>()
+const cancelEditModal = ref<InstanceType<typeof Modal>>()
 
 const update = () => {
   const validate = v.value.$validate()
@@ -34,33 +33,35 @@ const update = () => {
         v.value.$reset()
 
         updatedAddressSnackbar.value?.show(true)
-        editAddressModal.value?.close()
+        editModal.value?.dialog?.close()
       },
     }
   )
 }
 
 const cancelUpdate = () => {
-  editAddressModal.value?.close()
-  cancelEditModal.value?.close()
+  editModal.value?.dialog?.close()
+  cancelEditModal.value?.dialog?.close()
 
   addressForm.value?.form.reset()
   v.value.$reset()
 }
 
-useEventListener(editAddressModal, 'open', () => {
-  if (!addressForm.value?.form) return
+onMounted(() => {
+  useEventListener(editModal.value?.dialog, 'open', () => {
+    if (!addressForm.value?.form) return
 
-  addressForm.value.form.defaults({ ...props.selectedAddress })
-  addressForm.value.form.reset()
+    addressForm.value.form.defaults({ ...props.selectedAddress })
+    addressForm.value.form.reset()
+  })
 })
 
-defineExpose({ editAddressModal })
+defineExpose({ editModal })
 </script>
 
 <template>
   <Modal
-    id="edit-address-modal"
+    ref="editModal"
     :not-cancellable="addressForm?.form.isDirty"
   >
     <div slot="headline">Editar dirección</div>
@@ -76,8 +77,8 @@ defineExpose({ editAddressModal })
       <md-text-button
         @click="
           addressForm?.form.isDirty
-            ? cancelEditModal?.show()
-            : editAddressModal?.close()
+            ? cancelEditModal?.dialog?.show()
+            : editModal?.dialog?.close()
         "
         :disabled="addressForm?.form.processing"
       >
@@ -93,7 +94,7 @@ defineExpose({ editAddressModal })
   </Modal>
 
   <Modal
-    id="cancel-edit-address-modal"
+    ref="cancelEditModal"
     type="alert"
   >
     <Icon slot="icon">edit_off</Icon>
@@ -103,7 +104,9 @@ defineExpose({ editAddressModal })
       continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="cancelEditModal?.close">Cancelar</md-text-button>
+      <md-text-button @click="cancelEditModal?.dialog?.close">
+        Cancelar
+      </md-text-button>
       <md-text-button @click="cancelUpdate">Aceptar</md-text-button>
     </div>
   </Modal>

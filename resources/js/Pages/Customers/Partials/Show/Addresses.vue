@@ -33,7 +33,7 @@ const createAddressDetails = (address: IdAddress) => {
 
 const onUpdate = (address: IdAddress) => {
   selectedAddress.value = address
-  editAddressForm.value?.editAddressModal?.show()
+  editAddressForm.value?.editModal?.dialog?.show()
 }
 
 const onDestroy = (address: IdAddress) => {
@@ -43,7 +43,7 @@ const onDestroy = (address: IdAddress) => {
   }
 
   selectedAddress.value = address
-  deleteAddress.value?.modal?.show()
+  deleteAddress.value?.deleteModal?.dialog?.show()
 }
 </script>
 
@@ -58,7 +58,7 @@ const onDestroy = (address: IdAddress) => {
       >
         Direcciones
       </h1>
-      <md-filled-button @click="createAddressForm?.addAddressModal?.show()">
+      <md-filled-button @click="createAddressForm?.createModal?.dialog?.show()">
         Agregar
         <Icon slot="icon">add</Icon>
       </md-filled-button>

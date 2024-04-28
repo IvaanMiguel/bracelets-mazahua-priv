@@ -36,9 +36,7 @@ const age = computed(() => {
       >
         Datos personales
       </h1>
-      <md-filled-button
-        @click="editPersonalInfoForm?.editPersonalInfoModal?.show"
-      >
+      <md-filled-button @click="editPersonalInfoForm?.editModal?.dialog?.show">
         Editar
         <Icon slot="icon">edit</Icon>
       </md-filled-button>

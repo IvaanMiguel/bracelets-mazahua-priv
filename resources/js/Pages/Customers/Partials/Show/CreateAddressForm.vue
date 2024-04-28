@@ -3,16 +3,16 @@ import AddressForm from '@/Components/Forms/AddressForm.vue'
 import Icon from '@/Components/Icon.vue'
 import Modal from '@/Components/Modal.vue'
 import Snackbar from '@/Components/Snackbar.vue'
-import { useModal } from '@/composables/useModal'
 import { IdCustomer } from '@/types/customers'
 import { usePage } from '@inertiajs/vue3'
 import useVuelidate from '@vuelidate/core'
-import { computed, ref } from 'vue'
+import { useEventListener } from '@vueuse/core'
+import { computed, onMounted, ref } from 'vue'
 
 const v = useVuelidate()
 const page = usePage()
-const { modal: addAddressModal } = useModal('#add-address-modal')
-const { modal: cancelAddModal } = useModal('#cancel-add-modal')
+const createModal = ref<InstanceType<typeof Modal>>()
+const cancelCreateModal = ref<InstanceType<typeof Modal>>()
 
 const addressForm = ref<InstanceType<typeof AddressForm>>()
 const storedAddressSnackbar = ref<InstanceType<typeof Snackbar>>()
@@ -30,26 +30,30 @@ const store = async () => {
         addressForm.value?.form.reset()
         v.value.$reset()
 
-        addAddressModal.value?.close()
+        createModal.value?.dialog?.close()
         storedAddressSnackbar.value?.show(true)
       },
     })
 }
 
 const cancelStore = () => {
-  addAddressModal.value?.close()
-  cancelAddModal.value?.close()
-
-  addressForm.value?.form.reset()
-  v.value.$reset()
+  createModal.value?.dialog?.close()
+  cancelCreateModal.value?.dialog?.close()
 }
 
-defineExpose({ addAddressModal })
+onMounted(() => {
+  useEventListener(createModal.value?.dialog, 'closed', () => {
+    addressForm.value?.form.reset()
+    v.value.$reset()
+  })
+})
+
+defineExpose({ createModal })
 </script>
 
 <template>
   <Modal
-    id="add-address-modal"
+    ref="createModal"
     class="w-full"
     :not-cancellable="addressForm?.form.isDirty"
   >
@@ -66,8 +70,8 @@ defineExpose({ addAddressModal })
       <md-text-button
         @click="
           addressForm?.form.isDirty
-            ? cancelAddModal?.show()
-            : addAddressModal?.close()
+            ? cancelCreateModal?.dialog?.show()
+            : createModal?.dialog?.close()
         "
         :disabled="addressForm?.form.processing"
       >
@@ -84,6 +88,7 @@ defineExpose({ addAddressModal })
 
   <Modal
     id="cancel-add-modal"
+    ref="cancelCreateModal"
     type="alert"
   >
     <Icon slot="icon">edit_off</Icon>
@@ -93,7 +98,9 @@ defineExpose({ addAddressModal })
       ¿deseas continuar?
     </div>
     <div slot="actions">
-      <md-text-button @click="cancelAddModal?.close">Cancelar</md-text-button>
+      <md-text-button @click="cancelCreateModal?.dialog?.close">
+        Cancelar
+      </md-text-button>
       <md-text-button @click="cancelStore">Aceptar</md-text-button>
     </div>
   </Modal>
