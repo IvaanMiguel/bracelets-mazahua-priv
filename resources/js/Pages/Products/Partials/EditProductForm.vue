@@ -59,7 +59,7 @@ defineExpose({ editModal })
   <Modal
     ref="editModal"
     class="w-full"
-    not-cancellable
+    :not-cancellable="productForm?.form.isDirty"
   >
     <div slot="headline">Editar producto</div>
 
@@ -71,11 +71,20 @@ defineExpose({ editModal })
     />
 
     <div slot="actions">
-      <md-text-button @click="cancelEditModal?.dialog?.show">
+      <md-text-button
+        @click="
+          productForm?.form.isDirty
+            ? cancelEditModal?.dialog?.show()
+            : editModal?.dialog?.close()
+        "
+        :disabled="productForm?.form.processing"
+      >
         Cancelar
       </md-text-button>
       <md-text-button
-        @click="update"
+        @click="
+          productForm?.form.isDirty ? update() : editModal?.dialog?.close()
+        "
         :disabled="productForm?.form.processing"
       >
         Guardar cambios

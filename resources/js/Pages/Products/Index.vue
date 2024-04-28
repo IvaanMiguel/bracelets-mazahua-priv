@@ -51,7 +51,7 @@ const onAction = (product: IdProduct, modal?: MdDialog | null) => () => {
           :base-url="route('products')"
         />
 
-        <md-filled-button @click="createProductForm?.createProductModal?.show">
+        <md-filled-button @click="createProductForm?.createModal?.dialog?.show">
           <Icon slot="icon">add</Icon>
           Agregar
         </md-filled-button>
