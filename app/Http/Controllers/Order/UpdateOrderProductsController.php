@@ -29,6 +29,7 @@ class UpdateOrderProductsController extends Controller
                 'products.price',
                 DB::raw('COALESCE(products.stock + order_product.amount, products.stock) AS stock')
             ])
+                ->withTrashed()
                 ->leftJoin('order_product', function (JoinClause $join) use ($order) {
                     $join->on('order_product.product_id', '=', 'products.id')
                         ->where('order_product.order_id', '=', $order->id)
