@@ -25,6 +25,11 @@ class Product extends Model
         'deleted_at'
     ];
 
+    protected static function booted(): void
+    {
+        static::deleting(fn (Product $product) => $product->update(['stock' => 0]));
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
