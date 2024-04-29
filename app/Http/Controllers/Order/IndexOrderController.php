@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Order;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\DeliveryApp;
 use App\Models\DeliveryType;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -64,8 +67,8 @@ class IndexOrderController extends Controller
     {
         try {
             $order  = Order::with([
-                'customer' => fn ($q) => $q->select(['id', 'name', 'last_name', 'phone_number', 'email'])
-                    ->with('addresses')
+                'customer' => fn (BelongsTo $q) => $q->select(['id', 'name', 'last_name', 'phone_number', 'email', 'deleted_at'])
+                    ->with(['addresses' => fn (HasMany $q) => $q->withTrashed()])
                     ->withTrashed(),
                 'paymentType',
                 'delivery.deliveryType',

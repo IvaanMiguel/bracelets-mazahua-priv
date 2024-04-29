@@ -21,7 +21,7 @@ class UpdateOrderProductsController extends Controller
         return Inertia::render('Orders/EditProducts', [
             'order' => $order,
             'orderProducts' => $order->products,
-            'customer' => $order->customer()->select('name', 'last_name')->first(),
+            'customer' => $order->customer()->withTrashed()->select('name', 'last_name')->first(),
             'products' => Product::select([
                 'products.id',
                 'products.name',

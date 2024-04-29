@@ -52,7 +52,6 @@ const deleteOrderModal = ref<InstanceType<typeof DeleteOrderModal>>()
       </div>
 
       <CustomerInfo
-        class="rounded-lg border border-light-outline-variant p-4 dark:border-dark-outline-variant"
         :customer-info="order.customer"
       />
 

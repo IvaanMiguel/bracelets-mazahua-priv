@@ -85,6 +85,7 @@ export interface IdOrder {
     email: string | null
     phone_number: string
     addresses: IdAddress[]
+    deleted_at?: string | null
   }
   customer_id: number
   delivery: Delivery & {
