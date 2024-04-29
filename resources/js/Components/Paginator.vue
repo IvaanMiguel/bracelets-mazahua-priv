@@ -45,6 +45,7 @@ watch(results, (value) => {
     // @ts-expect-error immediately
     {
       ...route().params,
+      page: 1,
       [resultsKey]: value,
     },
     {

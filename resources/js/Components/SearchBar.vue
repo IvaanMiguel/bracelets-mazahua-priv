@@ -28,6 +28,7 @@ watch(search, (value) => {
     // @ts-expect-error immediately
     {
       ...route().params,
+      page: 1,
       [searchKey]: value,
     },
     {
