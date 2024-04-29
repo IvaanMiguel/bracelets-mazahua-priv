@@ -102,4 +102,10 @@ onMounted(() => {
       </Table>
     </div>
   </div>
+
+  <Snackbar
+    ref="destroyedCustomerSnackbar"
+    text="Cliente eliminado con éxito."
+    close-button
+  />
 </template>
