@@ -39,7 +39,7 @@ const border = computed(() => {
           :text="`${customerInfo.phone_number}`"
         >
           <template #icon>
-            <Icon>person</Icon>
+            <Icon>phone</Icon>
           </template>
         </DisplayField>
         <DisplayField
