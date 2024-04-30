@@ -7,7 +7,9 @@ import { computed, ref, watch } from 'vue'
 
 defineEmits<{ removingProduct: [product: SelectedProduct] }>()
 const props = defineProps<{
-  product: SelectedProduct | SelectedChangedProduct
+  product: (SelectedProduct | SelectedChangedProduct) & {
+    deletedAt?: string | null
+  }
 }>()
 
 const textfield = ref<MdOutlinedTextField>()
@@ -38,8 +40,22 @@ watch(
 
 <template>
   <md-list-item>
-    <div class="grid grid-cols-4 items-center gap-4">
-      <span class="truncate">{{ product.name }}</span>
+    <div
+      :class="[
+        'grid grid-cols-4 items-center gap-4',
+        { 'text-light-error dark:text-dark-error': product.deletedAt },
+      ]"
+    >
+      <div class="flex items-center gap-1 truncate">
+        <span class="truncate">{{ product.name }}</span>
+        <Icon
+          v-if="product.deletedAt"
+          size="1.25rem"
+          title="Este producto ya ha sido eliminado."
+        >
+          report
+        </Icon>
+      </div>
       <span class="truncate">{{ `$${formattedPrice} MXN` }}</span>
       <md-outlined-text-field
         ref="textfield"

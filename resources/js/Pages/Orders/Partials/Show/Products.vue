@@ -15,6 +15,7 @@ defineProps<{
       subtotal: number
     }
     price: number
+    deleted_at?: string | null
   }[]
   advance: number
   total: number
@@ -61,8 +62,22 @@ const order = ref(page.props.order as IdOrder)
             class="col-span-full"
             inset
           />
-          <div class="col-span-full grid grid-cols-subgrid gap-4 px-4 py-3">
-            <span class="truncate">{{ product.name }}</span>
+          <div
+            :class="[
+              'col-span-full grid grid-cols-subgrid gap-4 px-4 py-3',
+              { 'text-light-error dark:text-dark-error': product.deleted_at },
+            ]"
+          >
+            <div class="flex items-center gap-1 truncate">
+              <span class="truncate">{{ product.name }}</span>
+              <Icon
+                v-if="product.deleted_at"
+                size="1.25rem"
+                title="Este producto ya ha sido eliminado."
+              >
+                report
+              </Icon>
+            </div>
             <span class="truncate">{{ product.pivot.amount }}</span>
             <span class="truncate">{{ `$${product.pivot.subtotal} MXN` }}</span>
           </div>

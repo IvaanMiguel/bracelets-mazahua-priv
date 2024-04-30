@@ -27,6 +27,7 @@ class UpdateOrderProductsController extends Controller
                 'products.name',
                 'products.category_id',
                 'products.price',
+                'products.deleted_at',
                 DB::raw('COALESCE(products.stock + order_product.amount, products.stock) AS stock')
             ])
                 ->withTrashed()

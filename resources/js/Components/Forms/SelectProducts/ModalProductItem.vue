@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import HighlightSearch from '@/Components/HighlightSearch.vue';
+import HighlightSearch from '@/Components/HighlightSearch.vue'
+import Icon from '@/Components/Icon.vue'
 import { AvailableChangedProduct } from '@/types/orders'
 import { MdCheckbox } from '@material/web/checkbox/checkbox'
 import { MdListItem } from '@material/web/list/list-item'
@@ -9,7 +10,7 @@ const emit = defineEmits<{
   checkedProduct: [product: AvailableChangedProduct, checked: boolean]
 }>()
 const props = defineProps<{
-  product: AvailableChangedProduct
+  product: AvailableChangedProduct & { deleted_at: string | null }
   checked: boolean
   disabled: boolean
 }>()
@@ -50,13 +51,26 @@ const onClick = () => {
       ref="checkbox"
       :checked="checked || disabled"
     />
-    <div class="search-product-row grid gap-4">
-      <HighlightSearch
-        class="truncate"
-        :text="`${product.name}`"
-        :search="`${$page.props.filters.search}`"
-      />
-      <!-- <span class="truncate">{{ product.name }}</span> -->
+    <div
+      :class="[
+        'search-product-row grid gap-4',
+        { 'text-light-error dark:text-dark-error': product.deleted_at },
+      ]"
+    >
+      <div class="flex items-center gap-1 truncate">
+        <HighlightSearch
+          class="truncate"
+          :text="`${product.name}`"
+          :search="`${$page.props.filters.search}`"
+        />
+        <Icon
+          v-if="product.deleted_at"
+          size="1.25rem"
+          title="Este producto ya ha sido eliminado."
+        >
+          report
+        </Icon>
+      </div>
       <span class="truncate">{{ `$${formattedPrice} MXN` }}</span>
       <span class="truncate">{{ product.stock }}</span>
     </div>

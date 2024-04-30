@@ -42,6 +42,7 @@ const productsDefault = computed(() => {
         ? product.pivot.amount
         : product.pivot.amount + product.stock,
       priceHasChanged,
+      deletedAt: product.deleted_at,
     })
   }
 
@@ -64,8 +65,8 @@ const update = () => {
         selectProductsForm.value?.form.defaults({
           products: selectProductsForm.value.form.products.map((product) => ({
             ...product,
-            stock: product.priceHasChanged ? product.amount : product.stock
-          }))
+            stock: product.priceHasChanged ? product.amount : product.stock,
+          })),
         })
         selectProductsForm.value?.form.reset()
 

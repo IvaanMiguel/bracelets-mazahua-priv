@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
-// import { store } from '@/store/orderProducts'
 import {
   AvailableChangedProduct,
   AvailableProduct,
@@ -17,14 +16,16 @@ import ModalSearch from './ModalSearch.vue'
 import SelectProductsItem from './SelectProductsItem.vue'
 import SelectProductsRemove from './SelectProductsRemove.vue'
 
-const props = defineProps<{ defaults?: SelectedChangedProduct[] }>()
+const props = defineProps<{
+  defaults?: (SelectedChangedProduct & { deleted_at?: string | null })[]
+}>()
 
 const defaultProducts = reactive<{
   notChanged: AvailableChangedProduct[]
   changed: AvailableChangedProduct[]
 }>({
   notChanged: [],
-  changed: []
+  changed: [],
 })
 
 provide('defaultProducts', defaultProducts)

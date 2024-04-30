@@ -110,7 +110,10 @@ export interface IdOrderEdit {
   delivery_id: number
   details: string | null
   payment_type_id: number
-  products: (AvailableProduct & {pivot: productPivot})[]
+  products: (AvailableProduct & {
+    pivot: productPivot
+    deleted_at?: string | null
+  })[]
   products_total: number
   total: number
 }

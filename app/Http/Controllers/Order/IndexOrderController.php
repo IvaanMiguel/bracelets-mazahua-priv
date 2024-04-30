@@ -37,7 +37,7 @@ class IndexOrderController extends Controller
                 'delivery_id',
                 'payment_type_id',
             ])->with([
-                'customer' => fn ($q) => $q->select(['id', 'name', 'last_name'])->withTrashed(),
+                'customer' => fn ($q) => $q->select(['id', 'name', 'last_name']),
                 'delivery:id,date,delivery_type_id',
                 'delivery.deliveryType',
                 'paymentType'
@@ -74,7 +74,7 @@ class IndexOrderController extends Controller
                 'delivery.deliveryType',
                 'delivery.deliveryApp',
                 'delivery.address',
-                'products' => fn ($q) => $q->select(['name', 'price'])->withTrashed()
+                'products' => fn ($q) => $q->select(['name', 'price', 'products.deleted_at'])->withTrashed()
             ])->findOrFail($id);
         } catch (ModelNotFoundException $e) {
             return back()->withErrors([
