@@ -48,10 +48,10 @@ class OrderFactory extends Factory
     {
         switch ($paymentType->name) {
             case 'Depósito':
-                return fake()->numerify("Cuenta que termina en ##.");
+                return fake()->numerify("Cuenta que termina en ####.");
 
             case 'Tarjeta':
-                return fake()->numerify("Tarjeta que termina en ##.");
+                return fake()->numerify("Tarjeta que termina en ####.");
 
             default:
                 return null;
