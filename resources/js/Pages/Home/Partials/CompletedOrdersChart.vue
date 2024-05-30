@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useDarkModeChart } from '@/composables/useDarkModeChart.js'
 import { CompletedOrder } from '@/types/home'
-import { usePage } from '@inertiajs/vue3'
 import {
   BarController,
   BarElement,
@@ -9,7 +8,7 @@ import {
   Chart,
   LinearScale,
 } from 'chart.js'
-import { computed, onMounted, ref, toRef } from 'vue'
+import { computed, onMounted, ref, toRef, watch } from 'vue'
 
 Chart.register({
   BarController,
@@ -18,29 +17,38 @@ Chart.register({
   LinearScale,
 })
 
-const page = usePage()
+const props = defineProps<{ completedOrders: CompletedOrder[] }>()
 
 let chart: Chart<'bar'>
 const { textColor, backgroundColors } = useDarkModeChart(toRef(() => chart))
 const canvas = ref<HTMLCanvasElement>()
-const completedOrders = ref(page.props.completedOrders as CompletedOrder[])
 const ordersPercentage = computed(() => {
-  const total = completedOrders.value[0].total + completedOrders.value[1].total
+  const total = props.completedOrders[0].total + props.completedOrders[1].total
 
-  return Math.round((completedOrders.value[0].total / total) * 100)
+  return Math.round((props.completedOrders[0].total / total) * 100)
 })
+
+watch(
+  () => props.completedOrders,
+  () => {
+    chart.data.datasets[0].data = props.completedOrders.map(
+      (order) => order.total
+    )
+    chart.update()
+  }
+)
 
 onMounted(() => {
   chart = new Chart(canvas.value!, {
     type: 'bar',
     data: {
-      labels: completedOrders.value.map((order) => order.name),
+      labels: props.completedOrders.map((order) => order.name),
       datasets: [
         {
-          data: completedOrders.value.map((order) => order.total),
+          data: props.completedOrders.map((order) => order.total),
           backgroundColor: backgroundColors.value,
           borderRadius: 6,
-          categoryPercentage: 0.5
+          categoryPercentage: 0.5,
         },
       ],
     },
@@ -88,8 +96,8 @@ onMounted(() => {
           padding: { top: 4, bottom: 8 },
         },
         datalabels: {
-          display: false
-        }
+          display: false,
+        },
       },
     },
   })

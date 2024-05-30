@@ -1,8 +1,20 @@
 <script setup lang="ts">
 import MainLayout from '@/Layouts/MainLayout.vue'
+import {
+  BestSeller,
+  CompletedOrder,
+  CustomerOrders,
+  PopularPaymentType,
+  SalesPerCategory,
+  SalesPerMonth,
+  TopCustomer,
+} from '@/types/home'
+import { usePage } from '@inertiajs/vue3'
 import '@material/web/elevation/elevation'
+import axios from 'axios'
 import { Chart, SubTitle, Title, Tooltip } from 'chart.js'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import { onMounted, ref } from 'vue'
 import BestSellerChart from './Partials/BestSellerChart.vue'
 import CompletedOrdersChart from './Partials/CompletedOrdersChart.vue'
 import CustomersOrdersChart from './Partials/CustomersOrdersChart.vue'
@@ -22,6 +34,35 @@ Chart.register({
 defineOptions({
   layout: MainLayout,
 })
+
+const page = usePage()
+const completedOrders = ref(page.props.completedOrders as CompletedOrder[])
+const topCustomer = ref(page.props.topCustomer as TopCustomer)
+const salesPerCategory = ref(page.props.salesPerCategory as SalesPerCategory[])
+const bestSeller = ref(page.props.bestSeller as BestSeller)
+const customersOrders = ref(page.props.customersOrders as CustomerOrders[])
+const popularPaymentType = ref(
+  page.props.popularPaymentType as PopularPaymentType
+)
+const totalSales = ref(
+  page.props.totalSales as { total_sales: string | number }
+)
+const salesPerMonth = ref(page.props.salesPerMonth as SalesPerMonth[])
+
+onMounted(() => {
+  setInterval(() => {
+    axios.get(route('dashboard')).then((res) => {
+      completedOrders.value = res.data.completedOrders
+      topCustomer.value = res.data.topCustomer
+      salesPerCategory.value = res.data.salesPerCategory
+      bestSeller.value = res.data.bestSeller
+      customersOrders.value = res.data.customersOrders
+      popularPaymentType.value = res.data.popularPaymentType
+      totalSales.value = res.data.totalSales
+      salesPerMonth.value = res.data.salesPerMonth
+    })
+  }, 750)
+})
 </script>
 
 <template>
@@ -30,14 +71,29 @@ defineOptions({
       class="md-elevation-1 relative mx-auto grid h-full w-full grid-cols-1 grid-rows-[repeat(14,160px)] gap-1 rounded-lg bg-light-surface-container-lowest p-4 dark:bg-dark-surface-container md:grid-cols-2 md:grid-rows-[repeat(12,160px)] lg:grid-cols-4 lg:grid-rows-[repeat(7,160px)]"
     >
       <md-elevation />
-      <CompletedOrdersChart class="row-span-2" />
-      <TopCustomerChart />
-      <SalesPerCategoryChart class="row-span-3 md:col-span-2 md:row-span-4" />
-      <BestSellerChart class="md:col-start-2 md:row-start-2" />
-      <CustomersOrdersChart class="row-span-3 md:col-span-2" />
-      <PopularPaymentTypeChart />
-      <TotalSalesChart />
-      <SalesPerMonthChart class="col-span-full row-span-2" />
+      <CompletedOrdersChart
+        :completed-orders
+        class="row-span-2"
+      />
+      <TopCustomerChart :top-customer />
+      <SalesPerCategoryChart
+        :sales-per-category
+        class="row-span-3 md:col-span-2 md:row-span-4"
+      />
+      <BestSellerChart
+        :best-seller
+        class="md:col-start-2 md:row-start-2"
+      />
+      <CustomersOrdersChart
+        :customers-orders
+        class="row-span-3 md:col-span-2"
+      />
+      <PopularPaymentTypeChart :popular-payment-type />
+      <TotalSalesChart :total-sales />
+      <SalesPerMonthChart
+        :sales-per-month
+        class="col-span-full row-span-2"
+      />
     </div>
   </div>
 </template>

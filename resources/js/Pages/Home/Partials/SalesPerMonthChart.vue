@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { SalesPerMonth } from '@/types/home'
-import { usePage } from '@inertiajs/vue3'
 import { useDark } from '@vueuse/core'
 import {
   CategoryScale,
@@ -23,11 +22,11 @@ Chart.register({
   PointElement,
 })
 
-const page = usePage()
+const props = defineProps<{ salesPerMonth: SalesPerMonth[] }>()
+
 const isDark = useDark()
 
 let chart: Chart<'line', String[]>
-// const { textColor, backgroundColors } = useDarkModeChart(toRef(() => chart))
 
 const canvas = ref<HTMLCanvasElement>()
 const textColor = computed(() =>
@@ -40,7 +39,6 @@ const backgroundColor = computed(() =>
     ? [`${colorPalette.primary[80]}8C`, `${colorPalette.secondary[30]}8C`]
     : [`${colorPalette.primary[40]}8C`, `${colorPalette.secondary[40]}8C`]
 )
-const salesPerMonth = ref(page.props.salesPerMonth as SalesPerMonth[])
 const data = computed(() => {
   const data: {
     labels: string[]
@@ -48,7 +46,7 @@ const data = computed(() => {
     productsAmount: string[]
   } = { labels: [], sales: [], productsAmount: [] }
 
-  for (const monthSale of salesPerMonth.value) {
+  for (const monthSale of props.salesPerMonth) {
     const month =
       monthSale.month.charAt(0).toUpperCase() + monthSale.month.slice(1, 3)
 
@@ -59,6 +57,16 @@ const data = computed(() => {
 
   return data
 })
+
+watch(
+  () => props.salesPerMonth,
+  () => {
+    chart.data.datasets[0].data = data.value.sales
+    chart.data.datasets[1].data = data.value.productsAmount
+
+    chart.update()
+  }
+)
 
 watch(isDark, () => {
   chart.options.scales!.salesY!.ticks!.color = textColor.value

@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
-import { usePage } from '@inertiajs/vue3'
-import { ref } from 'vue'
 
-const page = usePage()
-const totalSales = ref(
-  page.props.totalSales as { total_sales: string | number }
-)
+defineProps<{ totalSales: { total_sales: string | number } }>()
 </script>
 
 <template>

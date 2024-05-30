@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useDarkModeChart } from '@/composables/useDarkModeChart'
 import { CustomerOrders } from '@/types/home'
-import { usePage } from '@inertiajs/vue3'
 import {
   BarController,
   BarElement,
@@ -9,7 +8,7 @@ import {
   Chart,
   LinearScale,
 } from 'chart.js'
-import { computed, onMounted, ref, toRef } from 'vue'
+import { computed, onMounted, ref, toRef, watch } from 'vue'
 
 Chart.register({
   BarController,
@@ -18,13 +17,12 @@ Chart.register({
   LinearScale,
 })
 
-const page = usePage()
+const props = defineProps<{ customersOrders: CustomerOrders[] }>()
 
 let chart: Chart<'bar'>
 const { textColor, backgroundColors } = useDarkModeChart(toRef(() => chart))
 
 const canvas = ref<HTMLCanvasElement>()
-const customersOrders = ref(page.props.customersOrders as CustomerOrders[])
 const data = computed(() => {
   const data: {
     labels: string[]
@@ -32,7 +30,7 @@ const data = computed(() => {
     completedOrders: number[]
   } = { labels: [], totalOrders: [], completedOrders: [] }
 
-  for (const customerOrder of customersOrders.value) {
+  for (const customerOrder of props.customersOrders) {
     data.labels.push(customerOrder.name)
     data.totalOrders.push(+customerOrder.total_orders)
     data.completedOrders.push(+customerOrder.completed_orders)
@@ -40,6 +38,15 @@ const data = computed(() => {
 
   return data
 })
+
+watch(
+  () => props.customersOrders,
+  () => {
+    chart.data.datasets[0].data = data.value.totalOrders
+    chart.data.datasets[1].data = data.value.completedOrders
+    chart.update()
+  }
+)
 
 onMounted(() => {
   chart = new Chart(canvas.value!, {

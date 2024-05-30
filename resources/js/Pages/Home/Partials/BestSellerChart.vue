@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import Icon from '@/Components/Icon.vue'
 import { BestSeller } from '@/types/home'
-import { usePage } from '@inertiajs/vue3'
-import { ref } from 'vue'
 
-const page = usePage()
-const bestSeller = ref(page.props.bestSeller as BestSeller)
+defineProps<{ bestSeller: BestSeller }>()
 </script>
 
 <template>

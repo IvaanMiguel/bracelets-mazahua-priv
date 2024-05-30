@@ -1,36 +1,46 @@
 <script setup lang="ts">
 import { useDarkModeChart } from '@/composables/useDarkModeChart'
 import { SalesPerCategory } from '@/types/home'
-import { usePage } from '@inertiajs/vue3'
 import { ArcElement, Chart, DoughnutController } from 'chart.js'
-import { computed, onMounted, ref, toRef } from 'vue'
+import { computed, onMounted, ref, toRef, watch } from 'vue'
 
 Chart.register({
   ArcElement,
   DoughnutController,
 })
 
-const page = usePage()
+const props = defineProps<{ salesPerCategory: SalesPerCategory[] }>()
 
 let chart: Chart<'doughnut'>
 const { textColor, backgroundColors } = useDarkModeChart(toRef(() => chart))
 
 const canvas = ref<HTMLCanvasElement>()
-const salesPerCategory = ref(page.props.salesPerCategory as SalesPerCategory[])
 const totalSales = computed(() => {
-  return salesPerCategory.value.reduce((acc, sales) => {
+  return props.salesPerCategory.reduce((acc, sales) => {
     return (acc += +sales.total_sales)
   }, 0)
 })
+
+watch(
+  () => props.salesPerCategory,
+  () => {
+    chart.data.labels = props.salesPerCategory.map((sales) => sales.name)
+    chart.data.datasets[0].data = props.salesPerCategory.map(
+      (sales) => +sales.total_sales
+    )
+
+    chart.update()
+  }
+)
 
 onMounted(() => {
   chart = new Chart(canvas.value!, {
     type: 'doughnut',
     data: {
-      labels: salesPerCategory.value.map((sales) => sales.name),
+      labels: props.salesPerCategory.map((sales) => sales.name),
       datasets: [
         {
-          data: salesPerCategory.value.map((sales) => +sales.total_sales),
+          data: props.salesPerCategory.map((sales) => +sales.total_sales),
           backgroundColor: backgroundColors.value,
         },
       ],
