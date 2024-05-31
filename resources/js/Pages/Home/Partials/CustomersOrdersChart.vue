@@ -42,6 +42,7 @@ const data = computed(() => {
 watch(
   () => props.customersOrders,
   () => {
+    chart.data.labels = data.value.labels
     chart.data.datasets[0].data = data.value.totalOrders
     chart.data.datasets[1].data = data.value.completedOrders
     chart.update()
