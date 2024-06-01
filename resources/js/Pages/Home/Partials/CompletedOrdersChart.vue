@@ -34,6 +34,7 @@ watch(
     chart.data.datasets[0].data = props.completedOrders.map(
       (order) => order.total
     )
+    chart.options.plugins!.subtitle!.text = `El ${ordersPercentage.value}% de los pedidos han sido completados.`
     chart.update()
   }
 )
