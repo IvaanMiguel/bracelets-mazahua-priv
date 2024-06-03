@@ -10,7 +10,7 @@ const emit = defineEmits<{
   checkedProduct: [product: AvailableChangedProduct, checked: boolean]
 }>()
 const props = defineProps<{
-  product: AvailableChangedProduct & { deleted_at: string | null }
+  product: AvailableChangedProduct & { deleted_at?: string | null }
   checked: boolean
   disabled: boolean
 }>()
