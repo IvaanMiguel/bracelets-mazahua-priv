@@ -72,26 +72,26 @@ onMounted(() => {
     >
       <md-elevation />
       <CompletedOrdersChart
-        :completed-orders
+        :completedOrders
         class="row-span-2"
       />
-      <TopCustomerChart :top-customer />
+      <TopCustomerChart :topCustomer />
       <SalesPerCategoryChart
-        :sales-per-category
+        :salesPerCategory
         class="row-span-3 md:col-span-2 md:row-span-4"
       />
       <BestSellerChart
-        :best-seller
+        :bestSeller
         class="md:col-start-2 md:row-start-2"
       />
       <CustomersOrdersChart
-        :customers-orders
+        :customersOrders
         class="row-span-3 md:col-span-2"
       />
-      <PopularPaymentTypeChart :popular-payment-type />
-      <TotalSalesChart :total-sales />
+      <PopularPaymentTypeChart :popularPaymentType />
+      <TotalSalesChart :totalSales />
       <SalesPerMonthChart
-        :sales-per-month
+        :salesPerMonth
         class="col-span-full row-span-2"
       />
     </div>
